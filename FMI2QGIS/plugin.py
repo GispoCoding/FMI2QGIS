@@ -8,6 +8,7 @@ from qgis.gui import QgisInterface
 from .qgis_plugin_tools.tools.custom_logging import setup_logger
 from .qgis_plugin_tools.tools.i18n import setup_translation, tr
 from .qgis_plugin_tools.tools.resources import plugin_name
+from .ui.main_dialog import MainDialog
 
 
 class Plugin:
@@ -123,4 +124,6 @@ class Plugin:
 
     def run(self):
         """Run method that performs all the real work"""
-        print("Hello QGIS plugin")
+        print("Hello QGIS plugin!!!")
+        dialog = MainDialog()
+        dialog.exec()
