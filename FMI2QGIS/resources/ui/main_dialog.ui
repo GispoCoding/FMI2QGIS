@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>498</width>
-    <height>243</height>
+    <width>1196</width>
+    <height>833</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,34 +17,69 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Load</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLineEdit" name="ln_edit_url"/>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btn_load">
-            <property name="text">
-             <string>Load</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
       <widget class="QGroupBox" name="groupBox_2">
        <property name="title">
         <string>Results</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Load</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="ln_edit_url"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_load">
+               <property name="text">
+                <string>Load</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chck_box_aqi">
+             <property name="text">
+              <string>AQI (air quality index)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chck_box_no2">
+             <property name="text">
+              <string>NO2 (nitrogen dioxide)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chck_box_o3">
+             <property name="text">
+              <string>O3 (ozone)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chck_box_pm25">
+             <property name="text">
+              <string>PM25 (concentration of particles smaller than 10 micrometres)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="chck_box_pm10">
+             <property name="text">
+              <string>PM10 (Concentration of particles smaller than 10 micrometres)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item>
          <widget class="QTextEdit" name="txt_edit_result"/>
         </item>
