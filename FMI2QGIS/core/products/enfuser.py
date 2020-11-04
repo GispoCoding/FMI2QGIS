@@ -1,5 +1,6 @@
 import enum
 from datetime import datetime
+from pathlib import Path
 from typing import Set
 
 from qgis.core import QgsRectangle
@@ -31,8 +32,8 @@ class EnfuserNetcdfLoader(BaseProduct):
     format = 'netcdf'
     projection = 'EPSG:4326'
 
-    def download(self, products: Set[Products], extent: QgsRectangle, start_time: datetime, end_time: datetime):
-        super(EnfuserNetcdfLoader, self).download(products=products, extent=extent, start_time=start_time,
+    def download(self, products: Set[Products], extent: QgsRectangle, start_time: datetime, end_time: datetime) -> Path:
+        return super(EnfuserNetcdfLoader, self).download(products=products, extent=extent, start_time=start_time,
                                                   end_time=end_time)
 
     def _construct_uri(self, products: Set[Products], extent: QgsRectangle, start_time: datetime,

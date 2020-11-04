@@ -36,10 +36,10 @@ def test_download(tmpdir_pth, fmi_download_url, feedback, extent_sm_1, monkeypat
     # Mocking the download
     monkeypatch.setattr(network, 'fetch_raw', mock_fetch_raw)
 
-    enfuser_loader.download(products, extent_sm_1, start_time, end_time)
-    expected_output_file = Path(tmpdir_pth, test_file_name)
+    expected_output_file = enfuser_loader.download(products, extent_sm_1, start_time, end_time)
 
     assert not feedback.isCanceled(), feedback.last_report_error
+    assert expected_output_file == Path(tmpdir_pth, test_file_name)
     assert expected_output_file.exists()
     assert expected_output_file.stat().st_size == test_file.stat().st_size
 

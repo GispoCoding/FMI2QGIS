@@ -25,10 +25,11 @@ class BaseProduct:
         self.url = fmi_download_url
         self.feedback = feedback
 
-    def download(self, **kwargs) -> None:
+    def download(self, **kwargs) -> Path:
         """
         Downloads files to the disk (self.download_dir)
         :param kwargs: keyword arguments depending on the product
+        :return: Path to the downloaded file
         """
         try:
             self.feedback.setProgress(0)
@@ -40,8 +41,10 @@ class BaseProduct:
                 data, default_name = network.fetch_raw(uri)
                 self.feedback.setProgress(0.7)
                 if not self.feedback.isCanceled():
-                    with open(Path(self.download_dir, default_name), 'wb') as f:
+                    output = Path(self.download_dir, default_name)
+                    with open(output, 'wb') as f:
                         f.write(data)
+                    return output
             except QgsPluginNetworkException as e:
                 error_message = e.bar_msg['details']
                 if 'Bad Request' in error_message:
