@@ -93,6 +93,8 @@ class FmiEnfuserLoaderAlg(BaseProcessingAlgorithm):
         loader = EnfuserNetcdfLoader(output_dir, fmi_download_url, feedback)
         path_to_file = loader.download(products, extent, start_time, end_time)
 
+        feedback.pushDebugInfo(f'Output file is: {path_to_file}')
+
         return {
             self.OUTPUT: str(path_to_file)
         }

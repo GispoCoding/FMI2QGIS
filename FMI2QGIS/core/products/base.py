@@ -34,12 +34,13 @@ class BaseProduct:
         try:
             self.feedback.setProgress(0)
             uri = self._construct_uri(**kwargs)
-            self.feedback.setProgress(0.10)
+            self.feedback.setProgress(10)
             self.feedback.pushDebugInfo(uri)
 
             try:
                 data, default_name = network.fetch_raw(uri)
-                self.feedback.setProgress(0.7)
+                self.feedback.pushDebugInfo(f'File name is: "{default_name}"')
+                self.feedback.setProgress(70)
                 if not self.feedback.isCanceled():
                     output = Path(self.download_dir, default_name)
                     with open(output, 'wb') as f:
@@ -54,7 +55,7 @@ class BaseProduct:
             self.feedback.reportError(tr('Error occurred: {}', e), True)
             self.feedback.cancel()
 
-        self.feedback.setProgress(1.0)
+        self.feedback.setProgress(100)
 
     def _construct_uri(self, **kwargs) -> str:
         url = self.url + f'?producer={self.producer}'
