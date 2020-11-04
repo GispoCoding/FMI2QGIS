@@ -6,7 +6,7 @@ from typing import Set
 from qgis.core import QgsRectangle
 
 from .base import BaseProduct
-from FMI2QGIS.core.exceptions.loader_exceptions import InvalidParameterException
+from ...core.exceptions.loader_exceptions import InvalidParameterException
 from ...qgis_plugin_tools.tools.i18n import tr
 from ...qgis_plugin_tools.tools.misc_utils import extent_to_bbox
 

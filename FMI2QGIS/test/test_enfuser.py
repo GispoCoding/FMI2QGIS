@@ -1,7 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 
-from FMI2QGIS.qgis_plugin_tools.tools.resources import plugin_test_data_path
+from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
 from ..qgis_plugin_tools.tools.logger_processing import LoggerProcessingFeedBack
 from ..core.products.enfuser import EnfuserNetcdfLoader
 from ..qgis_plugin_tools.tools import network
