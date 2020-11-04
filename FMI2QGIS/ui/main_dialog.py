@@ -8,7 +8,6 @@ LOGGER = logging.getLogger(plugin_name())
 
 class MainDialog(QDialog, FORM_CLASS):
 
-
     def __init__(self, parent=None):
         QDialog.__init__(self, parent)
         self.setupUi(self)
@@ -17,10 +16,28 @@ class MainDialog(QDialog, FORM_CLASS):
 
     def __load_clicked(self):
         """todo"""
-        input_url: str = self.ln_edit_url.text()
-        self.txt_edit_result.setPlainText(input_url)
 
-        
+        start_time = self.dt_edit_start.dateTime().toPyDateTime()
+        end_time = self.dt_edit_end.dateTime().toPyDateTime()
+
+        # extent_group_box_bbox
+
+        if self.chk_box_aqi.isChecked():
+            print("fetch AQI")
+        if self.chk_box_pm25.isChecked():
+            print("fetch PM25")
+        if self.chk_box_pm10.isChecked():
+            print("fetch PM10")
+        if self.chk_box_no2.isChecked():
+            print("fetch NO2")
+        if self.chk_box_o3.isChecked():
+            print("fetch O3")
+
+        # self.txt_edit_result.setPlainText(input_url)
+
+
+
+
 
 
 
