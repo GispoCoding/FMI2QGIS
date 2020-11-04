@@ -134,6 +134,5 @@ class Plugin:
 
     def run(self):
         """Run method that performs all the real work"""
-        print("Hello QGIS plugin!!!")
-        dialog = MainDialog()
+        dialog = MainDialog(self.iface)
         dialog.exec()
