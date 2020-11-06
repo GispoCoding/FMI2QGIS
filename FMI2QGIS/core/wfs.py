@@ -17,17 +17,17 @@
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
+import datetime
 import enum
 import xml.etree.ElementTree as ET
-import datetime
 from typing import List, Optional, Dict
 from urllib.parse import urlsplit, parse_qs
 
 from PyQt5.QtCore import QVariant
 
-from FMI2QGIS.definitions.configurable_settings import Namespace
-from FMI2QGIS.qgis_plugin_tools.tools.misc_utils import extent_to_bbox
-from FMI2QGIS.qgis_plugin_tools.tools.network import fetch
+from ..definitions.configurable_settings import Namespace
+from ..qgis_plugin_tools.tools.misc_utils import extent_to_bbox
+from ..qgis_plugin_tools.tools.network import fetch
 
 
 class ParameterVariable:
