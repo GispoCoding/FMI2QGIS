@@ -3,8 +3,10 @@ from typing import Callable, Optional
 from PyQt5.QtCore import QTranslator, QCoreApplication
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QWidget
+from qgis.core import QgsApplication
 from qgis.gui import QgisInterface
 
+from .core.processing.provider import Fmi2QgisProcessingProvider
 from .qgis_plugin_tools.tools.custom_logging import setup_logger
 from .qgis_plugin_tools.tools.i18n import setup_translation, tr
 from .qgis_plugin_tools.tools.resources import plugin_name
@@ -33,17 +35,19 @@ class Plugin:
         self.actions = []
         self.menu = tr(plugin_name())
 
+        self.processing_provider = Fmi2QgisProcessingProvider()
+
     def add_action(
-            self,
-            icon_path: str,
-            text: str,
-            callback: Callable,
-            enabled_flag: bool = True,
-            add_to_menu: bool = True,
-            add_to_toolbar: bool = True,
-            status_tip: Optional[str] = None,
-            whats_this: Optional[str] = None,
-            parent: Optional[QWidget] = None) -> QAction:
+        self,
+        icon_path: str,
+        text: str,
+        callback: Callable,
+        enabled_flag: bool = True,
+        add_to_menu: bool = True,
+        add_to_toolbar: bool = True,
+        status_tip: Optional[str] = None,
+        whats_this: Optional[str] = None,
+        parent: Optional[QWidget] = None) -> QAction:
         """Add a toolbar icon to the toolbar.
 
         :param icon_path: Path to the icon for this action. Can be a resource
@@ -110,6 +114,9 @@ class Plugin:
             add_to_toolbar=False
         )
 
+        # noinspection PyArgumentList
+        QgsApplication.processingRegistry().addProvider(self.processing_provider)
+
     def onClosePlugin(self):
         """Cleanup necessary items here when plugin dockwidget is closed"""
         pass
@@ -122,8 +129,10 @@ class Plugin:
                 action)
             self.iface.removeToolBarIcon(action)
 
+        # noinspection PyArgumentList
+        QgsApplication.processingRegistry().removeProvider(self.processing_provider)
+
     def run(self):
         """Run method that performs all the real work"""
-        print("Hello QGIS plugin!!!")
-        dialog = MainDialog()
+        dialog = MainDialog(self.iface)
         dialog.exec()

@@ -2,16 +2,19 @@
 <ui version="4.0">
  <class>Dialog</class>
  <widget class="QDialog" name="Dialog">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>673</width>
-    <height>440</height>
+    <width>1049</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>FMI2QGIS</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_6">
    <item>
@@ -41,6 +44,12 @@
               <width>16777215</width>
               <height>16777215</height>
              </size>
+            </property>
+            <property name="storageMode">
+             <enum>QgsFileWidget::GetDirectory</enum>
+            </property>
+            <property name="options">
+             <set>QFileDialog::ShowDirsOnly</set>
             </property>
            </widget>
           </item>
@@ -173,7 +182,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QgsExtentGroupBox" name="extnt_group_box_bbox"/>
+                <widget class="QgsExtentGroupBox" name="extent_group_box_bbox"/>
                </item>
               </layout>
              </item>
@@ -225,6 +234,9 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <widget class="QPushButton" name="btn_load">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Load</string>
             </property>
@@ -236,7 +248,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item>
-      <widget class="QProgressBar" name="progressBar">
+      <widget class="QProgressBar" name="progress_bar">
        <property name="value">
         <number>24</number>
        </property>
