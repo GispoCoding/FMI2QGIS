@@ -61,6 +61,12 @@ def enfuser_sq(sqs, sq_factory) -> StoredQuery:
     return sq
 
 
+@pytest.fixture(scope='session')
+def air_quality_sq(sqs) -> StoredQuery:
+    sq = list(filter(lambda q: q.id == AIR_QUALITY_ID, sqs))[0]
+    return sq
+
+
 @pytest.fixture
 def feedback() -> QgsProcessingFeedback:
     return LoggerProcessingFeedBack()
@@ -69,6 +75,11 @@ def feedback() -> QgsProcessingFeedback:
 @pytest.fixture
 def extent_sm_1() -> QgsRectangle:
     return QgsRectangle(24.96631041, 60.19950146, 24.98551092, 60.20983643)
+
+@pytest.fixture
+def extent_lg_1() -> QgsRectangle:
+    return QgsRectangle(21,59.7,31.7,70)
+
 
 
 @pytest.fixture
