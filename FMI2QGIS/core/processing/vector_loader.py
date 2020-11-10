@@ -18,13 +18,16 @@ LOGGER = logging.getLogger(plugin_name())
 class VectorLoader(BaseLoader):
     MESSAGE_CATEGORY = 'FmiVectorLoader'
 
-    def __init__(self, description: str, download_dir: Path, wfs_url: str, wfs_version: str, sq: StoredQuery):
+    def __init__(self, description: str, download_dir: Path, wfs_url: str, wfs_version: str, sq: StoredQuery,
+                 max_features: Optional[int] = None):
         """
         :param download_dir:Download directory of the output file(s)
         :param wfs_url: FMI wfs url
         :param sq: StoredQuery
+        :param max_features: maximum number of features
         """
         super().__init__(description, download_dir)
+        self.max_features = max_features
         self.wfs_url = wfs_url
         self.wfs_version = wfs_version
         self.sq = sq
@@ -44,6 +47,8 @@ class VectorLoader(BaseLoader):
 
     def _construct_uri(self) -> str:
         url = f'{self.wfs_url}?service=WFS&version={self.wfs_version}&request=GetFeature'
+        if self.max_features:
+            url += f'&count={self.max_features}'
         url += f'&storedquery_id={self.sq.id}'
         url += '&' + '&'.join(
             [f'{name}={param.value}' for name, param in self.sq.parameters.items() if param.value is not None])
