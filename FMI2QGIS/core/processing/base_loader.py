@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Optional
 
 from qgis.core import QgsMessageLog, Qgis, QgsTask
 
@@ -12,6 +12,27 @@ from ...qgis_plugin_tools.tools.i18n import tr
 
 class BaseLoader(QgsTask):
     MESSAGE_CATEGORY = ''
+
+    def __init__(self, description: str, download_dir: Path):
+        """
+        :param download_dir:Download directory of the output file(s)
+        :param sq: StoredQuery
+        """
+        super().__init__(description, QgsTask.CanCancel)
+        self.download_dir = download_dir
+        if not self.download_dir.exists():
+            self.download_dir.mkdir()
+
+        self.path_to_file: Path = Path()
+        self.exception: Optional[Exception] = None
+
+    @property
+    def file_name(self) -> Optional[str]:
+        """
+        File name for the download
+        :return: str or None
+        """
+        return None
 
     def _download(self) -> Tuple[Path, bool]:
         """
@@ -29,15 +50,11 @@ class BaseLoader(QgsTask):
             self._log(f'Download url is is: "{uri}"')
 
             try:
-                # TODO: what about large files, should requests be used if available to stream content?
-                data, default_name = network.fetch_raw(uri)
-                self._log(f'File name is: "{default_name}"')
+                # TODO: add a way to cancel the download
+                output = network.download_to_file(uri, self.download_dir, output_name=self.file_name)
+                self._log(f'File path is: "{output}"')
                 self.setProgress(70)
                 if not self.isCanceled():
-                    output = Path(self.download_dir, default_name)
-                    with open(output, 'wb') as f:
-                        f.write(data)
-                    self._log(f'Success!')
                     result = True
             except QgsPluginNetworkException as e:
                 error_message = e.bar_msg['details']

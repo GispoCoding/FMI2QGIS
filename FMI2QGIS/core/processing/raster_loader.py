@@ -23,16 +23,9 @@ class RasterLoader(BaseLoader):
         :param fmi_download_url: FMI download url
         :param sq: StoredQuery
         """
-        super().__init__(description, QgsTask.CanCancel)
-
-        self.download_dir = download_dir
-        if not self.download_dir.exists():
-            self.download_dir.mkdir()
+        super().__init__(description, download_dir)
         self.url = fmi_download_url
         self.sq = sq
-
-        self.path_to_file: Path = Path()
-        self.exception: Optional[Exception] = None
 
     def run(self) -> bool:
         """
@@ -45,7 +38,8 @@ class RasterLoader(BaseLoader):
 
     def _construct_uri(self) -> str:
         url = self.url + f'?producer={self.sq.producer}&format={self.sq.format}'
-        url += '&' + '&'.join([f'{name}={param.value}' for name, param in self.sq.parameters.items()])
+        url += '&' + '&'.join(
+            [f'{name}={param.value}' for name, param in self.sq.parameters.items() if param.value is not None])
         return url
 
     def finished(self, result: bool) -> None:
