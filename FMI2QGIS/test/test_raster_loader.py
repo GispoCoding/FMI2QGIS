@@ -18,22 +18,21 @@ def test_download_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_sm_1,
     test_file = Path(plugin_test_data_path('aq_small.nc'))
     test_file_name = 'test_aq_small.nc'
 
-    def mock_fetch_raw(uri: str, encoding: str = 'utf-8'):
-        with open(test_file, 'rb') as f:
-            return f.read(), test_file_name
+    def mock_download_to_file(*args, **kwargs) -> Path:
+        return test_file
 
     # Mocking the download
-    monkeypatch.setattr(network, 'fetch_raw', mock_fetch_raw)
+    monkeypatch.setattr(network, 'download_to_file', mock_download_to_file)
 
     result = loader.run()
 
     assert result, loader.exception
-    assert loader.path_to_file == Path(tmpdir_pth, test_file_name)
+    assert loader.path_to_file == test_file
     assert loader.path_to_file.exists()
     assert loader.path_to_file.stat().st_size == test_file.stat().st_size
 
 
-def test_construct_uri_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_sm_1, monkeypatch):
+def test_construct_uri_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_sm_1):
     enfuser_sq.parameters['starttime'].value = datetime.strptime('2020-11-05T19:00:00Z', Parameter.TIME_FORMAT)
     enfuser_sq.parameters['endtime'].value = datetime.strptime('2020-11-06T11:00:00Z', Parameter.TIME_FORMAT)
     enfuser_sq.parameters['bbox'].value = extent_sm_1

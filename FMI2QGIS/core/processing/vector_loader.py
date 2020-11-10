@@ -1,8 +1,9 @@
 import logging
+import uuid
 from pathlib import Path
 from typing import Optional
 
-from qgis.core import QgsTask, QgsRasterLayer, QgsProject
+from qgis.core import QgsProject, QgsVectorLayer
 
 from .base_loader import BaseLoader
 from ..wfs import StoredQuery
@@ -14,20 +15,21 @@ from ...qgis_plugin_tools.tools.resources import plugin_name
 LOGGER = logging.getLogger(plugin_name())
 
 
-class RasterLoader(BaseLoader):
-    MESSAGE_CATEGORY = 'FmiRasterLoader'
+class VectorLoader(BaseLoader):
+    MESSAGE_CATEGORY = 'FmiVectorLoader'
 
-    def __init__(self, description: str, download_dir: Path, fmi_download_url: str, sq: StoredQuery):
+    def __init__(self, description: str, download_dir: Path, wfs_url: str, wfs_version: str, sq: StoredQuery):
         """
         :param download_dir:Download directory of the output file(s)
-        :param fmi_download_url: FMI download url
+        :param wfs_url: FMI wfs url
         :param sq: StoredQuery
         """
         super().__init__(description, download_dir)
-        self.url = fmi_download_url
+        self.wfs_url = wfs_url
+        self.wfs_version = wfs_version
         self.sq = sq
 
-    def run(self) -> bool:
+    def run(self):
         """
         NOTE: LOGGER cannot be used in here or any methods that are called from here
         :return:
@@ -36,8 +38,13 @@ class RasterLoader(BaseLoader):
         self.setProgress(100)
         return result
 
+    @property
+    def file_name(self) -> Optional[str]:
+        return f'{self.sq.id.replace("::", "_")}_{uuid.uuid4()}.gml'
+
     def _construct_uri(self) -> str:
-        url = self.url + f'?producer={self.sq.producer}&format={self.sq.format}'
+        url = f'{self.wfs_url}?service=WFS&version={self.wfs_version}&request=GetFeature'
+        url += f'&storedquery_id={self.sq.id}'
         url += '&' + '&'.join(
             [f'{name}={param.value}' for name, param in self.sq.parameters.items() if param.value is not None])
         return url
@@ -52,7 +59,7 @@ class RasterLoader(BaseLoader):
         :param result: the return value from self.run
         """
         if result and self.path_to_file.is_file():
-            layer = self.raster_to_layer()
+            layer = self.vector_to_layer()
             if layer.isValid():
                 # TODO: layer styling
 
@@ -71,21 +78,10 @@ class RasterLoader(BaseLoader):
                 except Exception as e:
                     LOGGER.exception(tr('Unhandled exception occurred'), extra=bar_msg(e))
 
-    def raster_to_layer(self) -> QgsRasterLayer:
+    def vector_to_layer(self) -> QgsVectorLayer:
         """
         TODO
         :return:
         """
-        # TODO: change name
-        layer_name = 'testlayer'
-        if self.path_to_file.suffix == 'nc':
-            # TODO: Check variable(s) using gdal.Dataset.GetSubDatasets()
-            variable = 'index_of_airquality_194'
-
-            uri = f'NETCDF:"{self.path_to_file}":{variable}'
-
-        else:
-            # TODO: add support for other raster formats
-            uri = str(self.path_to_file)
-        layer = QgsRasterLayer(uri, layer_name)
+        layer = QgsVectorLayer(str(self.path_to_file), self.file_name)
         return layer
