@@ -109,6 +109,7 @@ class Parameter:
         root = ET.ElementTree(ET.fromstring(content)).getroot()
         for component in root.findall('{%s}component' % Namespace.OMOP.value):
             op = component.find('{%s}ObservableProperty' % Namespace.OMOP.value)
+            # noinspection PyUnresolvedReferences
             id = op.items()[0][-1]
             label = op.find('{%s}label' % Namespace.OMOP.value).text
             # Find alias for id from url, since ids are always lowercase
@@ -143,9 +144,6 @@ class StoredQuery:
             sq_type = StoredQuery.Type.Raster
         elif id.endswith('iwxxm') or id.endswith('GetFeatureById'):
             # TODO: add support?
-            return None
-        if sq_element == StoredQuery.Type.Vector:
-            # TODO: add support for vectors
             return None
 
         title = sq_element.find('{%s}Title' % Namespace.WFS.value).text

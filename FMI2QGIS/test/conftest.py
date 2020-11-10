@@ -15,6 +15,7 @@ from ..qgis_plugin_tools.tools.logger_processing import LoggerProcessingFeedBack
 QGIS_APP, CANVAS, IFACE, PARENT = get_qgis_app()
 
 ENFUSER_ID = 'fmi::forecast::enfuser::airquality::helsinki-metropolitan::grid'
+AIR_QUALITY_ID = 'fmi::observations::airquality::hourly::simple'
 
 
 @pytest.fixture
