@@ -121,10 +121,6 @@ class WMSLayerHandler:
         url = self._construct_qgis_url(wms_layer, start_time, end_time, elevation)
         layer = QgsRasterLayer(url, wms_layer.name, 'wms')
         if layer.isValid():
-
-            if wms_layer.is_temporal:
-                # TODO: activate Temporal Controller panel
-                pass
             # noinspection PyArgumentList
             QgsProject.instance().addMapLayer(layer)
         else:
