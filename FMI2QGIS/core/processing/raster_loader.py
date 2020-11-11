@@ -1,8 +1,7 @@
 import logging
 from pathlib import Path
-from typing import Optional
 
-from qgis.core import QgsTask, QgsRasterLayer, QgsProject
+from qgis.core import QgsRasterLayer, QgsProject
 
 from .base_loader import BaseLoader
 from ..wfs import StoredQuery

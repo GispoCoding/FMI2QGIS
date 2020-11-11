@@ -4,6 +4,7 @@ from typing import Tuple, Optional
 from qgis.core import QgsMessageLog, Qgis, QgsTask
 
 from ..exceptions.loader_exceptions import BadRequestException
+from ..wfs import raise_based_on_response
 from ...qgis_plugin_tools.tools import network
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
 from ...qgis_plugin_tools.tools.exceptions import QgsPluginNetworkException, QgsPluginNotImplementedException
@@ -15,8 +16,8 @@ class BaseLoader(QgsTask):
 
     def __init__(self, description: str, download_dir: Path):
         """
+        :param description: Description of the task
         :param download_dir:Download directory of the output file(s)
-        :param sq: StoredQuery
         """
         super().__init__(description, QgsTask.CanCancel)
         self.download_dir = download_dir
@@ -46,7 +47,6 @@ class BaseLoader(QgsTask):
             uri = self._construct_uri()
             self.setProgress(10)
             self._log(f'Started task "{self.description}"')
-
             self._log(f'Download url is is: "{uri}"')
 
             try:
@@ -57,10 +57,14 @@ class BaseLoader(QgsTask):
                 if not self.isCanceled():
                     result = True
             except QgsPluginNetworkException as e:
+                self.exception = e
                 error_message = e.bar_msg['details']
                 if 'Bad Request' in error_message:
                     raise BadRequestException(tr('Bad request'),
                                               bar_msg=bar_msg(tr('Try with different parameters')))
+                elif '<?xml' in error_message:
+                    raise_based_on_response(error_message)
+
         except Exception as e:
             self.exception = e
             result = False

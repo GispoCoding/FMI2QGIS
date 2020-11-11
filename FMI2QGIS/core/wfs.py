@@ -19,15 +19,22 @@
 
 import datetime
 import enum
+import logging
 import xml.etree.ElementTree as ET
 from typing import List, Optional, Dict
 from urllib.parse import urlsplit, parse_qs
 
 from PyQt5.QtCore import QVariant
 
+from .exceptions.loader_exceptions import WfsException
 from ..definitions.configurable_settings import Namespace
+from ..qgis_plugin_tools.tools.custom_logging import bar_msg
+from ..qgis_plugin_tools.tools.i18n import tr
 from ..qgis_plugin_tools.tools.misc_utils import extent_to_bbox
 from ..qgis_plugin_tools.tools.network import fetch
+from ..qgis_plugin_tools.tools.resources import plugin_name
+
+LOGGER = logging.getLogger(plugin_name())
 
 
 class ParameterVariable:
@@ -195,3 +202,18 @@ class StoredQueryFactory:
             process_url = grid_observation_elem.find('{%s}procedure' % Namespace.OM.value).items()[0][-1]
             sq.producer = process_url.split('/')[-1]
             sq.format = parse_qs(urlsplit(ob_url).query).get('units', [''])[0]
+
+
+def raise_based_on_response(xml_content: str) -> None:
+    """
+    Rais WfsException based on xml content
+    :param xml_content:
+    """
+    # TODO: add possibly other kind of exceptions as well
+    root = ET.ElementTree(ET.fromstring(xml_content)).getroot()
+    exception_elem: ET.Element = list(root)[0]
+    exception_code = exception_elem.attrib.get('exceptionCode', '')
+    exception_texts = ' '.join([elem.text for elem in exception_elem if 'URI: ' not in elem.text])
+
+    LOGGER.error(f'Exception texts: {exception_texts}')
+    raise WfsException(tr('Exception occurred: {}', exception_code), bar_msg=bar_msg(exception_texts))
