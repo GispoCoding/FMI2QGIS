@@ -44,6 +44,7 @@ class WMSLayer:
         self.title: Optional[str] = None
         self.abstract: Optional[str] = None
         self.elevations: Optional[List[float]] = None
+        self.default_elevation: Optional[float] = None
         self.start_time: Optional[datetime.datetime] = None
         self.end_time: Optional[datetime.datetime] = None
         self.t_step: Optional[int] = None
@@ -64,7 +65,7 @@ class WMSLayer:
 
     @property
     def has_elevation(self) -> bool:
-        return self.elevations is not None
+        return all((self.elevations, self.default_elevation))
 
     def _parse_layer(self, layer_elem: ET.Element):
         for elem in layer_elem:
@@ -84,6 +85,7 @@ class WMSLayer:
                 self.time_step_uom = step[-1]
             elif tag.endswith('Dimension') and elem.attrib.get('name') == 'elevation':
                 self.elevations = list(map(float, elem.text.split(',')))
+                self.default_elevation = float(elem.attrib.get('default', self.elevations[0]))
 
     def __str__(self):
         return self.name

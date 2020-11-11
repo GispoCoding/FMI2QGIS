@@ -7,7 +7,7 @@ from typing import Callable, List
 import pytest
 from qgis.core import QgsProcessingFeedback, QgsRectangle
 
-from FMI2QGIS.qgis_plugin_tools.tools.resources import plugin_test_data_path
+from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
 from ..core.wfs import StoredQueryFactory, StoredQuery
 from ..core.wms import WMSLayerHandler, WMSLayer
 from ..definitions.configurable_settings import Settings

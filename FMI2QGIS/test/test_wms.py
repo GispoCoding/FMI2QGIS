@@ -30,6 +30,7 @@ def test_wms_layer_handler(wms_url):
     layer1 = [layer for layer in wms_layers if layer.name == ANJALANKOSKI_DBZH][0]
 
     assert layer1.has_elevation
+    assert layer1.default_elevation == 0.3
     assert layer1.is_temporal
     assert layer1.t_step == 5
     assert layer1.time_step_uom == 'M'
