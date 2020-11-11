@@ -7,15 +7,21 @@ from typing import Callable, List
 import pytest
 from qgis.core import QgsProcessingFeedback, QgsRectangle
 
+from FMI2QGIS.qgis_plugin_tools.tools.resources import plugin_test_data_path
 from ..core.wfs import StoredQueryFactory, StoredQuery
+from ..core.wms import WMSLayerHandler, WMSLayer
 from ..definitions.configurable_settings import Settings
 from ..qgis_plugin_tools.testing.utilities import get_qgis_app
 from ..qgis_plugin_tools.tools.logger_processing import LoggerProcessingFeedBack
 
 QGIS_APP, CANVAS, IFACE, PARENT = get_qgis_app()
 
+# Stored query ids
 ENFUSER_ID = 'fmi::forecast::enfuser::airquality::helsinki-metropolitan::grid'
 AIR_QUALITY_ID = 'fmi::observations::airquality::hourly::simple'
+
+# WMS layer ids
+ANJALANKOSKI_DBZH = 'Radar:anjalankoski_dbzh'
 
 
 @pytest.fixture
@@ -37,6 +43,11 @@ def wfs_url() -> str:
 @pytest.fixture(scope='session')
 def wfs_version() -> str:
     return Settings.FMI_WFS_VERSION.value
+
+
+@pytest.fixture(scope='session')
+def wms_url() -> str:
+    return Settings.FMI_WMS_URL.value
 
 
 @pytest.fixture(scope='session')
@@ -68,6 +79,26 @@ def air_quality_sq(sqs) -> StoredQuery:
 
 
 @pytest.fixture
+def wms_layer_handler(wms_url, monkeypatch):
+    def mocked_capabilities(handler):
+        with open(plugin_test_data_path('wms_capabilities.xml')) as f:
+            return f.read()
+
+    monkeypatch.setattr(WMSLayerHandler, '_get_capabilities', mocked_capabilities)
+    return WMSLayerHandler(wms_url)
+
+
+@pytest.fixture
+def wms_layers(wms_layer_handler) -> List[WMSLayer]:
+    return wms_layer_handler.list_wms_layers()
+
+
+@pytest.fixture
+def test_wms_1(wms_layers):
+    return list(filter(lambda l: l.name == ANJALANKOSKI_DBZH, wms_layers))[0]
+
+
+@pytest.fixture
 def feedback() -> QgsProcessingFeedback:
     return LoggerProcessingFeedBack()
 
@@ -76,10 +107,10 @@ def feedback() -> QgsProcessingFeedback:
 def extent_sm_1() -> QgsRectangle:
     return QgsRectangle(24.96631041, 60.19950146, 24.98551092, 60.20983643)
 
+
 @pytest.fixture
 def extent_lg_1() -> QgsRectangle:
-    return QgsRectangle(21,59.7,31.7,70)
-
+    return QgsRectangle(21, 59.7, 31.7, 70)
 
 
 @pytest.fixture
