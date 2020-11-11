@@ -1,3 +1,5 @@
 FMI2QGIS/i18n
 /FMI2QGIS/test/data/*.nc.aux.xml
+/FMI2QGIS/test/data/*.gfs
 /FMI2QGIS/test/data/enfuser_helsinki_metropolitan_20201005T180000_20201005T180000_20201006T180000_latlon.nc
+/FMI2QGIS/test/data/enfuser_helsinki_metropolitan_20201105T200000_20201105T200000_20201106T110000.nc
