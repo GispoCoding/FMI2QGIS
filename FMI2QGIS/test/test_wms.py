@@ -18,7 +18,7 @@
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 from datetime import datetime
 
-from qgis._core import QgsProject
+from qgis._core import QgsProject, QgsTemporalUtils
 
 from .conftest import ANJALANKOSKI_DBZH
 from ..core.wms import WMSLayerHandler
@@ -31,6 +31,8 @@ def test_wms_layer_handler(wms_url):
 
     assert layer1.has_elevation
     assert layer1.default_elevation == 0.3
+    assert layer1.elevation_unit_symbol == 'deg'
+    assert layer1.elevation_unit == 'Degree'
     assert layer1.is_temporal
     assert layer1.t_step == 5
     assert layer1.time_step_uom == 'M'

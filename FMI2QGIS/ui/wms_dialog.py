@@ -20,11 +20,12 @@
 import logging
 from typing import List, Optional
 
-from PyQt5.QtWidgets import QDialog, QDockWidget, QTableWidget, QTableWidgetItem, QCheckBox, QComboBox
+from PyQt5.QtWidgets import QDialog, QDockWidget, QTableWidget, QTableWidgetItem, QCheckBox, QComboBox, QLabel
 from qgis.gui import QgisInterface, QgsCollapsibleGroupBox, QgsDateTimeEdit
 
 from ..core.wms import WMSLayer, WMSLayerHandler
 from ..definitions.configurable_settings import Settings
+from ..qgis_plugin_tools.tools.i18n import tr
 from ..qgis_plugin_tools.tools.resources import load_ui, plugin_name
 
 TEMPORAL_CONTROLLER = 'Temporal Controller'
@@ -42,18 +43,7 @@ class WMSDialog(QDialog, FORM_CLASS):
         self.iface = iface
 
         self.btn_refresh_wms.clicked.connect(self.__refresh_wms_layers)
-
-        self.tbl_wms_layers: QTableWidget
-        self.tbl_wms_layers.cellActivated.connect(self.__wms_layer_activated)
-
-        self.cb_start_time: QCheckBox
-        self.cb_start_time.stateChanged.connect(
-            lambda _: self.date_time_start.setEnabled(self.cb_start_time.isChecked()))
-
-        self.cb_end_time: QCheckBox
-        self.cb_end_time.stateChanged.connect(
-            lambda _: self.date_time_end.setEnabled(self.cb_end_time.isChecked()))
-
+        self.btn_select_wms.clicked.connect(self.__wms_layer_selected)
         self.btn_add_wms.clicked.connect(self.__add_wms_to_map)
 
         self.group_box_wms_params: QgsCollapsibleGroupBox
@@ -78,37 +68,48 @@ class WMSDialog(QDialog, FORM_CLASS):
             abstract_item.setToolTip(wms_layer.abstract)
             self.tbl_wms_layers.setItem(idx, 2, abstract_item)
 
-    def __wms_layer_activated(self, row: int, col: int):
-        wms_layer = self.wms_layers[row]
-        self.group_box_wms_params.setEnabled(True)
-        self.group_box_wms_params.setCollapsed(False)
-        self.cb_start_time.setEnabled(wms_layer.is_temporal)
-        self.cb_start_time.setChecked(False)
-        self.cb_end_time.setEnabled(wms_layer.is_temporal)
-        self.cb_end_time.setChecked(False)
+    def __wms_layer_selected(self):
+        self.tbl_wms_layers: QTableWidget
+        indexes = self.tbl_wms_layers.selectedIndexes()
+        if not indexes:
+            return
+
+        wms_layer = self.wms_layers[indexes[0].row()]
+        self.group_box_wms_params.setEnabled(any((wms_layer.is_temporal, wms_layer.has_elevation)))
+        self.group_box_wms_params.setCollapsed(not any((wms_layer.is_temporal, wms_layer.has_elevation)))
+
+        self.date_time_start: QgsDateTimeEdit
+        self.date_time_end: QgsDateTimeEdit
+        self.date_time_start.setEnabled(wms_layer.is_temporal)
+        self.date_time_end.setEnabled(wms_layer.is_temporal)
         if wms_layer.is_temporal:
-            self.date_time_start: QgsDateTimeEdit
+            time_step_text = tr('With time steps {}{}', wms_layer.t_step, wms_layer.time_step_uom)
             self.date_time_start.setDateTimeRange(wms_layer.start_time, wms_layer.end_time)
             self.date_time_start.setDateTime(wms_layer.start_time)
-
-            self.date_time_end: QgsDateTimeEdit
+            self.date_time_start.setToolTip(time_step_text)
             self.date_time_end.setDateTimeRange(wms_layer.start_time, wms_layer.end_time)
             self.date_time_end.setDateTime(wms_layer.end_time)
+            self.date_time_end.setToolTip(time_step_text)
 
         self.combo_box_elevation: QComboBox
+        self.combo_box_elevation.clear()
         self.combo_box_elevation.setEnabled(wms_layer.has_elevation)
+        self.label_elevation_units.setText('')
         if wms_layer.has_elevation:
-            self.combo_box_elevation.clear()
             self.combo_box_elevation.addItems(list(map(str, wms_layer.elevations)))
             self.combo_box_elevation.setCurrentText(str(wms_layer.default_elevation))
+            self.combo_box_elevation.setToolTip(wms_layer.elevation_unit)
+            self.label_elevation_units: QLabel
+            self.label_elevation_units.setToolTip(wms_layer.elevation_unit)
+            self.label_elevation_units.setText(wms_layer.elevation_unit_symbol)
 
         self.selected_wms_layer = wms_layer
 
     def __add_wms_to_map(self):
         if self.selected_wms_layer:
             self.date_time_start: QgsDateTimeEdit
-            start_time = self.date_time_start.dateTime().toPyDateTime() if self.cb_start_time.isChecked() else None
-            end_time = self.date_time_end.dateTime().toPyDateTime() if self.cb_end_time.isChecked() else None
+            start_time = self.date_time_start.dateTime().toPyDateTime() if self.date_time_start.isEnabled() else None
+            end_time = self.date_time_end.dateTime().toPyDateTime() if self.date_time_end.isEnabled() else None
             elevation = float(self.combo_box_elevation.currentText()) if self.combo_box_elevation.isEnabled() else None
 
             if self.selected_wms_layer.is_temporal:

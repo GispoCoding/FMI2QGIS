@@ -45,6 +45,8 @@ class WMSLayer:
         self.abstract: Optional[str] = None
         self.elevations: Optional[List[float]] = None
         self.default_elevation: Optional[float] = None
+        self.elevation_unit: Optional[str] = None
+        self.elevation_unit_symbol: Optional[str] = None
         self.start_time: Optional[datetime.datetime] = None
         self.end_time: Optional[datetime.datetime] = None
         self.t_step: Optional[int] = None
@@ -56,7 +58,7 @@ class WMSLayer:
     def create(layer_elem: ET.Element) -> Optional['WMSLayer']:
         wms_layer = WMSLayer(layer_elem)
 
-        if wms_layer.title != '':
+        if wms_layer.name:
             return wms_layer
 
     @property
@@ -86,6 +88,8 @@ class WMSLayer:
             elif tag.endswith('Dimension') and elem.attrib.get('name') == 'elevation':
                 self.elevations = list(map(float, elem.text.split(',')))
                 self.default_elevation = float(elem.attrib.get('default', self.elevations[0]))
+                self.elevation_unit = elem.attrib.get('units', '')
+                self.elevation_unit_symbol = elem.attrib.get('unitSymbol', '')
 
     def __str__(self):
         return self.name
