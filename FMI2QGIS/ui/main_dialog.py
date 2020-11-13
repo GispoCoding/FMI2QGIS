@@ -21,7 +21,7 @@ import logging
 from pathlib import Path
 from typing import Dict, List
 
-from PyQt5.QtWidgets import QDialog, QProgressBar
+from PyQt5.QtWidgets import QDialog, QProgressBar, QDockWidget
 from qgis.core import (QgsCoordinateReferenceSystem, QgsApplication, QgsProcessingAlgRunnerTask, QgsProcessingContext,
                        QgsProcessingFeedback, QgsRasterLayer, QgsProject)
 from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas
@@ -36,6 +36,8 @@ from ..qgis_plugin_tools.tools.custom_logging import bar_msg
 from ..qgis_plugin_tools.tools.i18n import tr
 from ..qgis_plugin_tools.tools.logger_processing import LoggerProcessingFeedBack
 from ..qgis_plugin_tools.tools.resources import load_ui, plugin_name
+
+TEMPORAL_CONTROLLER = 'Temporal Controller'
 
 FORM_CLASS = load_ui('main_dialog.ui')
 LOGGER = logging.getLogger(plugin_name())
@@ -74,6 +76,16 @@ class MainDialog(QDialog, FORM_CLASS):
 
         # TODO: do this only on demand when refreshing
         self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
+
+        # TODO: possibly do this after succesful loading of temporal layer
+        self.__show_temporal_controller()
+
+    def __show_temporal_controller(self):
+        """Sets Temporal Controller dock widget visible if it exists"""
+        dock_widget: QDockWidget
+        for dock_widget in self.iface.mainWindow().findChildren(QDockWidget):
+            if dock_widget.objectName() == TEMPORAL_CONTROLLER:
+                dock_widget.setVisible(True)
 
     def __load_clicked(self):
         enfuser_id = 'fmi::forecast::enfuser::airquality::helsinki-metropolitan::grid'

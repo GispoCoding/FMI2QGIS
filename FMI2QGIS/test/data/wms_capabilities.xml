@@ -1,0 +1,2705 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities xmlns:gco="http://schemas.opengis.net/iso/19139/20060504/gco/gco.xsd" xmlns:srv="http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd" xmlns:gml="http://schemas.opengis.net/gml" xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:gmd="http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd" version="1.3.0" updateSequence="5172" xmlns="http://www.opengis.net/wms" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wms https://openwms.fmi.fi:443/geoserver/schemas/wms/1.3.0/capabilities_1_3_0.xsd http://inspire.ec.europa.eu/schemas/inspire_vs/1.0 https://openwms.fmi.fi:443/geoserver/www/inspire/inspire_vs.xsd">
+  <Service>
+    <Name>WMS</Name>
+    <Title>Finnish Meteorological Institute Open Data Web Map Service</Title>
+    <Abstract>Finnish Meteorological Institute Open Data Web Map Service provides INSPIRE View Service along with radar data.</Abstract>
+    <KeywordList>
+      <Keyword>WMS</Keyword>
+    </KeywordList>
+    <OnlineResource xlink:type="simple" xlink:href="http://ilmatieteenlaitos.fi"/>
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson>Mikko Visa</ContactPerson>
+        <ContactOrganization>Finnish Meteorological Institute</ContactOrganization>
+      </ContactPersonPrimary>
+      <ContactPosition/>
+      <ContactAddress>
+        <AddressType/>
+        <Address/>
+        <City/>
+        <StateOrProvince/>
+        <PostCode/>
+        <Country>Finland</Country>
+      </ContactAddress>
+      <ContactVoiceTelephone>+358 29 539 2990</ContactVoiceTelephone>
+      <ContactFacsimileTelephone/>
+      <ContactElectronicMailAddress>avoin-data@fmi.fi</ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees>NONE</Fees>
+    <AccessConstraints>NONE</AccessConstraints>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?SERVICE=WMS&amp;"/>
+            </Get>
+            <Post>
+              <OnlineResource xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?SERVICE=WMS&amp;"/>
+            </Post>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/png</Format>
+        <Format>application/atom+xml</Format>
+        <Format>application/pdf</Format>
+        <Format>application/rss+xml</Format>
+        <Format>application/vnd.google-earth.kml+xml</Format>
+        <Format>application/vnd.google-earth.kml+xml;mode=networklink</Format>
+        <Format>application/vnd.google-earth.kmz</Format>
+        <Format>image/geotiff</Format>
+        <Format>image/geotiff8</Format>
+        <Format>image/gif</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/png; mode=8bit</Format>
+        <Format>image/svg+xml</Format>
+        <Format>image/tiff</Format>
+        <Format>image/tiff8</Format>
+        <Format>text/html; subtype=openlayers</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?SERVICE=WMS&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>text/plain</Format>
+        <Format>application/vnd.ogc.gml</Format>
+        <Format>text/xml</Format>
+        <Format>application/vnd.ogc.gml/3.1.1</Format>
+        <Format>text/xml; subtype=gml/3.1.1</Format>
+        <Format>text/html</Format>
+        <Format>application/json</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?SERVICE=WMS&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+    </Request>
+    <Exception>
+      <Format>XML</Format>
+      <Format>INIMAGE</Format>
+      <Format>BLANK</Format>
+    </Exception>
+    <inspire_vs:ExtendedCapabilities>
+      <inspire_common:MetadataUrl xsi:type="inspire_common:resourceLocatorType">
+        <inspire_common:URL>http://catalog.fmi.fi/geonetwork/srv/en/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=1234dfc1-4c08-4491-8ca0-b8ea2941c24a&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full</inspire_common:URL>
+        <inspire_common:MediaType>application/vnd.ogc.csw.GetRecordByIdResponse_xml</inspire_common:MediaType>
+      </inspire_common:MetadataUrl>
+      <inspire_common:SupportedLanguages xsi:type="inspire_common:supportedLanguagesType">
+        <inspire_common:DefaultLanguage>
+          <inspire_common:Language>eng</inspire_common:Language>
+        </inspire_common:DefaultLanguage>
+        <inspire_common:SupportedLanguage>
+          <inspire_common:Language>eng</inspire_common:Language>
+        </inspire_common:SupportedLanguage>
+      </inspire_common:SupportedLanguages>
+      <inspire_common:ResponseLanguage>
+        <inspire_common:Language>eng</inspire_common:Language>
+      </inspire_common:ResponseLanguage>
+    </inspire_vs:ExtendedCapabilities>
+    <Layer>
+      <Title>Finnish Meteorological Institute Open Data Web Map Service</Title>
+      <Abstract>Finnish Meteorological Institute Open Data Web Map Service provides INSPIRE View Service along with radar data.</Abstract>
+      <!--Limited list of EPSG projections:-->
+      <CRS>EPSG:3035</CRS>
+      <CRS>EPSG:3067</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4258</CRS>
+      <CRS>EPSG:4326</CRS>
+      <CRS>CRS:84</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-198.734544576</westBoundLongitude>
+        <eastBoundLongitude>198.734544576</eastBoundLongitude>
+        <southBoundLatitude>-134.7248287540408</southBoundLatitude>
+        <northBoundLatitude>262.7442603979592</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:84" minx="-198.734544576" miny="-134.7248287540408" maxx="198.734544576" maxy="262.7442603979592"/>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:anjalankoski_dbzh</Name>
+        <Title>anjalankoski_dbzh</Title>
+        <Abstract>dBZH PPI from Anjalankoski radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>anjalankoski_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>21.760785909337603</westBoundLongitude>
+          <eastBoundLongitude>32.47029598727418</eastBoundLongitude>
+          <southBoundLatitude>55.511093710597464</southBoundLatitude>
+          <northBoundLatitude>66.22060378853404</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="21.760785909337603" miny="55.511093710597464" maxx="32.47029598727418" maxy="66.22060378853404"/>
+        <BoundingBox CRS="EPSG:3067" minx="255987.170958444" miny="6502209.863" maxx="755737.171" maxy="7001959.86332093"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T09:40:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="deg">0.3,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:anjalankoski_etop_20</Name>
+        <Title>anjalankoski_etop_20</Title>
+        <Abstract>20 dBZ echo top from Anjalankoski radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>anjalankoski_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>21.316276056980204</westBoundLongitude>
+          <eastBoundLongitude>32.91481308664304</eastBoundLongitude>
+          <southBoundLatitude>55.06654474457787</southBoundLatitude>
+          <northBoundLatitude>66.6650817742407</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="21.316276056980204" miny="55.06654474457787" maxx="32.91481308664304" maxy="66.6650817742407"/>
+        <BoundingBox CRS="EPSG:3067" minx="255862.17122562" miny="6502084.86305325" maxx="755862.170691269" maxy="7002084.86358861"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T09:40:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:anjalankoski_hclass</Name>
+        <Title>anjalankoski_hclass</Title>
+        <Abstract>HydroClass PPI from Anjalankoski radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>anjalankoski_hclass</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>22.168574998062613</westBoundLongitude>
+          <eastBoundLongitude>32.06250689773037</eastBoundLongitude>
+          <southBoundLatitude>58.58481545092704</southBoundLatitude>
+          <northBoundLatitude>63.14688205110307</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="22.168574998062613" miny="58.58481545092704" maxx="32.06250689773037" maxy="63.14688205110307"/>
+        <BoundingBox CRS="EPSG:3067" minx="255987.170958444" miny="6502209.86332093" maxx="755737.170958444" maxy="7001959.86332093"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T09:40:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3</Dimension>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_hclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_hclass&amp;style=Radar+hydroclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_hclass&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:anjalankoski_vrad</Name>
+        <Title>anjalankoski_vrad</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>anjalankoski_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>24.651174597581736</westBoundLongitude>
+          <eastBoundLongitude>29.57244696796221</eastBoundLongitude>
+          <southBoundLatitude>58.43301275313443</southBoundLatitude>
+          <northBoundLatitude>63.3542851235149</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="24.651174597581736" miny="58.43301275313443" maxx="29.57244696796221" maxy="63.3542851235149"/>
+        <BoundingBox CRS="EPSG:3067" minx="381987.170958444" miny="6628209.86332093" maxx="629737.170958444" maxy="6875959.86332093"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T09:40:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aanjalankoski_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:cloudiness-forecast</Name>
+        <Title>cloudiness-forecast</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>cloudiness-forecast</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-148.87475119457073</westBoundLongitude>
+          <eastBoundLongitude>120.97221141961096</eastBoundLongitude>
+          <southBoundLatitude>19.518313732791974</southBoundLatitude>
+          <northBoundLatitude>82.66417592799823</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-148.87475119457073" miny="19.518313732791974" maxx="120.97221141961096" maxy="82.66417592799823"/>
+        <BoundingBox CRS="EPSG:3035" minx="776933.943" miny="20716.923" maxx="8080224.036" maxy="7983381.588"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T04:00:00.000Z/2020-11-13T06:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>cloudiness-forecast-ec2</Name>
+          <Title>cloudiness forecast</Title>
+          <Abstract>cloudiness-forecast style</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Acloudiness-forecast"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:hirlam-wind-forecast-arrow</Name>
+        <Title>hirlam-wind-forecast-arrow</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>hirlam-wind-forecast-arrow</Keyword>
+          <Keyword>features</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-143.02189590956812</westBoundLongitude>
+          <eastBoundLongitude>138.4458152061732</eastBoundLongitude>
+          <southBoundLatitude>19.88432484345979</southBoundLatitude>
+          <northBoundLatitude>90.0</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-143.02189590956812" miny="19.88432484345979" maxx="138.4458152061732" maxy="90.0"/>
+        <BoundingBox CRS="EPSG:3035" minx="845621.180189913" miny="-19323.9817980267" maxx="7994899.6980322" maxy="7922673.69417186"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T05:00:00.000Z/2020-11-13T08:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>wind_arrow_polygon</Name>
+          <Title>Wind arrow</Title>
+          <Abstract>A sample style that draws a dark-gray filled polygon or a small dot for features with the speed property value under 1</Abstract>
+          <LegendURL width="247" height="40">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Ahirlam-wind-forecast-arrow"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:humidity-forecast</Name>
+        <Title>humidity-forecast</Title>
+        <Abstract>Relative humidity forecast from hirlam weather model.</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>humidity-forecast</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-148.87069057296216</westBoundLongitude>
+          <eastBoundLongitude>140.58726775221507</eastBoundLongitude>
+          <southBoundLatitude>19.51932216775788</southBoundLatitude>
+          <northBoundLatitude>90.0</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-148.87069057296216" miny="19.51932216775788" maxx="140.58726775221507" maxy="90.0"/>
+        <BoundingBox CRS="EPSG:3035" minx="777058.563380362" miny="20716.9230768215" maxx="8080224.0358762" maxy="7983245.71595502"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T04:00:00.000Z/2020-11-13T06:00:00.000Z/PT1H</Dimension>
+        <Dimension name="elevation" default="0.0" units="pressure_level" unitSymbol="hPa">0.0</Dimension>
+        <Style>
+          <Name>humidity-forecast</Name>
+          <Title>humidity forecast</Title>
+          <Abstract>humidity-forecast style</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Ahumidity-forecast"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:ikaalinen_dbzh</Name>
+        <Title>ikaalinen_dbzh</Title>
+        <Abstract>dBZH PPI from Ikaalinen radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>ikaalinen_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>16.95594272937249</westBoundLongitude>
+          <eastBoundLongitude>28.63483544907159</eastBoundLongitude>
+          <southBoundLatitude>55.85814464316982</southBoundLatitude>
+          <northBoundLatitude>67.53703736286892</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="16.95594272937249" miny="55.85814464316982" maxx="28.63483544907159" maxy="67.53703736286892"/>
+        <BoundingBox CRS="EPSG:3067" minx="43144.1389139237" miny="6604634.37700023" maxx="542894.138913924" maxy="7104384.37700023"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:ikaalinen_etop_20</Name>
+        <Title>ikaalinen_etop_20</Title>
+        <Abstract>20 dBZ echo top from Ikaalinen  radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>ikaalinen_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>17.708931292220676</westBoundLongitude>
+          <eastBoundLongitude>27.881575108965805</eastBoundLongitude>
+          <southBoundLatitude>59.330450572514074</southBoundLatitude>
+          <northBoundLatitude>64.06459097862283</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="17.708931292220676" miny="59.330450572514074" maxx="27.881575108965805" maxy="64.06459097862283"/>
+        <BoundingBox CRS="EPSG:3067" minx="43019.1387979254" miny="6604509.37711515" maxx="543019.139029922" maxy="7104509.37688531"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:ikaalinen_hclass</Name>
+        <Title>ikaalinen_hclass</Title>
+        <Abstract>HydroClass PPI from Ikaalinen radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>ikaalinen_hclass</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>17.182695548420863</westBoundLongitude>
+          <eastBoundLongitude>28.408082630023223</eastBoundLongitude>
+          <southBoundLatitude>56.084897462218194</southBoundLatitude>
+          <northBoundLatitude>67.31028454382056</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="17.182695548420863" miny="56.084897462218194" maxx="28.408082630023223" maxy="67.31028454382056"/>
+        <BoundingBox CRS="EPSG:3067" minx="43144.1389139237" miny="6604634.37700023" maxx="542894.138913924" maxy="7104384.37700023"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3</Dimension>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_hclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_hclass&amp;style=Radar+hydroclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_hclass&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:ikaalinen_vrad</Name>
+        <Title>ikaalinen_vrad</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>ikaalinen_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>20.194055454920253</westBoundLongitude>
+          <eastBoundLongitude>25.791072885143578</eastBoundLongitude>
+          <southBoundLatitude>58.951768244357055</southBoundLatitude>
+          <northBoundLatitude>64.54878567458039</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="20.194055454920253" miny="58.951768244357055" maxx="25.791072885143578" maxy="64.54878567458039"/>
+        <BoundingBox CRS="EPSG:3067" minx="169144.138913924" miny="6730634.37700023" maxx="416894.138913924" maxy="6978384.37700023"/>
+        <Dimension name="time" default="2020-11-11T07:45:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:45:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aikaalinen_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:kesalahti_dbzh</Name>
+        <Title>kesalahti_dbzh</Title>
+        <Abstract>Kesälahti dbzh</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>kesalahti_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>24.676425901175328</westBoundLongitude>
+          <eastBoundLongitude>35.32226086217729</eastBoundLongitude>
+          <southBoundLatitude>56.51757061173403</southBoundLatitude>
+          <northBoundLatitude>67.16340557273598</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="24.676425901175328" miny="56.51757061173403" maxx="35.32226086217729" maxy="67.16340557273598"/>
+        <BoundingBox CRS="EPSG:3067" minx="397075.998" miny="6617110.021" maxx="896825.998" maxy="7116860.021"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:kesalahti_etop_20</Name>
+        <Title>kesalahti_etop_20</Title>
+        <Abstract>Kesälahti etop 20</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>kesalahti_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>24.45849882725542</westBoundLongitude>
+          <eastBoundLongitude>35.54038280229416</eastBoundLongitude>
+          <southBoundLatitude>56.29949280250698</southBoundLatitude>
+          <northBoundLatitude>67.38137677754573</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="24.45849882725542" miny="56.29949280250698" maxx="35.54038280229416" maxy="67.38137677754573"/>
+        <BoundingBox CRS="EPSG:3067" minx="396950.998" miny="6616985.02" maxx="896950.998" maxy="7116985.021"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:kesalahti_hclass</Name>
+        <Title>kesalahti_hclass</Title>
+        <Abstract>Kesälahti hclass</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>kesalahti_hclass</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>24.122412374437467</westBoundLongitude>
+          <eastBoundLongitude>35.87627438891516</eastBoundLongitude>
+          <southBoundLatitude>55.963557084996154</southBoundLatitude>
+          <northBoundLatitude>67.71741909947384</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="24.122412374437467" miny="55.963557084996154" maxx="35.87627438891516" maxy="67.71741909947384"/>
+        <BoundingBox CRS="EPSG:3067" minx="397075.998" miny="6617110.021" maxx="896825.998" maxy="7116860.021"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3</Dimension>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_hclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_hclass&amp;style=Radar+hydroclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_hclass&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:kesalahti_vrad</Name>
+        <Title>kesalahti_vrad</Title>
+        <Abstract>Kesälahti vrad</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>kesalahti_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>27.424293870607947</westBoundLongitude>
+          <eastBoundLongitude>32.341478510311624</eastBoundLongitude>
+          <southBoundLatitude>60.731279374043</southBoundLatitude>
+          <northBoundLatitude>63.04657168426965</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="27.424293870607947" miny="60.731279374043" maxx="32.341478510311624" maxy="63.04657168426965"/>
+        <BoundingBox CRS="EPSG:3067" minx="523075.998" miny="6743110.021" maxx="770825.998" maxy="6990860.021"/>
+        <Dimension name="time" default="2020-11-11T07:45:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:45:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akesalahti_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:korpo_dbzh</Name>
+        <Title>korpo_dbzh</Title>
+        <Abstract>dBZH PPI from Korpo radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>korpo_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>16.490358667955274</westBoundLongitude>
+          <eastBoundLongitude>26.19615323907756</eastBoundLongitude>
+          <southBoundLatitude>57.658672559301436</southBoundLatitude>
+          <northBoundLatitude>62.47702461676262</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="16.490358667955274" miny="57.658672559301436" maxx="26.19615323907756" maxy="62.47702461676262"/>
+        <BoundingBox CRS="EPSG:3067" minx="-47276.9222216099" miny="6427912.0919774" maxx="452473.07777839" maxy="6927662.0919774"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.5" units="Degree" unitSymbol="°">0.5,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:korpo_etop_20</Name>
+        <Title>korpo_etop_20</Title>
+        <Abstract>20 dBZ echo top from Korpo radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>korpo_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>16.19043484850301</westBoundLongitude>
+          <eastBoundLongitude>26.49547767548843</eastBoundLongitude>
+          <southBoundLatitude>54.91526614481789</southBoundLatitude>
+          <northBoundLatitude>65.2203089718033</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="16.19043484850301" miny="54.91526614481789" maxx="26.49547767548843" maxy="65.2203089718033"/>
+        <BoundingBox CRS="EPSG:3067" minx="-47401.9219948308" miny="6427787.09174974" maxx="452598.077551611" maxy="6927787.09220507"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:korpo_hclass</Name>
+        <Title>korpo_hclass</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>korpo_hclass</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>16.193322530900645</westBoundLongitude>
+          <eastBoundLongitude>26.493189376132193</eastBoundLongitude>
+          <southBoundLatitude>54.91791516541626</southBoundLatitude>
+          <northBoundLatitude>65.21778201064781</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="16.193322530900645" miny="54.91791516541626" maxx="26.493189376132193" maxy="65.21778201064781"/>
+        <BoundingBox CRS="EPSG:3067" minx="-47276.9222216099" miny="6427912.0919774" maxx="452473.07777839" maxy="6927662.0919774"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.5" units="Degree" unitSymbol="°">0.5</Dimension>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_hclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_hclass&amp;style=Radar+hydroclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_hclass&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:korpo_vrad</Name>
+        <Title>korpo_vrad</Title>
+        <Abstract>Doppler velocity PPI from Korpo radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>korpo_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>19.119825811603203</westBoundLongitude>
+          <eastBoundLongitude>24.019173544857537</eastBoundLongitude>
+          <southBoundLatitude>57.66396464823211</southBoundLatitude>
+          <northBoundLatitude>62.56331238148645</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="19.119825811603203" miny="57.66396464823211" maxx="24.019173544857537" maxy="62.56331238148645"/>
+        <BoundingBox CRS="EPSG:3067" minx="78723.0777783901" miny="6553912.0919774" maxx="326473.07777839" maxy="6801662.0919774"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akorpo_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:kuopio_dbzh</Name>
+        <Title>kuopio_dbzh</Title>
+        <Abstract>dBZH PPI from Kuopio radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>kuopio_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>21.890021586043616</westBoundLongitude>
+          <eastBoundLongitude>32.930129591470404</eastBoundLongitude>
+          <southBoundLatitude>57.29728353525762</southBoundLatitude>
+          <northBoundLatitude>68.33739154068441</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="21.890021586043616" miny="57.29728353525762" maxx="32.930129591470404" maxy="68.33739154068441"/>
+        <BoundingBox CRS="EPSG:3067" minx="269538.107" miny="6720463.18" maxx="769288.107" maxy="7220213.18"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:kuopio_etop_20</Name>
+        <Title>kuopio_etop_20</Title>
+        <Abstract>20 dBZ echo top from Kuopio radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>kuopio_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>21.995351737731237</westBoundLongitude>
+          <eastBoundLongitude>32.82482699064614</eastBoundLongitude>
+          <southBoundLatitude>57.402559771979575</southBoundLatitude>
+          <northBoundLatitude>68.23203502489449</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="21.995351737731237" miny="57.402559771979575" maxx="32.82482699064614" maxy="68.23203502489449"/>
+        <BoundingBox CRS="EPSG:3067" minx="269413.106769325" miny="6720338.18013701" maxx="769413.106458523" maxy="7220338.1804471"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:kuopio_hclass</Name>
+        <Title>kuopio_hclass</Title>
+        <Abstract>Kuopio hclass</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>kuopio_hclass</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>22.104372010601114</westBoundLongitude>
+          <eastBoundLongitude>32.7157791669129</eastBoundLongitude>
+          <southBoundLatitude>60.5297382211824</southBoundLatitude>
+          <northBoundLatitude>65.10493685475963</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="22.104372010601114" miny="60.5297382211824" maxx="32.7157791669129" maxy="65.10493685475963"/>
+        <BoundingBox CRS="EPSG:3067" minx="269538.107" miny="6720463.18" maxx="769288.107" maxy="7220213.18"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3</Dimension>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_hclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_hclass&amp;style=Radar+hydroclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_hclass&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:kuopio_vrad</Name>
+        <Title>kuopio_vrad</Title>
+        <Abstract>Doppler velocity PPI from Kuopio radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>kuopio_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>24.689937296548003</westBoundLongitude>
+          <eastBoundLongitude>30.101968135037936</eastBoundLongitude>
+          <southBoundLatitude>60.143150013564174</southBoundLatitude>
+          <northBoundLatitude>65.55518085205411</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="24.689937296548003" miny="60.143150013564174" maxx="30.101968135037936" maxy="65.55518085205411"/>
+        <BoundingBox CRS="EPSG:3067" minx="394538.106613924" miny="6845463.18029206" maxx="644288.106613924" maxy="7095213.18029206"/>
+        <Dimension name="time" default="2020-11-11T07:45:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:45:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Akuopio_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:luosto_dbzh</Name>
+        <Title>luosto_dbzh</Title>
+        <Abstract>dBZH PPI from Luosto radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>luosto_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>20.4275053603686</westBoundLongitude>
+          <eastBoundLongitude>33.34768309241133</eastBoundLongitude>
+          <southBoundLatitude>60.630376788263455</southBoundLatitude>
+          <northBoundLatitude>73.55055452030619</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="20.4275053603686" miny="60.630376788263455" maxx="33.34768309241133" maxy="73.55055452030619"/>
+        <BoundingBox CRS="EPSG:3067" minx="245656.16023722" miny="7197015.4309767" maxx="745406.16023722" maxy="7696765.4309767"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.1" units="Degree" unitSymbol="°">0.1,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:luosto_etop_20</Name>
+        <Title>luosto_etop_20</Title>
+        <Abstract>20 dBZ echo top from Luosto radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>luosto_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>19.891149972151435</westBoundLongitude>
+          <eastBoundLongitude>33.88402965259629</eastBoundLongitude>
+          <southBoundLatitude>60.09398054046494</southBoundLatitude>
+          <northBoundLatitude>74.0868602209098</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="19.891149972151435" miny="60.09398054046494" maxx="33.88402965259629" maxy="74.0868602209098"/>
+        <BoundingBox CRS="EPSG:3067" minx="245531.160599353" miny="7196890.43061726" maxx="745531.159875087" maxy="7696890.43133614"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:luosto_hclass</Name>
+        <Title>luosto_hclass</Title>
+        <Abstract>Luosto HydroClass product.</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>luosto_hclass</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>20.554169383231105</westBoundLongitude>
+          <eastBoundLongitude>33.22101029492634</eastBoundLongitude>
+          <southBoundLatitude>64.80069367500928</southBoundLatitude>
+          <northBoundLatitude>69.38023750357478</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="20.554169383231105" miny="64.80069367500928" maxx="33.22101029492634" maxy="69.38023750357478"/>
+        <BoundingBox CRS="EPSG:3067" minx="245655.985813995" miny="7197015.43126586" maxx="745405.985813995" maxy="7696765.43126586"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.1" units="Degree" unitSymbol="°">0.1</Dimension>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_hclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_hclass&amp;style=Radar+hydroclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_hclass&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:luosto_vrad</Name>
+        <Title>luosto_vrad</Title>
+        <Abstract>Doppler velocity PPI from Luosto radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>luosto_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>23.89919866778005</westBoundLongitude>
+          <eastBoundLongitude>29.885218513593323</eastBoundLongitude>
+          <southBoundLatitude>66.0018859648146</southBoundLatitude>
+          <northBoundLatitude>68.25021542926429</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="23.89919866778005" miny="66.0018859648146" maxx="29.885218513593323" maxy="68.25021542926429"/>
+        <BoundingBox CRS="EPSG:3067" minx="371656.16023722" miny="7323015.4309767" maxx="619406.16023722" maxy="7570765.4309767"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Aluosto_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:mean-sea-level-pressure-forecast-contour</Name>
+        <Title>Mean sea level pressure forecast contour from Hirlam weather model</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>features</Keyword>
+          <Keyword>mean-sea-level-pressure-forecast-contour</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-148.01019540378576</westBoundLongitude>
+          <eastBoundLongitude>139.64442510800998</eastBoundLongitude>
+          <southBoundLatitude>20.38324525956891</southBoundLatitude>
+          <northBoundLatitude>90.0</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-148.01019540378576" miny="20.38324525956891" maxx="139.64442510800998" maxy="90.0"/>
+        <BoundingBox CRS="EPSG:3035" minx="866728.493" miny="50651.753" maxx="8050292.519" maxy="7953446.759"/>
+        <Dimension name="time" default="2020-11-13T08:00:00Z" units="ISO8601">2020-11-11T05:00:00.000Z/2020-11-13T08:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>pressure-contourline</Name>
+          <Title>Air pressure contour lines</Title>
+          <Abstract>Monochrome contour lines for air pressure</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Amean-sea-level-pressure-forecast-contour"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Basemaps:naturalearthcolor</Name>
+        <Title>Natural Earth Color</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>GeoTIFF</Keyword>
+          <Keyword>naturalearthcolor</Keyword>
+        </KeywordList>
+        <CRS>EPSG:4326</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-180.0</westBoundLongitude>
+          <eastBoundLongitude>180.0</eastBoundLongitude>
+          <southBoundLatitude>-90.0</southBoundLatitude>
+          <northBoundLatitude>90.0</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-180.0" miny="-90.0" maxx="180.0" maxy="90.0"/>
+        <BoundingBox CRS="EPSG:4326" minx="-90.0" miny="-180.0" maxx="90.0" maxy="180.0"/>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Basemaps%3Anaturalearthcolor"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Basemaps:naturalearthgray</Name>
+        <Title>Natural Earth Gray</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>GeoTIFF</Keyword>
+          <Keyword>naturalearthgray</Keyword>
+        </KeywordList>
+        <CRS>EPSG:4326</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-180.0</westBoundLongitude>
+          <eastBoundLongitude>180.0</eastBoundLongitude>
+          <southBoundLatitude>-90.0</southBoundLatitude>
+          <northBoundLatitude>90.0</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-180.0" miny="-90.0" maxx="180.0" maxy="90.0"/>
+        <BoundingBox CRS="EPSG:4326" minx="-90.0" miny="-180.0" maxx="90.0" maxy="180.0"/>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Basemaps%3Anaturalearthgray"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:petajavesi_dbzh</Name>
+        <Title>petajavesi_dbzh</Title>
+        <Abstract>Petäjävesi dbzh</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>petajavesi_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>20.130393499992714</westBoundLongitude>
+          <eastBoundLongitude>30.521204182742444</eastBoundLongitude>
+          <southBoundLatitude>59.936921474422974</southBoundLatitude>
+          <northBoundLatitude>64.55297167599385</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="20.130393499992714" miny="59.936921474422974" maxx="30.521204182742444" maxy="64.55297167599385"/>
+        <BoundingBox CRS="EPSG:3067" minx="169243.474" miny="6659204.704" maxx="668993.474" maxy="7158954.704"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:petajavesi_etop_20</Name>
+        <Title>petajavesi_etop_20</Title>
+        <Abstract>Petäjävesi etop 20</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>petajavesi_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>19.809368488165536</westBoundLongitude>
+          <eastBoundLongitude>30.842118866011933</eastBoundLongitude>
+          <southBoundLatitude>56.72851973598376</southBoundLatitude>
+          <northBoundLatitude>67.76127011383015</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="19.809368488165536" miny="56.72851973598376" maxx="30.842118866011933" maxy="67.76127011383015"/>
+        <BoundingBox CRS="EPSG:3067" minx="169118.474" miny="6659079.704" maxx="669118.474" maxy="7159079.704"/>
+        <Dimension name="time" default="2020-11-11T07:45:00Z" units="ISO8601">2020-11-04T07:50:00.000Z/2020-11-11T07:45:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:petajavesi_hclass</Name>
+        <Title>petajavesi_hclass</Title>
+        <Abstract>Petäjävesi hclass</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>petajavesi_hclass</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>19.589651539112847</westBoundLongitude>
+          <eastBoundLongitude>31.06194614362231</eastBoundLongitude>
+          <southBoundLatitude>56.508799272953674</southBoundLatitude>
+          <northBoundLatitude>67.98109387746314</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="19.589651539112847" miny="56.508799272953674" maxx="31.06194614362231" maxy="67.98109387746314"/>
+        <BoundingBox CRS="EPSG:3067" minx="169243.474" miny="6659204.704" maxx="668993.474" maxy="7158954.704"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3</Dimension>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_hclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_hclass&amp;style=Radar+hydroclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_hclass&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:petajavesi_vrad</Name>
+        <Title>petajavesi_vrad</Title>
+        <Abstract>Petäjävesi vrad</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>petajavesi_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>22.904152849758546</westBoundLongitude>
+          <eastBoundLongitude>27.86128244873009</eastBoundLongitude>
+          <southBoundLatitude>61.147768212033064</southBoundLatitude>
+          <northBoundLatitude>63.424602328530106</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="22.904152849758546" miny="61.147768212033064" maxx="27.86128244873009" maxy="63.424602328530106"/>
+        <BoundingBox CRS="EPSG:3067" minx="295243.474" miny="6785204.704" maxx="542993.474" maxy="7032954.704"/>
+        <Dimension name="time" default="2020-11-11T07:45:00Z" units="ISO8601">2020-11-04T07:50:00.000Z/2020-11-11T07:45:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Apetajavesi_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:precipitation-forecast</Name>
+        <Title>precipitation-forecast</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>precipitation-forecast</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-148.87475119679345</westBoundLongitude>
+          <eastBoundLongitude>120.97221141745497</eastBoundLongitude>
+          <southBoundLatitude>19.518313729608458</southBoundLatitude>
+          <northBoundLatitude>82.66417592941742</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-148.87475119679345" miny="19.518313729608458" maxx="120.97221141745497" maxy="82.66417592941742"/>
+        <BoundingBox CRS="EPSG:3035" minx="776933.942562308" miny="20716.9230768215" maxx="8080224.0358762" maxy="7983381.58811287"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T04:00:00.000Z/2020-11-13T06:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>precipitation-forecast</Name>
+          <Title>Precipitation forecast</Title>
+          <Abstract>precipitation-forecast style</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Aprecipitation-forecast"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Mare:sea-surface-salinity-forecast</Name>
+        <Title>Sea surface salinity forecast from HBM sea current model</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>sea-surface-salinity-forecast</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.53234725760191</westBoundLongitude>
+          <eastBoundLongitude>38.752489128403276</eastBoundLongitude>
+          <southBoundLatitude>51.38170736812348</southBoundLatitude>
+          <northBoundLatitude>67.09122496606582</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="8.53234725760191" miny="51.38170736812348" maxx="38.752489128403276" maxy="67.09122496606582"/>
+        <BoundingBox CRS="EPSG:3035" minx="3322377.616" miny="4256650.936" maxx="4886764.902" maxy="5662554.542"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T05:00:00.000Z/2020-11-13T04:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>sea-surface-salinity</Name>
+          <Title>Colormap style sea surface salinity (per mille)</Title>
+          <Abstract>Colormap style for sea surface salinity in the Baltic sea. 
+          Features dual color scales for 40-10 per mille and for 8-1 per mille salinities</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Mare%3Asea-surface-salinity-forecast"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Mare:sea-surface-temperature-forecast</Name>
+        <Title>Sea surface temperature forecast from HBM sea current model</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>sea-surface-temperature-forecast</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>9.041</westBoundLongitude>
+          <eastBoundLongitude>30.291</eastBoundLongitude>
+          <southBoundLatitude>53.025</southBoundLatitude>
+          <northBoundLatitude>65.875</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="9.041" miny="53.025" maxx="30.291" maxy="65.875"/>
+        <BoundingBox CRS="EPSG:3035" minx="3322377.616" miny="4256650.936" maxx="4886764.902" maxy="5662554.542"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T05:00:00.000Z/2020-11-13T04:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>sea-surface-temperature</Name>
+          <Title>Colormap style sea surface temperature</Title>
+          <Abstract>Colormap style for sea surface temperature between -20 and +20 °C with temperatures around 0 highlighted.</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Mare%3Asea-surface-temperature-forecast"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:suomi_dbz_eureffin</Name>
+        <Title>suomi_dbz_eureffin</Title>
+        <Abstract>Radar dbz from Finland with 5 minute time interval.</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>suomi_dbz_eureffin</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-198.734544576</westBoundLongitude>
+          <eastBoundLongitude>198.734544576</eastBoundLongitude>
+          <southBoundLatitude>-134.7248287540408</southBoundLatitude>
+          <northBoundLatitude>262.7442603979592</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-198.734544576" miny="-134.7248287540408" maxx="198.734544576" maxy="262.7442603979592"/>
+        <BoundingBox CRS="EPSG:3067" minx="-118331.366408" miny="6335621.167014" maxx="875567.731907" maxy="7907751.537264"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:45:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_dbz_eureffin"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_dbz_eureffin&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_dbz_eureffin&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:suomi_rr12h_eureffin</Name>
+        <Title>suomi_rr12h_eureffin</Title>
+        <Abstract>Finland twelve hour precipitation sum with one hour time interval.</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>suomi_rr12h_eureffin</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.502505724638294</westBoundLongitude>
+          <eastBoundLongitude>39.084699217933526</eastBoundLongitude>
+          <southBoundLatitude>48.70542604839313</southBoundLatitude>
+          <northBoundLatitude>79.28761954168836</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="8.502505724638294" miny="48.70542604839313" maxx="39.084699217933526" maxy="79.28761954168836"/>
+        <BoundingBox CRS="EPSG:3067" minx="-118331.366408" miny="6335621.167014" maxx="875567.731907" maxy="7907751.537264"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T08:00:00.000Z/2020-11-11T07:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>Radar accumulation</Name>
+          <Title>Radar rr12h and rr24h</Title>
+          <Abstract>Radar rr12h and rr24h</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr12h_eureffin"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar accumulation</Name>
+          <Title>Radar rr12h and rr24h</Title>
+          <Abstract>Radar rr12h and rr24h</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr12h_eureffin&amp;style=Radar+accumulation"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar rr</Name>
+          <Title>Radar rr</Title>
+          <Abstract>Radar rr</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr12h_eureffin&amp;style=Radar+rr"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr12h_eureffin&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:suomi_rr1h_eureffin</Name>
+        <Title>suomi_rr1h_eureffin</Title>
+        <Abstract>Finland one hour precipitation sum with one hour time interval.</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>suomi_rr1h_eureffin</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-183.6</westBoundLongitude>
+          <eastBoundLongitude>183.6</eastBoundLongitude>
+          <southBoundLatitude>-119.5902841780408</southBoundLatitude>
+          <northBoundLatitude>247.60971582195918</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-183.6" miny="-119.5902841780408" maxx="183.6" maxy="247.60971582195918"/>
+        <BoundingBox CRS="EPSG:3067" minx="-118331.366408" miny="6335621.167014" maxx="875567.731907" maxy="7907751.537264"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T08:00:00.000Z/2020-11-11T07:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>Radar accumulation</Name>
+          <Title>Radar rr12h and rr24h</Title>
+          <Abstract>Radar rr12h and rr24h</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr1h_eureffin"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar rr</Name>
+          <Title>Radar rr</Title>
+          <Abstract>Radar rr</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr1h_eureffin&amp;style=Radar+rr"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr1h_eureffin&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:suomi_rr24h_eureffin</Name>
+        <Title>suomi_rr24h_eureffin</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>suomi_rr24h_eureffin</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.802331151043148</westBoundLongitude>
+          <eastBoundLongitude>38.78487379152867</eastBoundLongitude>
+          <southBoundLatitude>49.005251474797994</southBoundLatitude>
+          <northBoundLatitude>78.9877941152835</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="8.802331151043148" miny="49.005251474797994" maxx="38.78487379152867" maxy="78.9877941152835"/>
+        <BoundingBox CRS="EPSG:3067" minx="-118331.366408" miny="6335621.167014" maxx="875567.731907" maxy="7907751.537264"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T08:00:00.000Z/2020-11-11T07:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>Radar accumulation</Name>
+          <Title>Radar rr12h and rr24h</Title>
+          <Abstract>Radar rr12h and rr24h</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr24h_eureffin"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar accumulation</Name>
+          <Title>Radar rr12h and rr24h</Title>
+          <Abstract>Radar rr12h and rr24h</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr24h_eureffin&amp;style=Radar+accumulation"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar rr</Name>
+          <Title>Radar rr</Title>
+          <Abstract>Radar rr</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr24h_eureffin&amp;style=Radar+rr"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr24h_eureffin&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:suomi_rr_eureffin</Name>
+        <Title>suomi_rr_eureffin</Title>
+        <Abstract>Finland precipitation amount (rr) with 5 minutes time interval.</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>suomi_rr_eureffin</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>9.6669926829666</westBoundLongitude>
+          <eastBoundLongitude>37.920212259605215</eastBoundLongitude>
+          <southBoundLatitude>49.86991300672145</southBoundLatitude>
+          <northBoundLatitude>78.12313258336006</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="9.6669926829666" miny="49.86991300672145" maxx="37.920212259605215" maxy="78.12313258336006"/>
+        <BoundingBox CRS="EPSG:3067" minx="-118331.366408" miny="6335621.167014" maxx="875567.731907" maxy="7907751.537264"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:45:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar rr</Name>
+          <Title>Radar rr</Title>
+          <Abstract>Radar rr</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr_eureffin"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar rr</Name>
+          <Title>Radar rr</Title>
+          <Abstract>Radar rr</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr_eureffin&amp;style=Radar+rr"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Asuomi_rr_eureffin&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:temperature-forecast</Name>
+        <Title>temperature-forecast</Title>
+        <Abstract>Temperature forecast from hirlam weather model</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>temperature-forecast</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-148.87069057296216</westBoundLongitude>
+          <eastBoundLongitude>140.58726775221507</eastBoundLongitude>
+          <southBoundLatitude>19.51932216775788</southBoundLatitude>
+          <northBoundLatitude>90.0</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-148.87069057296216" miny="19.51932216775788" maxx="140.58726775221507" maxy="90.0"/>
+        <BoundingBox CRS="EPSG:3035" minx="777058.563380362" miny="20716.9230768215" maxx="8080224.0358762" maxy="7983245.71595502"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T04:00:00.000Z/2020-11-13T06:00:00.000Z/PT1H</Dimension>
+        <Dimension name="elevation" default="0.0" units="pressure_level" unitSymbol="hPa">0.0</Dimension>
+        <Style>
+          <Name>temperature-forecast-ec2</Name>
+          <Title>Temperature forecast</Title>
+          <Abstract>temperature-forecast style</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Atemperature-forecast"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:temperature-forecast-contour</Name>
+        <Title>temperature-forecast-contour</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>features</Keyword>
+          <Keyword>temperature-forecast-contour</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-147.39263311077235</westBoundLongitude>
+          <eastBoundLongitude>138.98732830332298</eastBoundLongitude>
+          <southBoundLatitude>20.15445741064215</southBoundLatitude>
+          <northBoundLatitude>90.0</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-147.39263311077235" miny="20.15445741064215" maxx="138.98732830332298" maxy="90.0"/>
+        <BoundingBox CRS="EPSG:3035" minx="826956.477" miny="70483.577" maxx="8030201.501" maxy="7933614.934"/>
+        <Dimension name="time" default="2020-11-13T08:00:00Z" units="ISO8601">2020-11-11T05:00:00.000Z/2020-11-13T08:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>temperature-contourline</Name>
+          <Title>Temperature color contour lines</Title>
+          <Abstract>Colored contour lines for temperatures between -30 and 30 deg C</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Atemperature-forecast-contour"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:utajarvi_dbzh</Name>
+        <Title>utajarvi_dbzh</Title>
+        <Abstract>dBZH PPI from Utajärvi radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>utajarvi_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>20.315920933837972</westBoundLongitude>
+          <eastBoundLongitude>32.211022339654185</eastBoundLongitude>
+          <southBoundLatitude>58.77406922202278</southBoundLatitude>
+          <northBoundLatitude>70.66917062783898</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="20.315920933837972" miny="58.77406922202278" maxx="32.211022339654185" maxy="70.66917062783898"/>
+        <BoundingBox CRS="EPSG:3067" minx="217736.146321588" miny="6933670.53319351" maxx="717486.146321588" maxy="7433420.53319351"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:utajarvi_etop_20</Name>
+        <Title>utajarvi_etop_20</Title>
+        <Abstract>20 dBZ echo top from Utajärvi radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>utajarvi_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>20.543740996127813</westBoundLongitude>
+          <eastBoundLongitude>31.983149235331567</eastBoundLongitude>
+          <southBoundLatitude>62.425459726825046</southBoundLatitude>
+          <northBoundLatitude>67.01768961060668</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="20.543740996127813" miny="62.425459726825046" maxx="31.983149235331567" maxy="67.01768961060668"/>
+        <BoundingBox CRS="EPSG:3067" minx="217611.146636944" miny="6933545.53287822" maxx="717611.146006232" maxy="7433545.53350879"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:utajarvi_hclass</Name>
+        <Title>utajarvi_hclass</Title>
+        <Abstract>HydroClass PPI from Utajarvi radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>utajarvi_hclass</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>20.546871576280772</westBoundLongitude>
+          <eastBoundLongitude>31.980071697211386</eastBoundLongitude>
+          <southBoundLatitude>62.42667145073193</southBoundLatitude>
+          <northBoundLatitude>67.01656839912984</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="20.546871576280772" miny="62.42667145073193" maxx="31.980071697211386" maxy="67.01656839912984"/>
+        <BoundingBox CRS="EPSG:3067" minx="217736.146321588" miny="6933670.53319351" maxx="717486.146321588" maxy="7433420.53319351"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3</Dimension>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_hclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_hclass&amp;style=Radar+hydroclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_hclass&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:utajarvi_vrad</Name>
+        <Title>utajarvi_vrad</Title>
+        <Abstract>Doppler velocity PPI from Utajarvi radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>utajarvi_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>23.552755154692242</westBoundLongitude>
+          <eastBoundLongitude>29.028776516341935</eastBoundLongitude>
+          <southBoundLatitude>63.6208685581438</southBoundLatitude>
+          <northBoundLatitude>65.89527487001826</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="23.552755154692242" miny="63.6208685581438" maxx="29.028776516341935" maxy="65.89527487001826"/>
+        <BoundingBox CRS="EPSG:3067" minx="342736.146321588" miny="7058670.53319351" maxx="592486.146321588" maxy="7308420.53319351"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT15M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Autajarvi_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:vantaa_dbzh</Name>
+        <Title>vantaa_dbzh</Title>
+        <Abstract>dBZH PPI from Vantaa radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>vantaa_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>19.383429954283653</westBoundLongitude>
+          <eastBoundLongitude>30.06695156911965</eastBoundLongitude>
+          <southBoundLatitude>54.8688570467992</southBoundLatitude>
+          <northBoundLatitude>65.55237866163519</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="19.383429954283653" miny="54.8688570467992" maxx="30.06695156911965" maxy="65.55237866163519"/>
+        <BoundingBox CRS="EPSG:3067" minx="132249.772" miny="6433579.003" maxx="631999.772" maxy="6933329.003"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.5" units="Degree" unitSymbol="°">0.5,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:vantaa_etop_20</Name>
+        <Title>vantaa_etop_20</Title>
+        <Abstract>20 dBZ echo top from Vantaa radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>vantaa_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>19.88433291644965</westBoundLongitude>
+          <eastBoundLongitude>29.56590903737164</eastBoundLongitude>
+          <southBoundLatitude>57.8906977970735</southBoundLatitude>
+          <northBoundLatitude>62.51329976511227</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="19.88433291644965" miny="57.8906977970735" maxx="29.56590903737164" maxy="62.51329976511227"/>
+        <BoundingBox CRS="EPSG:3067" minx="132124.771967737" miny="6433454.00264369" maxx="632124.771663207" maxy="6933454.00294641"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:vantaa_hclass</Name>
+        <Title>vantaa_hclass</Title>
+        <Abstract>HydroClass PPI from Vantaa radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>vantaa_hclass</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>19.79022946974489</westBoundLongitude>
+          <eastBoundLongitude>29.660152046819043</eastBoundLongitude>
+          <southBoundLatitude>55.26708647006363</southBoundLatitude>
+          <northBoundLatitude>65.13700904713778</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="19.79022946974489" miny="55.26708647006363" maxx="29.660152046819043" maxy="65.13700904713778"/>
+        <BoundingBox CRS="EPSG:3067" minx="132249.771815472" miny="6433579.00279505" maxx="631999.771815472" maxy="6933329.00279505"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.5" units="Degree" unitSymbol="°">0.5</Dimension>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_hclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar hydroclass</Name>
+          <Title>Hydroclass</Title>
+          <Abstract>Hydroclass</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_hclass&amp;style=Radar+hydroclass"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_hclass&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:vantaa_vrad</Name>
+        <Title>vantaa_vrad</Title>
+        <Abstract>Doppler velocity PPI from Vantaa radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>vantaa_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>22.339823741421483</westBoundLongitude>
+          <eastBoundLongitude>27.254066502508607</eastBoundLongitude>
+          <southBoundLatitude>57.79612629486702</southBoundLatitude>
+          <northBoundLatitude>62.710369055954146</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="22.339823741421483" miny="57.79612629486702" maxx="27.254066502508607" maxy="62.710369055954146"/>
+        <BoundingBox CRS="EPSG:3067" minx="258249.771815472" miny="6559579.00279505" maxx="505999.771815472" maxy="6807329.00279505"/>
+        <Dimension name="time" default="2020-11-11T07:45:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:45:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avantaa_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:vimpeli_dbzh</Name>
+        <Title>vimpeli_dbzh</Title>
+        <Abstract>dBZH PPI from Vimpeli radar in Eureffin</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>vimpeli_dbzh</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>18.23606866754787</westBoundLongitude>
+          <eastBoundLongitude>28.924216429126428</eastBoundLongitude>
+          <southBoundLatitude>60.68614238926394</southBoundLatitude>
+          <northBoundLatitude>65.3705229997704</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="18.23606866754787" miny="60.68614238926394" maxx="28.924216429126428" maxy="65.3705229997704"/>
+        <BoundingBox CRS="EPSG:3067" minx="89719.8457887624" miny="6751365.52671389" maxx="589469.845788762" maxy="7251115.52671389"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.3" units="Degree" unitSymbol="°">0.3,1.5,5.0</Dimension>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avimpeli_dbzh"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar dbz Summer</Name>
+          <Title>Radar dbz summer</Title>
+          <Abstract>Radar dbz summer</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avimpeli_dbzh&amp;style=Radar+dbz+Summer"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avimpeli_dbzh&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:vimpeli_etop_20</Name>
+        <Title>vimpeli_etop_20</Title>
+        <Abstract>20 dBZ echo top from Vimpeli radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>vimpeli_etop_20</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>17.79230681275596</westBoundLongitude>
+          <eastBoundLongitude>29.36774643678995</eastBoundLongitude>
+          <southBoundLatitude>57.2405358279553</southBoundLatitude>
+          <northBoundLatitude>68.81597545198929</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="17.79230681275596" miny="57.2405358279553" maxx="29.36774643678995" maxy="68.81597545198929"/>
+        <BoundingBox CRS="EPSG:3067" minx="89594.8459058417" miny="6751240.52659744" maxx="589594.845671683" maxy="7251240.52683033"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avimpeli_etop_20"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar echotop</Name>
+          <Title>Simple DEM style</Title>
+          <Abstract>Classic elevation color progression</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avimpeli_etop_20&amp;style=Radar+echotop"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avimpeli_etop_20&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Radar:vimpeli_vrad</Name>
+        <Title>vimpeli_vrad</Title>
+        <Abstract>Doppler velocity PPI from Vimpeli radar</Abstract>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>vimpeli_vrad</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3067</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>21.15068760551313</westBoundLongitude>
+          <eastBoundLongitude>26.304347802986918</eastBoundLongitude>
+          <southBoundLatitude>61.920809255254795</southBoundLatitude>
+          <northBoundLatitude>64.25137092969433</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="21.15068760551313" miny="61.920809255254795" maxx="26.304347802986918" maxy="64.25137092969433"/>
+        <BoundingBox CRS="EPSG:3067" minx="215594.845788762" miny="6877240.52671389" maxx="463594.845788762" maxy="7125240.52671389"/>
+        <Dimension name="time" default="2020-11-11T07:50:00Z" units="ISO8601">2020-11-04T07:55:00.000Z/2020-11-11T07:50:00.000Z/PT5M</Dimension>
+        <Dimension name="elevation" default="0.4" units="Degree" unitSymbol="°">0.4,2.0</Dimension>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avimpeli_vrad"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>Radar Doppler</Name>
+          <Title>&gt;Radar doppler</Title>
+          <Abstract>&gt;Radar doppler speed colors</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avimpeli_vrad&amp;style=Radar+Doppler"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>raster</Name>
+          <Title>Default Raster</Title>
+          <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Radar%3Avimpeli_vrad&amp;style=raster"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:visibility-forecast</Name>
+        <Title>visibility-forecast</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>visibility-forecast</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-148.87475119679345</westBoundLongitude>
+          <eastBoundLongitude>120.97221141745497</eastBoundLongitude>
+          <southBoundLatitude>19.518313729608458</southBoundLatitude>
+          <northBoundLatitude>82.66417592941742</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-148.87475119679345" miny="19.518313729608458" maxx="120.97221141745497" maxy="82.66417592941742"/>
+        <BoundingBox CRS="EPSG:3035" minx="776933.942562308" miny="20716.9230768215" maxx="8080224.0358762" maxy="7983381.58811287"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T04:00:00.000Z/2020-11-13T06:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>visibility-forecast-ec2</Name>
+          <Title>visibilityforecast</Title>
+          <Abstract>visibility forecast style for EuroControl</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Avisibility-forecast"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:wind-forecast</Name>
+        <Title>wind-forecast</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>wind-forecast</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-148.87475119679345</westBoundLongitude>
+          <eastBoundLongitude>120.97221141745497</eastBoundLongitude>
+          <southBoundLatitude>19.518313729608458</southBoundLatitude>
+          <northBoundLatitude>82.66417592941742</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-148.87475119679345" miny="19.518313729608458" maxx="120.97221141745497" maxy="82.66417592941742"/>
+        <BoundingBox CRS="EPSG:3035" minx="776933.942562308" miny="20716.9230768215" maxx="8080224.0358762" maxy="7983381.58811287"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T04:00:00.000Z/2020-11-13T06:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>wind-forecast</Name>
+          <Title/>
+          <Abstract/>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Awind-forecast"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>Weather:windspeed-forecast</Name>
+        <Title>windspeed-forecast</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>WCS</Keyword>
+          <Keyword>ImageMosaic</Keyword>
+          <Keyword>wind-forecast</Keyword>
+        </KeywordList>
+        <CRS>EPSG:3035</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-148.87475119679345</westBoundLongitude>
+          <eastBoundLongitude>120.97221141745497</eastBoundLongitude>
+          <southBoundLatitude>19.518313729608458</southBoundLatitude>
+          <northBoundLatitude>82.66417592941742</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="-148.87475119679345" miny="19.518313729608458" maxx="120.97221141745497" maxy="82.66417592941742"/>
+        <BoundingBox CRS="EPSG:3035" minx="776933.942562308" miny="20716.9230768215" maxx="8080224.0358762" maxy="7983381.58811287"/>
+        <Dimension name="time" default="current" units="ISO8601">2020-11-11T04:00:00.000Z/2020-11-13T06:00:00.000Z/PT1H</Dimension>
+        <Style>
+          <Name>windspeed-forecast</Name>
+          <Title>Windspeed forecast</Title>
+          <Abstract>windspeed-forecast style</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://openwms.fmi.fi:443/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=Weather%3Awindspeed-forecast"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>

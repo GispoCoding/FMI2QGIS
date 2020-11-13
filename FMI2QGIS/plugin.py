@@ -30,6 +30,7 @@ from .qgis_plugin_tools.tools.custom_logging import setup_logger
 from .qgis_plugin_tools.tools.i18n import setup_translation, tr
 from .qgis_plugin_tools.tools.resources import plugin_name
 from .ui.main_dialog import MainDialog
+from .ui.wms_dialog import WMSDialog
 
 
 class Plugin:
@@ -133,6 +134,14 @@ class Plugin:
             add_to_toolbar=False
         )
 
+        self.add_action(
+            "",
+            text=tr("Add WMS"),
+            callback=self.add_wms,
+            parent=self.iface.mainWindow(),
+            add_to_toolbar=False
+        )
+
         # noinspection PyArgumentList
         QgsApplication.processingRegistry().addProvider(self.processing_provider)
 
@@ -154,4 +163,8 @@ class Plugin:
     def run(self):
         """Run method that performs all the real work"""
         dialog = MainDialog(self.iface)
+        dialog.exec()
+
+    def add_wms(self):
+        dialog = WMSDialog(self.iface)
         dialog.exec()
