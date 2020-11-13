@@ -18,30 +18,30 @@
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-from datetime import datetime
 from pathlib import Path
 from typing import Dict
 
 import gdal
-from qgis.core import (QgsRasterLayer, QgsProject, QgsRasterDataProvider, QgsSingleBandGrayRenderer,
-                       QgsContrastEnhancement, QgsRasterBandStats)
+from qgis.core import (QgsRasterLayer, QgsProject, )
 
 from .base_loader import BaseLoader
-from ..wfs import StoredQuery
+from ..wfs import StoredQuery, WFSMetadata
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
 from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
 from ...qgis_plugin_tools.tools.i18n import tr
-from ...qgis_plugin_tools.tools.raster_utils import set_raster_renderer_to_singleband
+from ...qgis_plugin_tools.tools.raster_layers import set_raster_renderer_to_singleband, set_fixed_temporal_range
 from ...qgis_plugin_tools.tools.resources import plugin_name
 
-NETCDF_DIM_EXTRA = 'NETCDF_DIM_EXTRA'
+try:
+    from qgis.core import QgsRasterLayerTemporalProperties
+except ImportError:
+    QgsRasterLayerTemporalProperties = None
 
 LOGGER = logging.getLogger(plugin_name())
 
 
 class RasterLoader(BaseLoader):
     MESSAGE_CATEGORY = 'FmiRasterLoader'
-    TIME_FORMAT = '%Y-%m-%d %H:%M:%S'  # 2020-11-02 15:00:00
 
     def __init__(self, description: str, download_dir: Path, fmi_download_url: str, sq: StoredQuery):
         """
@@ -52,7 +52,10 @@ class RasterLoader(BaseLoader):
         super().__init__(description, download_dir)
         self.url = fmi_download_url
         self.sq = sq
-        self.metadata: Dict[str] = {}  # TODO: use class maybe?
+
+    @property
+    def is_manually_temporal(self) -> bool:
+        return self.metadata.is_temporal
 
     def run(self) -> bool:
         """
@@ -82,12 +85,12 @@ class RasterLoader(BaseLoader):
             self.update_raster_metadata()
             layer = self.raster_to_layer()
             if layer.isValid():
-                # TODO: layer styling
-
                 # noinspection PyArgumentList
                 QgsProject.instance().addMapLayer(layer)
-                if self.metadata.get('time_val_count', 0) and layer.bandCount() > 1:
+                if self.metadata.is_temporal and layer.bandCount() > 1:
                     set_raster_renderer_to_singleband(layer, 1)
+                    set_fixed_temporal_range(layer, self.metadata.time_range)
+                self.layer_ids.add(layer.id())
 
         # Error handling
         else:
@@ -124,28 +127,15 @@ class RasterLoader(BaseLoader):
         """
         Update raster metadata
         """
-        metadata = {}
         try:
             ds: gdal.Dataset = gdal.Open(str(self.path_to_file))
             sub_datasets = ds.GetSubDatasets()
             if sub_datasets:
                 # TODO: Check variable(s) and add to metadata
-                first_path = sub_datasets[0][0]  #
+                first_path = sub_datasets[0][0]
                 ds: gdal.Dataset = gdal.Open(first_path)
 
             ds_metadata: Dict[str, str] = ds.GetMetadata()
-
-            if NETCDF_DIM_EXTRA in ds_metadata:
-                # Is netcdf file and has extra dimensions (probably time)
-                for dimension in ds_metadata[NETCDF_DIM_EXTRA].strip('{').strip('}').split(','):
-                    dim_def = ds_metadata.get(f'NETCDF_DIM_{dimension}_DEF', '').strip('{').strip('}').split(',')
-                    dim_units = ds_metadata.get(f'{dimension}#units', '')
-                    if dimension == 'time' and dim_def:
-                        time_units, start_time = dim_units.split(' since ')  # eg. hours since 2020-10-05 18:00:00
-                        metadata['time_units'] = time_units
-                        metadata['start_time'] = datetime.strptime(start_time, self.TIME_FORMAT) if start_time else None
-                        metadata['time_val_count'] = int(dim_def[0]) if dim_def else None
+            self.metadata.update_from_gdal_metadata(ds_metadata)
         finally:
             ds = None
-        self.metadata = metadata
-

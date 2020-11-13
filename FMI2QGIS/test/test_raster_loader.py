@@ -17,13 +17,11 @@
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
-from qgis._core import QgsSingleBandGrayRenderer
 
-from ..qgis_plugin_tools.tools.raster_utils import set_raster_renderer_to_singleband
 from ..core.processing.raster_loader import RasterLoader
 from ..core.wfs import Parameter
 from ..qgis_plugin_tools.tools import network
@@ -83,7 +81,12 @@ def test_raster_layer_metadata(raster_loader):
     raster_loader.path_to_file = test_file
     raster_loader.update_raster_metadata()
     metadata = raster_loader.metadata
-    assert metadata == {'time_units': 'hours', 'start_time': datetime(2020, 11, 2, 15, 0), 'time_val_count': 20}
+    assert metadata.time_step == timedelta(seconds=3600)
+    assert metadata.start_time == datetime(2020, 11, 2, 15, 0)
+    assert metadata.num_of_time_steps == 20
+    assert metadata.is_temporal
+    assert metadata.time_range.begin().toPyDateTime() == datetime(2020, 11, 2, 15, 0)
+    assert metadata.time_range.end().toPyDateTime() == datetime(2020, 11, 3, 11, 0)
 
 
 def test_raster_to_layer(raster_loader):
@@ -93,9 +96,3 @@ def test_raster_to_layer(raster_loader):
     layer = raster_loader.raster_to_layer()
     assert layer.isValid()
     assert layer.name() == 'testlayer'
-
-
-def test_raster_layer_styling(raster_loader, enfuser_layer_sm):
-    raster_loader.metadata = {'time_units': 'hours', 'start_time': datetime(2020, 11, 2, 15, 0), 'time_val_count': 20}
-    set_raster_renderer_to_singleband(enfuser_layer_sm)
-    assert isinstance(enfuser_layer_sm.renderer(), QgsSingleBandGrayRenderer)

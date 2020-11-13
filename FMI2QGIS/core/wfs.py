@@ -25,6 +25,7 @@ from typing import List, Optional, Dict
 from urllib.parse import urlsplit, parse_qs
 
 from PyQt5.QtCore import QVariant
+from qgis.core import QgsDateTimeRange
 
 from .exceptions.loader_exceptions import WfsException
 from ..definitions.configurable_settings import Namespace
@@ -59,7 +60,7 @@ class Parameter:
         self.title = title
         self.abstract = abstract
         self.type = type
-        self.variables = []
+        self.variables: List[ParameterVariable] = []
         self._value: any = None
 
     @staticmethod
@@ -158,6 +159,44 @@ class StoredQuery:
         params = [Parameter.create(param) for param in sq_element.findall('{%s}Parameter' % Namespace.WFS.value)]
         params = {param.name: param for param in params}
         return StoredQuery(id, title, abstract, sq_type, params)
+
+
+class WFSMetadata:
+    NETCDF_DIM_EXTRA = 'NETCDF_DIM_EXTRA'
+    TIME_FORMAT = '%Y-%m-%d %H:%M:%S'  # 2020-11-02 15:00:00
+
+    def __init__(self):
+        self.start_time: Optional[datetime.datetime] = None
+        self.time_step: Optional[datetime.timedelta] = None
+        self.num_of_time_steps: Optional[int] = None
+
+    @property
+    def is_temporal(self) -> bool:
+        return all((self.start_time, self.time_step, self.num_of_time_steps))
+
+    @property
+    def time_range(self) -> Optional[QgsDateTimeRange]:
+        """
+
+        """
+        if self.is_temporal:
+            return QgsDateTimeRange(self.start_time, self.start_time + self.num_of_time_steps * self.time_step)
+
+    def update_from_gdal_metadata(self, ds_metadata: Dict[str, str]):
+        if self.NETCDF_DIM_EXTRA in ds_metadata:
+            # Is netcdf file and has extra dimensions (probably time)
+            for dimension in ds_metadata[self.NETCDF_DIM_EXTRA].strip('{').strip('}').split(','):
+                dim_def = ds_metadata.get(f'NETCDF_DIM_{dimension}_DEF', '').strip('{').strip('}').split(',')
+
+                dim_units = ds_metadata.get(f'{dimension}#units', '')
+                if dimension == 'time' and dim_def:
+                    time_units, start_time = dim_units.split(' since ')  # eg. hours since 2020-10-05 18:00:00
+                    if time_units == 'hours':
+                        self.time_step = datetime.timedelta(hours=1)
+                    elif time_units == 'minutes':
+                        self.time_step = datetime.datetime.timedelta(minutes=1)
+                    self.start_time = datetime.datetime.strptime(start_time, self.TIME_FORMAT) if start_time else None
+                    self.num_of_time_steps = int(dim_def[0]) if dim_def else None
 
 
 class StoredQueryFactory:

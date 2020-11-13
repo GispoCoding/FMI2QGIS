@@ -38,6 +38,8 @@ def test_factory_list_queries_raster(wfs_url, wfs_version):
     assert enfuser_sq.producer == ''
     assert len(enfuser_sq.parameters) == 4
     assert set(enfuser_sq.parameters.keys()) == {'bbox', 'endtime', 'param', 'starttime'}
+    assert [param.type for param in enfuser_sq.parameters.values()] == [QVariant.DateTime, QVariant.DateTime,
+                                                                        QVariant.Rect, QVariant.StringList]
     assert enfuser_sq.parameters['bbox'].type == QVariant.Rect
     assert enfuser_sq.parameters['endtime'].type == QVariant.DateTime
     assert enfuser_sq.parameters['param'].has_variables()

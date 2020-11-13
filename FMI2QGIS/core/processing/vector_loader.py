@@ -25,7 +25,7 @@ from typing import Optional
 from qgis.core import QgsProject, QgsVectorLayer
 
 from .base_loader import BaseLoader
-from ..wfs import StoredQuery
+from ..wfs import StoredQuery, WFSMetadata
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
 from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
 from ...qgis_plugin_tools.tools.i18n import tr
@@ -89,6 +89,7 @@ class VectorLoader(BaseLoader):
 
                 # noinspection PyArgumentList
                 QgsProject.instance().addMapLayer(layer)
+                self.layer_ids.add(layer.id())
 
         # Error handling
         else:
