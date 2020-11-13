@@ -19,21 +19,22 @@
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Set
+from typing import Dict, List, Optional, Set
 
-from PyQt5.QtCore import QVariant
+from PyQt5.QtCore import QVariant, pyqtSignal
 from PyQt5.QtWidgets import (QDialog, QProgressBar, QTableWidget, QTableWidgetItem, QGridLayout, QWidget, QCheckBox,
                              QLabel, QVBoxLayout, QDockWidget)
 from qgis.core import (QgsCoordinateReferenceSystem, QgsApplication, QgsProcessingAlgRunnerTask, QgsProcessingContext,
-                       QgsProcessingFeedback, QgsRasterLayer, QgsProject)
+                       QgsProcessingFeedback, QgsRasterLayer, QgsProject, )
 from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas
 
 from ..core.processing.algorithms import FmiEnfuserLoaderAlg
+from ..core.processing.base_loader import BaseLoader
 from ..core.processing.provider import Fmi2QgisProcessingProvider
 from ..core.processing.raster_loader import RasterLoader
 from ..core.processing.vector_loader import VectorLoader
 from ..core.products.enfuser import EnfuserNetcdfLoader
-from ..core.wfs import StoredQueryFactory, StoredQuery, Parameter
+from ..core.wfs import StoredQueryFactory, StoredQuery
 from ..definitions.configurable_settings import Settings
 from ..qgis_plugin_tools.tools.custom_logging import bar_msg
 from ..qgis_plugin_tools.tools.fields import widget_for_field
@@ -41,13 +42,12 @@ from ..qgis_plugin_tools.tools.i18n import tr
 from ..qgis_plugin_tools.tools.logger_processing import LoggerProcessingFeedBack
 from ..qgis_plugin_tools.tools.resources import load_ui, plugin_name
 
-TEMPORAL_CONTROLLER = 'Temporal Controller'
-
 FORM_CLASS = load_ui('main_dialog.ui')
 LOGGER = logging.getLogger(plugin_name())
 
 
 class MainDialog(QDialog, FORM_CLASS):
+    temporal_layers_added = pyqtSignal(set)
 
     def __init__(self, iface: QgisInterface, parent=None):
         QDialog.__init__(self, parent)
@@ -77,7 +77,7 @@ class MainDialog(QDialog, FORM_CLASS):
 
         self.responsive_items = {self.btn_load}
 
-        self.task = None
+        self.task: Optional[BaseLoader] = None
         self.sq_factory = StoredQueryFactory(Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get())
         self.stored_queries: List[StoredQuery] = []
 
@@ -210,8 +210,14 @@ class MainDialog(QDialog, FORM_CLASS):
         # noinspection PyArgumentList
         QgsApplication.taskManager().addTask(self.task)
         self._disable_ui()
-        self.task.taskTerminated.connect(self._enable_ui)
-        self.task.taskCompleted.connect(self._enable_ui)
+        self.task.taskCompleted.connect(lambda: self.__task_completed(True))
+        self.task.taskTerminated.connect(lambda: self.__task_completed(False))
+
+    def __task_completed(self, result: bool):
+        self._enable_ui()
+        if result:
+            if self.task.is_manually_temporal:
+                self.temporal_layers_added.emit(self.task.layer_ids)
 
     def _disable_ui(self):
         for item in self.responsive_items:

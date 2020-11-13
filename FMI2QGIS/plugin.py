@@ -17,20 +17,28 @@
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
-from typing import Callable, Optional
+from typing import Callable, Optional, Set
 
 from PyQt5.QtCore import QTranslator, QCoreApplication
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QWidget
-from qgis.core import QgsApplication
+from PyQt5.QtWidgets import QAction, QWidget, QDockWidget
+from qgis.core import QgsApplication, QgsDateTimeRange, QgsMapLayer, QgsProject, QgsRasterLayer
 from qgis.gui import QgisInterface
 
 from .core.processing.provider import Fmi2QgisProcessingProvider
 from .qgis_plugin_tools.tools.custom_logging import setup_logger
 from .qgis_plugin_tools.tools.i18n import setup_translation, tr
+from .qgis_plugin_tools.tools.raster_layers import set_band_based_on_range
 from .qgis_plugin_tools.tools.resources import plugin_name, resources_path
 from .ui.main_dialog import MainDialog
 from .ui.wms_dialog import WMSDialog
+
+try:
+    from qgis.core import QgsTemporalController
+except ImportError:
+    QgsTemporalController = None
+
+TEMPORAL_CONTROLLER = 'Temporal Controller'
 
 
 class Plugin:
@@ -56,6 +64,8 @@ class Plugin:
         self.menu = tr(plugin_name())
 
         self.processing_provider = Fmi2QgisProcessingProvider()
+
+        self.manually_handled_temporal_layer_ids: Set[str] = set()
 
     def add_action(
         self,
@@ -162,9 +172,47 @@ class Plugin:
 
     def run(self):
         """Run method that performs all the real work"""
+        self.__show_temporal_controller()
         dialog = MainDialog(self.iface)
+
+        def update_layers(layer_ids):
+            self.manually_handled_temporal_layer_ids.update(set(layer_ids))
+
+        dialog.temporal_layers_added.connect(update_layers)
         dialog.exec()
 
     def add_wms(self):
+        self.__show_temporal_controller()
         dialog = WMSDialog(self.iface)
         dialog.exec()
+
+    ## Temporal common functionality
+    def __show_temporal_controller(self):
+        """Sets Temporal Controller dock widget visible if it exists"""
+        dock_widget: QDockWidget
+        for dock_widget in self.iface.mainWindow().findChildren(QDockWidget, TEMPORAL_CONTROLLER):
+            if not dock_widget.isVisible():
+                dock_widget.setVisible(True)
+                temporal_controller: QgsTemporalController = self.iface.mapCanvas().temporalController()
+                # noinspection PyUnresolvedReferences
+                temporal_controller.updateTemporalRange.connect(self.__temporal_range_changed)
+
+    def __temporal_range_changed(self, t_range: QgsDateTimeRange):
+        layer: QgsMapLayer
+
+        obsolete_layer_ids = set()
+        for layer_id in self.manually_handled_temporal_layer_ids:
+            layer = QgsProject.instance().mapLayer(layer_id)
+            if layer is None:
+                # removed by user
+                obsolete_layer_ids.add(layer_id)
+            else:
+                tprops = layer.temporalProperties()
+                if tprops.isVisibleInTemporalRange(t_range):
+                    if isinstance(layer, QgsRasterLayer):
+                        set_band_based_on_range(layer, t_range)
+                else:
+                    pass
+                    # TODO: what to do?
+
+        self.manually_handled_temporal_layer_ids.difference_update(obsolete_layer_ids)
