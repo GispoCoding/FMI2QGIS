@@ -17,10 +17,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
+import pytest
 from PyQt5.QtCore import QVariant
 
+from ..core.exceptions.loader_exceptions import WfsException
 from .conftest import ENFUSER_ID, AIR_QUALITY_ID
-from ..core.wfs import StoredQueryFactory, StoredQuery
+from ..core.wfs import StoredQueryFactory, StoredQuery, raise_based_on_response
 
 
 def test_factory_list_queries_raster(wfs_url, wfs_version):
@@ -82,3 +84,11 @@ def test_sq_vector_expanding(wfs_url, wfs_version):
     air_quality_sq: StoredQuery = list(filter(lambda q: q.id == AIR_QUALITY_ID, queries))[0]
 
     factory.expand(air_quality_sq)
+
+
+def test_raise_based_on_response1():
+    xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n<ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n  xsi:schemaLocation="http://www.opengis.net/ows/1.1 http://schemas.opengis.net/ows/1.1.0/owsExceptionReport.xsd"\n  version="2.0.0" xml:lang="eng">\n\n\n  <Exception exceptionCode="OperationParsingFailed">\n    <ExceptionText>Invalid time interval!</ExceptionText>\n    <ExceptionText>The start time is later than the end time.</ExceptionText>\n    <ExceptionText>URI: /wfs?bbox=21.0%2C59.7%2C31.7%2C70.0&amp;endtime=2020-11-06T11%3A00%3A00Z&amp;request=GetFeature&amp;service=WFS&amp;storedquery_id=fmi%3A%3Aobservations%3A%3Aairquality%3A%3Ahourly%3A%3Asimple&amp;timestep=60&amp;version=2.0.0</ExceptionText>\n    \n  </Exception>\n\n</ExceptionReport>\n'
+    with pytest.raises(WfsException) as excinfo:
+        raise_based_on_response(xml_content)
+    assert str(excinfo.value) == 'Exception occurred: OperationParsingFailed'
+    assert excinfo.value.bar_msg['details'] == 'Invalid time interval! The start time is later than the end time.'

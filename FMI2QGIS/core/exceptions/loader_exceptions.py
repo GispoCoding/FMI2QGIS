@@ -25,3 +25,6 @@ class InvalidParameterException(QgsPluginException):
 
 class BadRequestException(QgsPluginException):
     pass
+
+class WfsException(QgsPluginException):
+    pass

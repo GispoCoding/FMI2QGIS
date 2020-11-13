@@ -22,6 +22,8 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
+import pytest
+
 from ..core.processing.vector_loader import VectorLoader
 from ..core.wfs import Parameter
 from ..qgis_plugin_tools.tools import network
@@ -71,6 +73,38 @@ def test_construct_uri_airquality(tmpdir_pth, wfs_url, wfs_version, air_quality_
                    '&starttime=2020-11-05T00:00:00Z'
                    '&endtime=2020-11-06T00:00:00Z'
                    '&timestep=60&bbox=21.0,59.7,31.7,70.0')
+
+def test_construct_uri_airquality2(tmpdir_pth, wfs_url, wfs_version, air_quality_sq, extent_lg_1):
+    air_quality_sq.parameters['starttime'].value = datetime.strptime('2020-11-05T00:00:00Z', Parameter.TIME_FORMAT)
+    air_quality_sq.parameters['endtime'].value = datetime.strptime('2020-11-06T00:00:00Z', Parameter.TIME_FORMAT)
+    air_quality_sq.parameters['timestep'].value = 60
+    air_quality_sq.parameters['bbox'].value = extent_lg_1
+    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq, max_features=10)
+    uri = loader._construct_uri()
+    assert uri == ('https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0'
+                   '&request=GetFeature'
+                   '&count=10'
+                   '&storedquery_id=fmi::observations::airquality::hourly::simple'
+                   '&starttime=2020-11-05T00:00:00Z'
+                   '&endtime=2020-11-06T00:00:00Z'
+                   '&timestep=60&bbox=21.0,59.7,31.7,70.0')
+
+
+@pytest.mark.skip('This test fails if run together with other tests, individually works fine...')
+def test_loader_with_invalid_parameters(new_project, tmpdir_pth, wfs_url, wfs_version, air_quality_sq, extent_lg_1):
+    # Without starttime
+    air_quality_sq.parameters['endtime'].value = datetime.strptime('2020-11-06T11:00:00Z', Parameter.TIME_FORMAT)
+    air_quality_sq.parameters['timestep'].value = 60
+    air_quality_sq.parameters['bbox'].value = extent_lg_1
+
+    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq, max_features=1)
+    result = loader.run()
+
+    assert not result
+    assert loader.exception
+    assert str(loader.exception) == 'Exception occurred: OperationParsingFailed'
+    # noinspection PyUnresolvedReferences
+    assert loader.exception.bar_msg['details'] == 'Invalid time interval! The start time is later than the end time.'
 
 
 def test_vector_to_layer(tmpdir_pth, wfs_url, wfs_version, air_quality_sq, monkeypatch):
