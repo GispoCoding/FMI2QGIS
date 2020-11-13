@@ -20,10 +20,19 @@
 from datetime import datetime
 from pathlib import Path
 
+import pytest
+from qgis._core import QgsSingleBandGrayRenderer
+
+from ..qgis_plugin_tools.tools.raster_utils import set_raster_renderer_to_singleband
 from ..core.processing.raster_loader import RasterLoader
 from ..core.wfs import Parameter
 from ..qgis_plugin_tools.tools import network
 from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
+
+
+@pytest.fixture
+def raster_loader(tmpdir_pth, fmi_download_url) -> RasterLoader:
+    return RasterLoader('', tmpdir_pth, fmi_download_url, None)
 
 
 def test_download_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_sm_1, monkeypatch):
@@ -68,11 +77,25 @@ def test_construct_uri_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_
                    '&param=AQIndex')
 
 
-def test_raster_to_layer(tmpdir_pth, fmi_download_url):
-    loader = RasterLoader('', tmpdir_pth, fmi_download_url, None)
+def test_raster_layer_metadata(raster_loader):
+    # TODO: add more tests with different rasters
     test_file = Path(plugin_test_data_path('aq_small.nc'))
-    loader.path_to_file = test_file
+    raster_loader.path_to_file = test_file
+    raster_loader.update_raster_metadata()
+    metadata = raster_loader.metadata
+    assert metadata == {'time_units': 'hours', 'start_time': datetime(2020, 11, 2, 15, 0), 'time_val_count': 20}
 
-    layer = loader.raster_to_layer()
+
+def test_raster_to_layer(raster_loader):
+    test_file = Path(plugin_test_data_path('aq_small.nc'))
+    raster_loader.path_to_file = test_file
+
+    layer = raster_loader.raster_to_layer()
     assert layer.isValid()
     assert layer.name() == 'testlayer'
+
+
+def test_raster_layer_styling(raster_loader, enfuser_layer_sm):
+    raster_loader.metadata = {'time_units': 'hours', 'start_time': datetime(2020, 11, 2, 15, 0), 'time_val_count': 20}
+    set_raster_renderer_to_singleband(enfuser_layer_sm)
+    assert isinstance(enfuser_layer_sm.renderer(), QgsSingleBandGrayRenderer)

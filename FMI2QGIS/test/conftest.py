@@ -19,12 +19,12 @@ This class contains fixtures and common helper function to keep the test files s
 #
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
-
+import shutil
 from pathlib import Path
 from typing import Callable, List
 
 import pytest
-from qgis.core import QgsProcessingFeedback, QgsRectangle
+from qgis.core import QgsProcessingFeedback, QgsRectangle, QgsRasterLayer
 
 from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
 from ..core.wfs import StoredQueryFactory, StoredQuery
@@ -91,6 +91,14 @@ def enfuser_sq(sqs, sq_factory) -> StoredQuery:
     return sq
 
 
+@pytest.fixture
+def enfuser_layer_sm(tmpdir_pth) -> QgsRasterLayer:
+    test_file = Path(plugin_test_data_path('aq_small.nc'))
+    copied_file = shutil.copy(test_file, tmpdir_pth)
+    uri = f'NETCDF:{copied_file}:index_of_airquality_194'
+    return QgsRasterLayer(uri, 'enfuser_test')
+
+
 @pytest.fixture(scope='session')
 def air_quality_sq(sqs) -> StoredQuery:
     sq = list(filter(lambda q: q.id == AIR_QUALITY_ID, sqs))[0]
@@ -135,3 +143,4 @@ def extent_lg_1() -> QgsRectangle:
 @pytest.fixture
 def tmpdir_pth(tmpdir) -> Path:
     return Path(tmpdir)
+
