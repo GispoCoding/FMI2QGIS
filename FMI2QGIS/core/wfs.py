@@ -194,7 +194,9 @@ class WFSMetadata:
                     if time_units == 'hours':
                         self.time_step = datetime.timedelta(hours=1)
                     elif time_units == 'minutes':
-                        self.time_step = datetime.datetime.timedelta(minutes=1)
+                        self.time_step = datetime.timedelta(minutes=1)
+                    elif time_units == 'days':
+                        self.time_step = datetime.timedelta(days=1)
                     self.start_time = datetime.datetime.strptime(start_time, self.TIME_FORMAT) if start_time else None
                     self.num_of_time_steps = int(dim_def[0]) if dim_def else None
 
