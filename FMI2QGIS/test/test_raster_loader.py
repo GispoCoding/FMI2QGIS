@@ -79,14 +79,14 @@ def test_raster_layer_metadata(raster_loader):
     # TODO: add more tests with different rasters
     test_file = Path(plugin_test_data_path('aq_small.nc'))
     raster_loader.path_to_file = test_file
-    raster_loader.update_raster_metadata()
+    raster_loader._update_raster_metadata()
     metadata = raster_loader.metadata
-    assert metadata.time_step == timedelta(seconds=3600)
+    assert metadata.time_step == timedelta(hours=1)
     assert metadata.start_time == datetime(2020, 11, 2, 15, 0)
     assert metadata.num_of_time_steps == 20
     assert metadata.is_temporal
     assert metadata.time_range.begin().toPyDateTime() == datetime(2020, 11, 2, 15, 0)
-    assert metadata.time_range.end().toPyDateTime() == datetime(2020, 11, 3, 11, 0)
+    assert metadata.time_range.end().toPyDateTime() == datetime(2020, 11, 3, 10, 0, 1)
 
 
 def test_raster_to_layer(raster_loader):

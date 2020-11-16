@@ -177,10 +177,12 @@ class WFSMetadata:
     @property
     def time_range(self) -> Optional[QgsDateTimeRange]:
         """
-
+        Date time range of the dataset
         """
         if self.is_temporal:
-            return QgsDateTimeRange(self.start_time, self.start_time + self.num_of_time_steps * self.time_step)
+            # Add extra second to make last frame visible
+            return QgsDateTimeRange(self.start_time, self.start_time + (
+                self.num_of_time_steps - 1) * self.time_step + datetime.timedelta(seconds=1))
 
     def update_from_gdal_metadata(self, ds_metadata: Dict[str, str]):
         if self.NETCDF_DIM_EXTRA in ds_metadata:

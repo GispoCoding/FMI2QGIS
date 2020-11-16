@@ -193,15 +193,16 @@ class Plugin:
         for dock_widget in self.iface.mainWindow().findChildren(QDockWidget, TEMPORAL_CONTROLLER):
             if not dock_widget.isVisible():
                 dock_widget.setVisible(True)
-                temporal_controller: QgsTemporalController = self.iface.mapCanvas().temporalController()
-                # noinspection PyUnresolvedReferences
-                temporal_controller.updateTemporalRange.connect(self.__temporal_range_changed)
+            temporal_controller: QgsTemporalController = self.iface.mapCanvas().temporalController()
+            # noinspection PyUnresolvedReferences
+            temporal_controller.updateTemporalRange.connect(self.__temporal_range_changed)
 
     def __temporal_range_changed(self, t_range: QgsDateTimeRange):
-        layer: QgsMapLayer
-
+        """Update manually handled temporal layers"""
         obsolete_layer_ids = set()
+        layer: QgsMapLayer
         for layer_id in self.manually_handled_temporal_layer_ids:
+            # noinspection PyArgumentList
             layer = QgsProject.instance().mapLayer(layer_id)
             if layer is None:
                 # removed by user

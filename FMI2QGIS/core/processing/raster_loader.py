@@ -25,7 +25,7 @@ import gdal
 from qgis.core import (QgsRasterLayer, QgsProject, )
 
 from .base_loader import BaseLoader
-from ..wfs import StoredQuery, WFSMetadata
+from ..wfs import StoredQuery
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
 from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
 from ...qgis_plugin_tools.tools.i18n import tr
@@ -63,6 +63,8 @@ class RasterLoader(BaseLoader):
         :return:
         """
         self.path_to_file, result = self._download()
+        if result and self.path_to_file.is_file():
+            self._update_raster_metadata()
         self.setProgress(100)
         return result
 
@@ -82,7 +84,6 @@ class RasterLoader(BaseLoader):
         :param result: the return value from self.run
         """
         if result and self.path_to_file.is_file():
-            self.update_raster_metadata()
             layer = self.raster_to_layer()
             if layer.isValid():
                 # noinspection PyArgumentList
@@ -123,7 +124,7 @@ class RasterLoader(BaseLoader):
         layer = QgsRasterLayer(uri, layer_name)
         return layer
 
-    def update_raster_metadata(self) -> None:
+    def _update_raster_metadata(self) -> None:
         """
         Update raster metadata
         """
