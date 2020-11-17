@@ -1,8 +1,10 @@
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Set
 
-from PyQt5.QtWidgets import QDialog, QProgressBar
+from PyQt5.QtCore import QVariant
+from PyQt5.QtWidgets import QDialog, QProgressBar, QTableWidget, QTableWidgetItem, QGridLayout, QWidget, QCheckBox, \
+    QLabel
 from qgis.core import (QgsCoordinateReferenceSystem, QgsApplication, QgsProcessingAlgRunnerTask, QgsProcessingContext,
                        QgsProcessingFeedback, QgsRasterLayer, QgsProject)
 from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas
@@ -29,10 +31,13 @@ class MainDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface
 
-        self.btn_load.clicked.connect(self.__load_clicked)
+        self.btn_load.clicked.connect(self.__load_wfs_layer)
+        self.btn_refresh.clicked.connect(self.__refresh_stored_wfs_queries)
+        self.btn_select.clicked.connect(self.__select_wfs_layer)
 
         # Typing
         self.extent_group_box_bbox: QgsExtentGroupBox
+       # self.group_box_wfs_params
         self.progress_bar: QProgressBar
 
         canvas: QgsMapCanvas = self.iface.mapCanvas()
@@ -52,11 +57,112 @@ class MainDialog(QDialog, FORM_CLASS):
 
         self.task = None
         self.sq_factory = StoredQueryFactory(Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get())
+        self.stored_queries: List[StoredQuery] = []
 
-        # TODO: do this only on demand when refreshing
+        #populating dynamically the parameters of main dialog
+        self.grid: QGridLayout
+        self.parameter_rows: Dict[str, Set[QWidget]] = {}
+        #self.selected_stored_query: StoredQuery
+
+
+    def __refresh_stored_wfs_queries(self):
+
         self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
+        self.tbl_wdgt_stored_queries: QTableWidget
+        self.tbl_wdgt_stored_queries.setRowCount(len( self.stored_queries))
+        self.tbl_wdgt_stored_queries.setColumnCount(3)
 
-    def __load_clicked(self):
+        for i, sq in enumerate(self.stored_queries):
+            self.tbl_wdgt_stored_queries.setItem(i, 0, QTableWidgetItem(sq.title))
+            abstract_item = QTableWidgetItem(sq.abstract)
+            abstract_item.setToolTip(sq.abstract)
+            self.tbl_wdgt_stored_queries.setItem(i, 1,  abstract_item)
+            id_item = QTableWidgetItem(sq.id)
+            id_item.setToolTip(sq.id)
+            self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
+
+            #self.tbl_wdgt_stored_queries.setItem(i, 1, QTableWidgetItem(sq.na))
+
+        print('row count: ', self.tbl_wdgt_stored_queries.rowCount())
+        print('last stored query', self.stored_queries[len(self.stored_queries) - 1].title)
+
+        rows = len( self.stored_queries)
+        print('number of stored queries: ', rows)
+        #for stored_query in self.stored_queries:
+        #    self.table.setItem(stored_query.title)
+        #    print(stored_query.title)
+
+    def __select_wfs_layer(self):
+        #self.grid: QGridLayout
+        #self.parameter_rows: Dict[str, Set[QWidget]] = {}
+        self.tbl_wdgt_stored_queries: QTableWidget
+        indexes = self.tbl_wdgt_stored_queries.selectedIndexes()
+        if not indexes:
+            print("select something")
+            return
+        self.selected_stored_query = self.stored_queries[indexes[0].row()]
+        print(self.selected_stored_query.title)
+        #return selected_stored_query
+
+        for widget_set in self.parameter_rows.values():
+            for widget in widget_set:
+                self.grid.removeWidget(widget)
+                widget = None
+        self.parameter_rows = {}
+
+        row_idx = -1
+        self.extent_group_box_bbox.setEnabled(False)
+        for param_name, parameter in self.selected_stored_query.parameters.items():
+            widgets = set()
+            #print(param_name, parameter)
+            if parameter.type == QVariant.Rect:
+                self.parameter_rows[param_name] = widgets
+                self.extent_group_box_bbox.setEnabled(True)
+                continue
+            row_idx += 1
+            widget: QWidget = widget_for_field(parameter.type)
+
+            if parameter.type == QVariant.StringList:
+                if parameter.has_variables():
+                    widget = QVLayout
+                    for variable in parameter.variables:
+                        box = QCheckBox(variable.alias)
+                        box.setToolTip(variable.label)
+                        widgets.add(box)
+
+                        widget.addWidget(box)
+
+            # TODO: all others
+            else:
+                LOGGER.error(tr('Unknown parameter type'),
+                             extra=bar_msg(tr('With parameter"{}": {}', param_name, parameter.type)))
+                return
+            label = QLabel(text=parameter.name)
+            label.setToolTip(parameter.abstract)
+
+            widgets.update({label, widget})
+
+            self.grid.addItem(label, 1, 1)
+            self.grid.addItem(widget, 1, 2)
+            self.parameter_rows[param_name] = widgets
+
+        for param_name, widgets in self.parameter_rows.items():
+            parameter = self.selected_stored_query.parameters[param_name]
+            if parameter.type == QVariant.Rect:
+                # TODO: ota extent
+                pass
+            else:
+                values = []
+                for widget in widgets:
+                    # Ohita label, muut valideja
+                    # Jos vain yksi arvo -->
+                    # ?     parameter.value = value_for_widget(widget)
+                    # jos parameter.type datetime wiget.dateTime().toPyDateTime()
+                    # jos parameter.has_variables()
+                    parameter.value = [widget.text() for widget in widgets if widget.isChecked()]
+
+
+    def __load_wfs_layer(self):
         enfuser_id = 'fmi::forecast::enfuser::airquality::helsinki-metropolitan::grid'
         sq: StoredQuery = list(filter(lambda q: q.id == enfuser_id, self.stored_queries))[0]
         # TODO: do expanding on demand with button and build parameters dynamically based on sq.parameters
@@ -83,11 +189,14 @@ class MainDialog(QDialog, FORM_CLASS):
         output_path = Path(self.output_dir_select_btn.filePath())
         self.task = RasterLoader('enfuser', output_path, Settings.FMI_DOWNLOAD_URL.get(), sq)
 
+
         # noinspection PyUnresolvedReferences
         self.task.progressChanged.connect(lambda: self.progress_bar.setValue(self.task.progress()))
         # noinspection PyArgumentList
         QgsApplication.taskManager().addTask(self.task)
         self._disable_ui()
+        self.task.taskTerminated.connect(self._enable_ui)
+        self.task.taskCompleted.connect(self._enable_ui)
 
     def __load_clicked_old(self):
         # TODO: Remove
