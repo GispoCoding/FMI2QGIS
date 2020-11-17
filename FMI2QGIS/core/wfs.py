@@ -25,6 +25,7 @@ from typing import List, Optional, Dict
 from urllib.parse import urlsplit, parse_qs
 
 from PyQt5.QtCore import QVariant
+from osgeo import ogr
 from qgis.core import QgsDateTimeRange
 
 from .exceptions.loader_exceptions import WfsException
@@ -131,6 +132,8 @@ class Parameter:
 
 
 class StoredQuery:
+    TIME_STEP_NAMES = ('timestep', 'time_step')
+
     class Type(enum.Enum):
         Raster = 'raster'
         Vector = 'vector'
@@ -143,6 +146,16 @@ class StoredQuery:
         self.parameters = parameters
         self.producer: str = ''
         self.format: str = ''
+
+    @property
+    def time_step(self) -> int:
+        """
+        :return: Time step parameter value or -1
+        """
+        time_step_params = [param for name, param in self.parameters.items() if name in self.TIME_STEP_NAMES]
+        if len(time_step_params) == 1:
+            return time_step_params[0].value
+        return -1
 
     @staticmethod
     def create(sq_element: ET.Element) -> Optional['StoredQuery']:
@@ -164,15 +177,27 @@ class StoredQuery:
 class WFSMetadata:
     NETCDF_DIM_EXTRA = 'NETCDF_DIM_EXTRA'
     TIME_FORMAT = '%Y-%m-%d %H:%M:%S'  # 2020-11-02 15:00:00
+    DATETIME_FIELDS = ('date', 'time', 'datetime')
+    DATETIME_TYPES = (9, 10, 11)  # Date, Dime, DateTime
 
     def __init__(self):
+        # Raster
         self.start_time: Optional[datetime.datetime] = None
         self.time_step: Optional[datetime.timedelta] = None
         self.num_of_time_steps: Optional[int] = None
 
+        # Vector
+        self.layer_name: str = ''
+        self.fields: Optional[List[str]] = None
+        self.time_field_idx: Optional[int] = None
+
     @property
     def is_temporal(self) -> bool:
         return all((self.start_time, self.time_step, self.num_of_time_steps))
+
+    @property
+    def temporal_field(self) -> str:
+        return self.fields[self.time_field_idx].lower()
 
     @property
     def time_range(self) -> Optional[QgsDateTimeRange]:
@@ -184,7 +209,7 @@ class WFSMetadata:
             return QgsDateTimeRange(self.start_time, self.start_time + (
                 self.num_of_time_steps - 1) * self.time_step + datetime.timedelta(seconds=1))
 
-    def update_from_gdal_metadata(self, ds_metadata: Dict[str, str]):
+    def update_from_gdal_metadata(self, ds_metadata: Dict[str, str]) -> None:
         if self.NETCDF_DIM_EXTRA in ds_metadata:
             # Is netcdf file and has extra dimensions (probably time)
             for dimension in ds_metadata[self.NETCDF_DIM_EXTRA].strip('{').strip('}').split(','):
@@ -201,6 +226,46 @@ class WFSMetadata:
                         self.time_step = datetime.timedelta(days=1)
                     self.start_time = datetime.datetime.strptime(start_time, self.TIME_FORMAT) if start_time else None
                     self.num_of_time_steps = int(dim_def[0]) if dim_def else None
+
+    def update_from_ogr_data_source(self, ds: ogr.DataSource) -> None:
+        layer_count = ds.GetLayerCount()
+        if layer_count == 1:
+            layer = ds.GetLayer(0)
+            # Only one layer
+        else:
+            # TODO: add support
+            return
+
+        defn = layer.GetLayerDefn()
+        self.layer_name = layer.GetName()
+        fields = []
+        for i in range(defn.GetFieldCount()):
+            field_name = defn.GetFieldDefn(i).GetName()
+            field_type_code = defn.GetFieldDefn(i).GetType()
+            fields.append(field_name)
+
+            if field_name.lower() in self.DATETIME_FIELDS:
+
+                if field_type_code not in self.DATETIME_TYPES:
+                    self.time_field_idx = i
+        self.fields = fields
+
+    def is_datasource_valid(self, ds: ogr.DataSource) -> bool:
+        layer_count = ds.GetLayerCount()
+        if layer_count == 1:
+            layer = ds.GetLayer(0)
+            # Only one layer
+        else:
+            # TODO: add support
+            return False
+
+        defn = layer.GetLayerDefn()
+        for i in range(defn.GetFieldCount()):
+            field_name = defn.GetFieldDefn(i).GetName()
+            if field_name.lower() == self.temporal_field:
+                field_type_code = defn.GetFieldDefn(i).GetType()
+                return field_type_code in self.DATETIME_TYPES
+        return False
 
 
 class StoredQueryFactory:

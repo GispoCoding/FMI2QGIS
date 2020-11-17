@@ -23,6 +23,8 @@ from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
 class InvalidParameterException(QgsPluginException):
     pass
 
+class LoaderException(QgsPluginException):
+    pass
 
 class BadRequestException(QgsPluginException):
     pass

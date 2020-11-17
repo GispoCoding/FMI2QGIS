@@ -22,13 +22,16 @@ import uuid
 from pathlib import Path
 from typing import Optional
 
+from osgeo import gdal, ogr
 from qgis.core import QgsProject, QgsVectorLayer
 
 from .base_loader import BaseLoader
-from ..wfs import StoredQuery, WFSMetadata
+from ..exceptions.loader_exceptions import LoaderException
+from ..wfs import StoredQuery
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
 from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
 from ...qgis_plugin_tools.tools.i18n import tr
+from ...qgis_plugin_tools.tools.layers import set_temporal_settings
 from ...qgis_plugin_tools.tools.resources import plugin_name
 
 LOGGER = logging.getLogger(plugin_name())
@@ -57,6 +60,10 @@ class VectorLoader(BaseLoader):
         :return:
         """
         self.path_to_file, result = self._download()
+        if result and self.path_to_file.is_file():
+            self._update_vector_metadata()
+            if all((self.metadata.time_field_idx, self.metadata.fields)):
+                result = self._convert_to_spatialite()
         self.setProgress(100)
         return result
 
@@ -85,8 +92,12 @@ class VectorLoader(BaseLoader):
         if result and self.path_to_file.is_file():
             layer = self.vector_to_layer()
             if layer.isValid():
-                # TODO: layer styling
-
+                if self.metadata.time_field_idx is not None and self.sq.time_step > 0:
+                    try:
+                        set_temporal_settings(layer, self.metadata.temporal_field, self.sq.time_step)
+                    except AttributeError:
+                        LOGGER.warning(tr('Your QGIS version does not support temporal properties'),
+                                       extra=bar_msg(tr('Please update your QGIS to support Temporal Controller')))
                 # noinspection PyArgumentList
                 QgsProject.instance().addMapLayer(layer)
                 self.layer_ids.add(layer.id())
@@ -103,10 +114,62 @@ class VectorLoader(BaseLoader):
                 except Exception as e:
                     LOGGER.exception(tr('Unhandled exception occurred'), extra=bar_msg(e))
 
+    def _update_vector_metadata(self) -> None:
+        """
+        Update vector metadata
+        """
+        driver: ogr.Driver = ogr.GetDriverByName("GML")
+        if driver is None:
+            self.exception = LoaderException(tr('Your gdal/ogr does not support GML drivers'),
+                                             bar_msg=bar_msg(tr('Please update your gdal installation')))
+        else:
+            try:
+                ds: ogr.DataSource = driver.Open(str(self.path_to_file))
+                self.metadata.update_from_ogr_data_source(ds)
+            finally:
+                ds = None
+
+    def _convert_to_spatialite(self) -> bool:
+        """
+        GML format is read-only and QGIS reads the date time fields as text. In order to make the layer temporal,
+        that field has to be casted as datetime.
+        :return: Whether conversion was successful or not
+        """
+        result = False
+        ogr2ogr_convert_params = [
+            # "-dim", "XY",
+            "-nlt", "convert_to_linear",
+            # "-oo", "REMOVE_UNUSED_LAYERS=YES",
+            # "-oo", "REMOVE_UNUSED_FIELDS=YES",
+            # "-oo", "EXPOSE_METADATA_LAYERS=YES",
+            "-forceNullable"
+        ]
+
+        new_file = Path(self.path_to_file.parent,
+                        self.path_to_file.name.replace('.gml', '.sqlite').replace('.xml', '.sqlite'))
+
+        fields = ','.join([field for i, field in enumerate(self.metadata.fields) if i != self.metadata.time_field_idx])
+        time_field = self.metadata.fields[self.metadata.time_field_idx]
+
+        options = '-f SQLite -dsco SPATIALITE=YES ' + ' '.join(ogr2ogr_convert_params)
+        options += f' -sql "SELECT {fields}, cast({time_field} as TIMESTAMP) {time_field} FROM {self.metadata.layer_name}"'
+
+        try:
+            ds: ogr.DataSource = gdal.VectorTranslate(str(new_file), str(self.path_to_file), options=options)
+            if self.metadata.is_datasource_valid(ds):
+                self.path_to_file = new_file
+                result = True
+        except Exception as e:
+            self.exception = e
+        finally:
+            ds = None
+
+        return result
+
     def vector_to_layer(self) -> QgsVectorLayer:
         """
-        TODO
-        :return:
+        :return: vector layer
         """
-        layer = QgsVectorLayer(str(self.path_to_file), self.file_name)
+
+        layer = QgsVectorLayer(str(self.path_to_file), self.sq.title)
         return layer

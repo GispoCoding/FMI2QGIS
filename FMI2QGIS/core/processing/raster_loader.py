@@ -90,7 +90,12 @@ class RasterLoader(BaseLoader):
                 QgsProject.instance().addMapLayer(layer)
                 if self.metadata.is_temporal and layer.bandCount() > 1:
                     set_raster_renderer_to_singleband(layer, 1)
-                    set_fixed_temporal_range(layer, self.metadata.time_range)
+                    try:
+                        set_fixed_temporal_range(layer, self.metadata.time_range)
+                    except AttributeError:
+                        LOGGER.warning(tr('Your QGIS version does not support temporal properties'),
+                                       extra=bar_msg(tr('Please update your QGIS to support Temporal Controller')))
+
                 self.layer_ids.add(layer.id())
 
         # Error handling
