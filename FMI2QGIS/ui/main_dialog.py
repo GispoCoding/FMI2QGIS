@@ -22,8 +22,8 @@ from pathlib import Path
 from typing import Dict, List, Set
 
 from PyQt5.QtCore import QVariant
-from PyQt5.QtWidgets import QDialog, QProgressBar, QTableWidget, QTableWidgetItem, QGridLayout, QWidget, QCheckBox, \
-    QLabel
+from PyQt5.QtWidgets import (QDialog, QProgressBar, QTableWidget, QTableWidgetItem, QGridLayout, QWidget, QCheckBox,
+                             QLabel, QVBoxLayout, QDockWidget)
 from qgis.core import (QgsCoordinateReferenceSystem, QgsApplication, QgsProcessingAlgRunnerTask, QgsProcessingContext,
                        QgsProcessingFeedback, QgsRasterLayer, QgsProject)
 from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas
@@ -31,10 +31,12 @@ from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas
 from ..core.processing.algorithms import FmiEnfuserLoaderAlg
 from ..core.processing.provider import Fmi2QgisProcessingProvider
 from ..core.processing.raster_loader import RasterLoader
+from ..core.processing.vector_loader import VectorLoader
 from ..core.products.enfuser import EnfuserNetcdfLoader
 from ..core.wfs import StoredQueryFactory, StoredQuery, Parameter
 from ..definitions.configurable_settings import Settings
 from ..qgis_plugin_tools.tools.custom_logging import bar_msg
+from ..qgis_plugin_tools.tools.fields import widget_for_field
 from ..qgis_plugin_tools.tools.i18n import tr
 from ..qgis_plugin_tools.tools.logger_processing import LoggerProcessingFeedBack
 from ..qgis_plugin_tools.tools.resources import load_ui, plugin_name
@@ -125,20 +127,24 @@ class MainDialog(QDialog, FORM_CLASS):
         #    print(stored_query.title)
 
     def __select_wfs_layer(self):
-        #self.grid: QGridLayout
-        #self.parameter_rows: Dict[str, Set[QWidget]] = {}
+
         self.tbl_wdgt_stored_queries: QTableWidget
         indexes = self.tbl_wdgt_stored_queries.selectedIndexes()
         if not indexes:
             print("select something")
             return
         self.selected_stored_query = self.stored_queries[indexes[0].row()]
-        print(self.selected_stored_query.title)
-        #return selected_stored_query
+        print(self.selected_stored_query.id)
+        self.sq_factory.expand(self.selected_stored_query)
 
         for widget_set in self.parameter_rows.values():
             for widget in widget_set:
-                self.grid.removeWidget(widget)
+                if isinstance(widget, QVBoxLayout):
+                    self.grid.removeItem(widget)
+                else:
+                    self.grid.removeWidget(widget)
+                    widget.hide()
+                widget.setParent(None)
                 widget = None
         self.parameter_rows = {}
 
@@ -156,16 +162,18 @@ class MainDialog(QDialog, FORM_CLASS):
 
             if parameter.type == QVariant.StringList:
                 if parameter.has_variables():
-                    widget = QVLayout
+                    widget = QVBoxLayout()
+                    widget.addStretch(1)
+                    print(parameter.variables)
                     for variable in parameter.variables:
-                        box = QCheckBox(variable.alias)
+                        box = QCheckBox(text=variable.alias)
                         box.setToolTip(variable.label)
                         widgets.add(box)
-
                         widget.addWidget(box)
+                        print(variable.alias)
 
             # TODO: all others
-            else:
+            if widget is None:
                 LOGGER.error(tr('Unknown parameter type'),
                              extra=bar_msg(tr('With parameter"{}": {}', param_name, parameter.type)))
                 return
@@ -174,9 +182,16 @@ class MainDialog(QDialog, FORM_CLASS):
 
             widgets.update({label, widget})
 
-            self.grid.addItem(label, 1, 1)
-            self.grid.addItem(widget, 1, 2)
+            self.grid.addWidget(label, row_idx, 1)
+            if isinstance(widget, QVBoxLayout):
+                self.grid.addLayout(widget, row_idx, 2)
+            else:
+                self.grid.addWidget(widget, row_idx, 2)
             self.parameter_rows[param_name] = widgets
+
+
+    def __load_wfs_layer(self):
+
 
         for param_name, widgets in self.parameter_rows.items():
             parameter = self.selected_stored_query.parameters[param_name]
@@ -186,15 +201,38 @@ class MainDialog(QDialog, FORM_CLASS):
             else:
                 values = []
                 for widget in widgets:
-                    # Ohita label, muut valideja
-                    # Jos vain yksi arvo -->
-                    # ?     parameter.value = value_for_widget(widget)
-                    # jos parameter.type datetime wiget.dateTime().toPyDateTime()
-                    # jos parameter.has_variables()
-                    parameter.value = [widget.text() for widget in widgets if widget.isChecked()]
+                    if isinstance(widget, QLabel) or isinstance(widget, QVBoxLayout):
+                        continue
+                    if parameter.type == QVariant.DateTime:
+                       parameter.value = widget.dateTime().toPyDateTime()
+                       break
+                    elif parameter.has_variables():
+                        if widget.isChecked():
+                            values.append(widget.text())
+                    else:
+                        parameter.value = widget.value()
+                if parameter.has_variables():
+                    parameter.value = values
 
 
-    def __load_wfs_layer(self):
+        output_path = Path(self.btn_output_dir_select.filePath())
+
+        if self.selected_stored_query.type == StoredQuery.Type.Raster:
+            self.task = RasterLoader('', output_path, Settings.FMI_DOWNLOAD_URL.get(), self.selected_stored_query)
+        else:
+            self.task = VectorLoader("",output_path,Settings.FMI_WFS_URL.get(),Settings.FMI_WFS_VERSION.get(),self.selected_stored_query)
+
+        # noinspection PyUnresolvedReferences
+        self.task.progressChanged.connect(lambda: self.progress_bar.setValue(self.task.progress()))
+        # noinspection PyArgumentList
+        QgsApplication.taskManager().addTask(self.task)
+        self._disable_ui()
+        self.task.taskTerminated.connect(self._enable_ui)
+        self.task.taskCompleted.connect(self._enable_ui)
+
+
+    def __load_wfs_layer_old(self):
+        # TODO: Remove
         enfuser_id = 'fmi::forecast::enfuser::airquality::helsinki-metropolitan::grid'
         sq: StoredQuery = list(filter(lambda q: q.id == enfuser_id, self.stored_queries))[0]
         # TODO: do expanding on demand with button and build parameters dynamically based on sq.parameters
@@ -221,7 +259,6 @@ class MainDialog(QDialog, FORM_CLASS):
         output_path = Path(self.output_dir_select_btn.filePath())
         self.task = RasterLoader('enfuser', output_path, Settings.FMI_DOWNLOAD_URL.get(), sq)
 
-
         # noinspection PyUnresolvedReferences
         self.task.progressChanged.connect(lambda: self.progress_bar.setValue(self.task.progress()))
         # noinspection PyArgumentList
@@ -230,7 +267,7 @@ class MainDialog(QDialog, FORM_CLASS):
         self.task.taskTerminated.connect(self._enable_ui)
         self.task.taskCompleted.connect(self._enable_ui)
 
-    def __load_clicked_old(self):
+    def __load_clicked_old_old(self):
         # TODO: Remove
         params = {
             FmiEnfuserLoaderAlg.AQI: (self.chk_box_aqi.isChecked()),
