@@ -7,9 +7,18 @@
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/Release/badge.svg)
 
 
+Plugin to view and download Finnish Meteorological Institute's open data
+
+
+This plugin is used to view and download [Finnish Meteorological Institute's](https://en.ilmatieteenlaitos.fi/) (later FMI)
+[open data](https://en.ilmatieteenlaitos.fi/open-data).
+
+
 ### Development
 
 Refer to [development](docs/development.md) for developing this QGIS3 plugin.
+
+
 
 ## License
 This plugin is licenced with 

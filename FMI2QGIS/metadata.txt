@@ -1,13 +1,13 @@
 [general]
 name=FMI2QGIS
-description=
-about=
+description=Plugin to view and download Finnish Meteorological Institute's open data
+about=This plugin is used to view and download <a href="https://en.ilmatieteenlaitos.fi/">Finnish Meteorological Institute's</a> (later FMI) <a href="https://en.ilmatieteenlaitos.fi/open-data">open data</a>. By downloading and using the FMI open data, you approve to the Finnish Meteorological Institute's open data <a href="https://en.ilmatieteenlaitos.fi/open-data-licence">license</a> (CC BY 4.0).
 version=0.0.1
 qgisMinimumVersion=3.10
 author=Gispo Ltd.
-email=
+email=jaakko@gispo.fi
 changelog=
-tags=
+tags=FMI, Meteorology, Weather, NetCDF, StoredQuery, WFS, WMS
 repository=https://github.com/GispoCoding/FMI2QGIS
 homepage=https://github.com/GispoCoding/FMI2QGIS
 tracker=https://github.com/GispoCoding/FMI2QGIS/issues
