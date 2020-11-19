@@ -185,6 +185,7 @@ class WFSMetadata:
         self.start_time: Optional[datetime.datetime] = None
         self.time_step: Optional[datetime.timedelta] = None
         self.num_of_time_steps: Optional[int] = None
+        self.sub_dataset_dict: Optional[Dict] = None
 
         # Vector
         self.layer_name: str = ''

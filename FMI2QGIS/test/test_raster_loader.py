@@ -79,8 +79,9 @@ def test_raster_layer_metadata(raster_loader):
     # TODO: add more tests with different rasters
     test_file = Path(plugin_test_data_path('aq_small.nc'))
     raster_loader.path_to_file = test_file
-    raster_loader._update_raster_metadata()
+    result = raster_loader._update_raster_metadata()
     metadata = raster_loader.metadata
+    assert result
     assert metadata.time_step == timedelta(hours=1)
     assert metadata.start_time == datetime(2020, 11, 2, 15, 0)
     assert metadata.num_of_time_steps == 20
@@ -89,10 +90,51 @@ def test_raster_layer_metadata(raster_loader):
     assert metadata.time_range.end().toPyDateTime() == datetime(2020, 11, 3, 10, 0, 1)
 
 
-def test_raster_to_layer(raster_loader):
+def test_raster_layer_metadata2(raster_loader, enfuser_sq):
+    raster_loader.sq = enfuser_sq
+    test_file = Path(plugin_test_data_path('enfuser_all_variables.nc'))
+    raster_loader.path_to_file = test_file
+    result = raster_loader._update_raster_metadata()
+    metadata = raster_loader.metadata
+    assert result
+    assert metadata.time_step == timedelta(hours=1)
+    assert metadata.start_time == datetime(2020, 11, 19, 12, 0)
+    assert metadata.num_of_time_steps == 1
+    assert metadata.is_temporal
+    assert metadata.time_range.begin().toPyDateTime() == datetime(2020, 11, 19, 12, 0)
+    assert metadata.time_range.end().toPyDateTime() == datetime(2020, 11, 19, 12, 0, 1)
+    assert metadata.sub_dataset_dict == {
+        'AQIndex': f'NETCDF:"{test_file}":index_of_airquality_194',
+        'NO2Concentration': f'NETCDF:"{test_file}":mass_concentration_of_nitrogen_dioxide_in_air_4902',
+        'O3Concentration': f'NETCDF:"{test_file}":mass_concentration_of_ozone_in_air_4903',
+        'PM10Concentration': f'NETCDF:"{test_file}":mass_concentration_of_pm10_ambient_aerosol_in_air_4904',
+        'PM25Concentration': f'NETCDF:"{test_file}":mass_concentration_of_pm2p5_ambient_aerosol_in_air_4905'}
+
+
+def test_raster_to_layer(raster_loader, enfuser_sq):
     test_file = Path(plugin_test_data_path('aq_small.nc'))
+    raster_loader.sq = enfuser_sq
     raster_loader.path_to_file = test_file
 
-    layer = raster_loader.raster_to_layer()
+    layers = raster_loader.raster_to_layers()
+    assert len(layers) == 1
+    layer = list(layers)[0]
     assert layer.isValid()
-    assert layer.name() == 'testlayer'
+    assert layer.name() == 'FMI-ENFUSER air quality forecast as grid'
+
+
+def test_raster_to_layer2(raster_loader):
+    test_file = Path(plugin_test_data_path('enfuser_all_variables.nc'))
+    raster_loader.path_to_file = test_file
+    raster_loader.metadata.sub_dataset_dict = {
+        'AQIndex': f'NETCDF:"{test_file}":index_of_airquality_194',
+        'NO2Concentration': f'NETCDF:"{test_file}":mass_concentration_of_nitrogen_dioxide_in_air_4902',
+        'O3Concentration': f'NETCDF:"{test_file}":mass_concentration_of_ozone_in_air_4903',
+        'PM10Concentration': f'NETCDF:"{test_file}":mass_concentration_of_pm10_ambient_aerosol_in_air_4904',
+        'PM25Concentration': f'NETCDF:"{test_file}":mass_concentration_of_pm2p5_ambient_aerosol_in_air_4905'}
+
+    layers = raster_loader.raster_to_layers()
+    assert len(layers) == 5
+    assert all((layer.isValid() for layer in layers))
+    assert {layer.name() for layer in layers} == {'AQIndex', 'NO2Concentration', 'O3Concentration', 'PM10Concentration',
+                                                  'PM25Concentration'}
