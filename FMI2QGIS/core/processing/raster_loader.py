@@ -19,12 +19,13 @@
 
 import logging
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Set
 
 import gdal
 from qgis.core import (QgsRasterLayer, QgsProject, )
 
 from .base_loader import BaseLoader
+from ..exceptions.loader_exceptions import LoaderException
 from ..wfs import StoredQuery
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
 from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
@@ -64,7 +65,7 @@ class RasterLoader(BaseLoader):
         """
         self.path_to_file, result = self._download()
         if result and self.path_to_file.is_file():
-            self._update_raster_metadata()
+            result = self._update_raster_metadata()
         self.setProgress(100)
         return result
 
@@ -84,19 +85,20 @@ class RasterLoader(BaseLoader):
         :param result: the return value from self.run
         """
         if result and self.path_to_file.is_file():
-            layer = self.raster_to_layer()
-            if layer.isValid():
-                # noinspection PyArgumentList
-                QgsProject.instance().addMapLayer(layer)
-                if self.metadata.is_temporal and layer.bandCount() > 1:
-                    set_raster_renderer_to_singleband(layer, 1)
-                    try:
-                        set_fixed_temporal_range(layer, self.metadata.time_range)
-                    except AttributeError:
-                        LOGGER.warning(tr('Your QGIS version does not support temporal properties'),
-                                       extra=bar_msg(tr('Please update your QGIS to support Temporal Controller')))
+            layers = self.raster_to_layers()
+            for layer in layers:
+                if layer.isValid():
+                    # noinspection PyArgumentList
+                    QgsProject.instance().addMapLayer(layer)
+                    if self.metadata.is_temporal:
+                        set_raster_renderer_to_singleband(layer, 1)
+                        try:
+                            set_fixed_temporal_range(layer, self.metadata.time_range)
+                        except AttributeError:
+                            LOGGER.warning(tr('Your QGIS version does not support temporal properties'),
+                                           extra=bar_msg(tr('Please update your QGIS to support Temporal Controller')))
 
-                self.layer_ids.add(layer.id())
+                    self.layer_ids.add(layer.id())
 
         # Error handling
         else:
@@ -110,33 +112,52 @@ class RasterLoader(BaseLoader):
                 except Exception as e:
                     LOGGER.exception(tr('Unhandled exception occurred'), extra=bar_msg(e))
 
-    def raster_to_layer(self) -> QgsRasterLayer:
+    def raster_to_layers(self) -> Set[QgsRasterLayer]:
         """
-        TODO
-        :return:
+        Creates QgsRasterLayers out of raster file
+        :return: Set of QgsRasterLayers
         """
-        # TODO: change name
-        layer_name = 'testlayer'
-
-        if self.path_to_file.suffix == 'nc':
-            variable = 'index_of_airquality_194'
-
-            uri = f'NETCDF:"{self.path_to_file}":{variable}'
-
+        # TODO: add support for other raster formats
+        layers: Set[QgsRasterLayer] = set()
+        if self.metadata.sub_dataset_dict is not None:
+            for layer_name, layer_uri in self.metadata.sub_dataset_dict.items():
+                layers.add(QgsRasterLayer(layer_uri, layer_name))
         else:
-            # TODO: add support for other raster formats
+            layer_name = self.sq.title
             uri = str(self.path_to_file)
-        layer = QgsRasterLayer(uri, layer_name)
-        return layer
+            layers.add(QgsRasterLayer(uri, layer_name))
+        return layers
 
-    def _update_raster_metadata(self) -> None:
+    def _update_raster_metadata(self) -> bool:
         """
         Update raster metadata
+        :return: Whether successfull or not
         """
         try:
             ds: gdal.Dataset = gdal.Open(str(self.path_to_file))
             sub_datasets = ds.GetSubDatasets()
             if sub_datasets:
+                sub_dataset_parameters = [param for param in self.sq.parameters.values() if param.has_variables()]
+                if not sub_dataset_parameters:
+                    self.exception = LoaderException(tr('This part of the plugin is not implemented yet'),
+                                                     bar_msg=bar_msg(tr('Please send log file to Github as issue')))
+                    return False
+                sub_dataset_parameter = sub_dataset_parameters[0]
+                if len(sub_datasets) == len(sub_dataset_parameter.variables) + 1:
+                    sub_datasets = [sub_dataset for sub_dataset in sub_datasets if
+                                    not sub_dataset[0].endswith('time_bounds_h')]
+                    if len(sub_datasets) == len(sub_dataset_parameter.variables):
+                        self.metadata.sub_dataset_dict = {sub_dataset_parameter.variables[i].alias: sub_datasets[i][0]
+                                                          for i in range(len(sub_datasets))}
+                    else:
+                        # TODO
+                        pass
+                else:
+                    # TODO
+                    self.exception = LoaderException(tr('This part of the plugin is not implemented yet'),
+                                                     bar_msg=bar_msg(tr('Please send log file to Github as issue')))
+                    return False
+
                 # TODO: Check variable(s) and add to metadata
                 first_path = sub_datasets[0][0]
                 ds: gdal.Dataset = gdal.Open(first_path)
@@ -145,3 +166,5 @@ class RasterLoader(BaseLoader):
             self.metadata.update_from_gdal_metadata(ds_metadata)
         finally:
             ds = None
+
+        return True
