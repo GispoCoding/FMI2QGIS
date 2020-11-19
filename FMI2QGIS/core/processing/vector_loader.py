@@ -16,7 +16,7 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
-
+import gzip
 import logging
 import uuid
 from pathlib import Path
@@ -70,6 +70,14 @@ class VectorLoader(BaseLoader):
     @property
     def file_name(self) -> Optional[str]:
         return f'{self.sq.id.replace("::", "_")}_{uuid.uuid4()}.gml'
+
+    def _process_downloaded_file(self, downloaded_file_path: Path) -> Path:
+        """ Do some postprocessing after the file is downloaded"""
+        output = Path(downloaded_file_path.parent, downloaded_file_path.name.replace('.', '_utf8.'))
+        with gzip.open(downloaded_file_path, 'rb') as f:
+            with open(output, 'w') as f2:
+                f2.write(f.read().decode('utf-8'))
+        return output
 
     def _construct_uri(self) -> str:
         url = f'{self.wfs_url}?service=WFS&version={self.wfs_version}&request=GetFeature'

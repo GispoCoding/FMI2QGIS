@@ -77,6 +77,7 @@ class BaseLoader(QgsTask):
             try:
                 # TODO: add a way to cancel the download
                 output = network.download_to_file(uri, self.download_dir, output_name=self.file_name)
+                output = self._process_downloaded_file(output)
                 self._log(f'File path is: "{output}"')
                 self.setProgress(70)
                 if not self.isCanceled():
@@ -95,6 +96,10 @@ class BaseLoader(QgsTask):
             result = False
 
         return output, result
+
+    def _process_downloaded_file(self, downloaded_file_path: Path) -> Path:
+        """ Do some postprocessing after the file is downloaded"""
+        return downloaded_file_path
 
     def _construct_uri(self) -> str:
         """

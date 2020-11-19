@@ -106,7 +106,7 @@ class Parameter:
         elif self.name == 'param':
             if isinstance(val, list):
                 _val = ','.join(val)
-        self._value = _val
+        self._value = _val if _val != '' else None
 
     def has_variables(self) -> bool:
         return self.name == 'param' and self.type == QVariant.StringList
@@ -150,12 +150,13 @@ class StoredQuery:
     @property
     def time_step(self) -> int:
         """
-        :return: Time step parameter value or -1
+        :return: Time step parameter value or 60
         """
+        value = None
         time_step_params = [param for name, param in self.parameters.items() if name in self.TIME_STEP_NAMES]
         if len(time_step_params) == 1:
-            return time_step_params[0].value
-        return -1
+            value = time_step_params[0].value
+        return int(value) if value is not None else 60
 
     @staticmethod
     def create(sq_element: ET.Element) -> Optional['StoredQuery']:

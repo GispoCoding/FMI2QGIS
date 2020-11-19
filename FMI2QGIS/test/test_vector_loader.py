@@ -44,7 +44,7 @@ def test_download_airquality(tmpdir_pth, wfs_url, wfs_version, air_quality_sq, e
 
     loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq)
 
-    test_file = Path(plugin_test_data_path('airquality_small.xml'))
+    test_file = Path(plugin_test_data_path('airquality_small.xml.gz'))
     expected_output = Path(plugin_test_data_path('airquality.sqlite'))
 
     def mock_download_to_file(uri, output_dir: Path, output_name: str, *args, **kwargs) -> Path:
@@ -61,7 +61,7 @@ def test_download_airquality(tmpdir_pth, wfs_url, wfs_version, air_quality_sq, e
     result = loader.run()
 
     assert result, loader.exception
-    assert loader.path_to_file == Path(tmpdir_pth, 'fmi_observations_airquality_hourly_simple_uuid.sqlite')
+    assert loader.path_to_file == Path(tmpdir_pth, 'fmi_observations_airquality_hourly_simple_uuid_utf8.sqlite')
     assert loader.path_to_file.exists()
     assert loader.path_to_file.stat().st_size == expected_output.stat().st_size
 
