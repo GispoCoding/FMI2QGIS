@@ -23,10 +23,10 @@ from typing import Dict, List, Optional, Set
 
 from PyQt5.QtCore import QVariant, pyqtSignal
 from PyQt5.QtWidgets import (QDialog, QProgressBar, QTableWidget, QTableWidgetItem, QGridLayout, QWidget, QCheckBox,
-                             QLabel, QVBoxLayout)
+                             QLabel, QVBoxLayout, QComboBox, QLineEdit, QSpinBox)
 from qgis.core import (QgsCoordinateReferenceSystem, QgsApplication, QgsProcessingContext,
                        QgsProcessingFeedback, )
-from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas
+from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas, QgsDoubleSpinBox
 
 from ..core.processing.base_loader import BaseLoader
 from ..core.processing.raster_loader import RasterLoader
@@ -34,7 +34,7 @@ from ..core.processing.vector_loader import VectorLoader
 from ..core.wfs import StoredQueryFactory, StoredQuery
 from ..definitions.configurable_settings import Settings
 from ..qgis_plugin_tools.tools.custom_logging import bar_msg
-from ..qgis_plugin_tools.tools.fields import widget_for_field
+from ..qgis_plugin_tools.tools.fields import widget_for_field, value_for_widget
 from ..qgis_plugin_tools.tools.i18n import tr
 from ..qgis_plugin_tools.tools.logger_processing import LoggerProcessingFeedBack
 from ..qgis_plugin_tools.tools.resources import load_ui, plugin_name
@@ -124,12 +124,14 @@ class MainDialog(QDialog, FORM_CLASS):
         self.extent_group_box_bbox.setEnabled(False)
         for param_name, parameter in self.selected_stored_query.parameters.items():
             widgets = set()
-            if parameter.type == QVariant.Rect:
+            if parameter.type in (QVariant.Rect, QVariant.RectF):
                 self.parameter_rows[param_name] = widgets
                 self.extent_group_box_bbox.setEnabled(True)
                 continue
             row_idx += 1
             widget: QWidget = widget_for_field(parameter.type)
+            if isinstance(widget, QComboBox) or isinstance(widget, QSpinBox) or isinstance(widget, QgsDoubleSpinBox):
+                widget = QLineEdit()
             widget.setToolTip(parameter.abstract)
 
             if parameter.type == QVariant.StringList:
@@ -164,7 +166,7 @@ class MainDialog(QDialog, FORM_CLASS):
 
         for param_name, widgets in self.parameter_rows.items():
             parameter = self.selected_stored_query.parameters[param_name]
-            if parameter.type == QVariant.Rect:
+            if parameter.type in (QVariant.Rect, QVariant.RectF):
                 parameter.value = self.extent_group_box_bbox.outputExtent()
             else:
                 values = []
@@ -178,7 +180,8 @@ class MainDialog(QDialog, FORM_CLASS):
                         if widget.isChecked():
                             values.append(widget.text())
                     else:
-                        parameter.value = widget.value()
+                        value = value_for_widget(widget)
+                        parameter.value = value
                 if parameter.has_variables():
                     parameter.value = values
 
