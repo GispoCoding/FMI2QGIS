@@ -19,15 +19,23 @@
 
 import logging
 from pathlib import Path
+from typing import Dict
 
-from qgis.core import QgsRasterLayer, QgsProject
+import gdal
+from qgis.core import (QgsRasterLayer, QgsProject, )
 
 from .base_loader import BaseLoader
 from ..wfs import StoredQuery
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
 from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
 from ...qgis_plugin_tools.tools.i18n import tr
+from ...qgis_plugin_tools.tools.raster_layers import set_raster_renderer_to_singleband, set_fixed_temporal_range
 from ...qgis_plugin_tools.tools.resources import plugin_name
+
+try:
+    from qgis.core import QgsRasterLayerTemporalProperties
+except ImportError:
+    QgsRasterLayerTemporalProperties = None
 
 LOGGER = logging.getLogger(plugin_name())
 
@@ -45,12 +53,18 @@ class RasterLoader(BaseLoader):
         self.url = fmi_download_url
         self.sq = sq
 
+    @property
+    def is_manually_temporal(self) -> bool:
+        return self.metadata.is_temporal
+
     def run(self) -> bool:
         """
         NOTE: LOGGER cannot be used in here or any methods that are called from here
         :return:
         """
         self.path_to_file, result = self._download()
+        if result and self.path_to_file.is_file():
+            self._update_raster_metadata()
         self.setProgress(100)
         return result
 
@@ -72,10 +86,17 @@ class RasterLoader(BaseLoader):
         if result and self.path_to_file.is_file():
             layer = self.raster_to_layer()
             if layer.isValid():
-                # TODO: layer styling
-
                 # noinspection PyArgumentList
                 QgsProject.instance().addMapLayer(layer)
+                if self.metadata.is_temporal and layer.bandCount() > 1:
+                    set_raster_renderer_to_singleband(layer, 1)
+                    try:
+                        set_fixed_temporal_range(layer, self.metadata.time_range)
+                    except AttributeError:
+                        LOGGER.warning(tr('Your QGIS version does not support temporal properties'),
+                                       extra=bar_msg(tr('Please update your QGIS to support Temporal Controller')))
+
+                self.layer_ids.add(layer.id())
 
         # Error handling
         else:
@@ -96,8 +117,8 @@ class RasterLoader(BaseLoader):
         """
         # TODO: change name
         layer_name = 'testlayer'
+
         if self.path_to_file.suffix == 'nc':
-            # TODO: Check variable(s) using gdal.Dataset.GetSubDatasets()
             variable = 'index_of_airquality_194'
 
             uri = f'NETCDF:"{self.path_to_file}":{variable}'
@@ -107,3 +128,20 @@ class RasterLoader(BaseLoader):
             uri = str(self.path_to_file)
         layer = QgsRasterLayer(uri, layer_name)
         return layer
+
+    def _update_raster_metadata(self) -> None:
+        """
+        Update raster metadata
+        """
+        try:
+            ds: gdal.Dataset = gdal.Open(str(self.path_to_file))
+            sub_datasets = ds.GetSubDatasets()
+            if sub_datasets:
+                # TODO: Check variable(s) and add to metadata
+                first_path = sub_datasets[0][0]
+                ds: gdal.Dataset = gdal.Open(first_path)
+
+            ds_metadata: Dict[str, str] = ds.GetMetadata()
+            self.metadata.update_from_gdal_metadata(ds_metadata)
+        finally:
+            ds = None

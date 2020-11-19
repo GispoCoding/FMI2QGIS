@@ -18,12 +18,12 @@
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
 from pathlib import Path
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Set
 
 from qgis.core import QgsMessageLog, Qgis, QgsTask
 
 from ..exceptions.loader_exceptions import BadRequestException
-from ..wfs import raise_based_on_response
+from ..wfs import raise_based_on_response, WFSMetadata
 from ...qgis_plugin_tools.tools import network
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
 from ...qgis_plugin_tools.tools.exceptions import QgsPluginNetworkException, QgsPluginNotImplementedException
@@ -43,8 +43,14 @@ class BaseLoader(QgsTask):
         if not self.download_dir.exists():
             self.download_dir.mkdir()
 
+        self.layer_ids: Set[str] = set()
         self.path_to_file: Path = Path()
+        self.metadata: WFSMetadata = WFSMetadata()
         self.exception: Optional[Exception] = None
+
+    @property
+    def is_manually_temporal(self) -> bool:
+        return False
 
     @property
     def file_name(self) -> Optional[str]:
