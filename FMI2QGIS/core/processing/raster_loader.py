@@ -71,7 +71,7 @@ class RasterLoader(BaseLoader):
 
     def _construct_uri(self) -> str:
         url = self.url + f'?producer={self.sq.producer}'
-        if 'format' not in self.sq.parameters:
+        if 'format' not in self.sq.parameters or self.sq.parameters['format'].value is None:
             url += f'&format={self.sq.format}'
         url += '&' + '&'.join(
             [f'{name}={param.value}' for name, param in self.sq.parameters.items() if param.value is not None])
