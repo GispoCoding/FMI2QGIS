@@ -17,7 +17,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>GroupBox</string>
+      <string>WFS Layers</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>

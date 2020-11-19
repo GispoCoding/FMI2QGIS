@@ -84,10 +84,6 @@ class MainDialog(QDialog, FORM_CLASS):
         #populating dynamically the parameters of main dialog
         self.grid: QGridLayout
         self.parameter_rows: Dict[str, Set[QWidget]] = {}
-        #self.selected_stored_query: StoredQuery
-
-        # TODO: do this only on demand when refreshing
-        self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
 
         # TODO: possibly do this after succesful loading of temporal layer
         self.__show_temporal_controller()
@@ -115,26 +111,15 @@ class MainDialog(QDialog, FORM_CLASS):
             id_item.setToolTip(sq.id)
             self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
 
-            #self.tbl_wdgt_stored_queries.setItem(i, 1, QTableWidgetItem(sq.na))
-
-        print('row count: ', self.tbl_wdgt_stored_queries.rowCount())
-        print('last stored query', self.stored_queries[len(self.stored_queries) - 1].title)
-
-        rows = len( self.stored_queries)
-        print('number of stored queries: ', rows)
-        #for stored_query in self.stored_queries:
-        #    self.table.setItem(stored_query.title)
-        #    print(stored_query.title)
-
     def __select_wfs_layer(self):
 
         self.tbl_wdgt_stored_queries: QTableWidget
         indexes = self.tbl_wdgt_stored_queries.selectedIndexes()
         if not indexes:
-            print("select something")
+            LOGGER.warning(tr('Could not execute select'), extra=bar_msg(tr('Data source must be selected first!')))
             return
         self.selected_stored_query = self.stored_queries[indexes[0].row()]
-        print(self.selected_stored_query.id)
+        LOGGER.info(tr('Selected query id: {}', self.selected_stored_query.id))
         self.sq_factory.expand(self.selected_stored_query)
 
         for widget_set in self.parameter_rows.values():
@@ -152,25 +137,24 @@ class MainDialog(QDialog, FORM_CLASS):
         self.extent_group_box_bbox.setEnabled(False)
         for param_name, parameter in self.selected_stored_query.parameters.items():
             widgets = set()
-            #print(param_name, parameter)
             if parameter.type == QVariant.Rect:
                 self.parameter_rows[param_name] = widgets
                 self.extent_group_box_bbox.setEnabled(True)
                 continue
             row_idx += 1
             widget: QWidget = widget_for_field(parameter.type)
+            widget.setToolTip(parameter.abstract)
 
             if parameter.type == QVariant.StringList:
                 if parameter.has_variables():
                     widget = QVBoxLayout()
                     widget.addStretch(1)
-                    print(parameter.variables)
                     for variable in parameter.variables:
                         box = QCheckBox(text=variable.alias)
                         box.setToolTip(variable.label)
                         widgets.add(box)
                         widget.addWidget(box)
-                        print(variable.alias)
+                        LOGGER.info(tr('Variables: {}', variable.alias))
 
             # TODO: all others
             if widget is None:
@@ -196,8 +180,7 @@ class MainDialog(QDialog, FORM_CLASS):
         for param_name, widgets in self.parameter_rows.items():
             parameter = self.selected_stored_query.parameters[param_name]
             if parameter.type == QVariant.Rect:
-                # TODO: ota extent
-                pass
+                parameter.value = self.extent_group_box_bbox.outputExtent()
             else:
                 values = []
                 for widget in widgets:
@@ -229,86 +212,6 @@ class MainDialog(QDialog, FORM_CLASS):
         self._disable_ui()
         self.task.taskTerminated.connect(self._enable_ui)
         self.task.taskCompleted.connect(self._enable_ui)
-
-
-    def __load_wfs_layer_old(self):
-        # TODO: Remove
-        enfuser_id = 'fmi::forecast::enfuser::airquality::helsinki-metropolitan::grid'
-        sq: StoredQuery = list(filter(lambda q: q.id == enfuser_id, self.stored_queries))[0]
-        # TODO: do expanding on demand with button and build parameters dynamically based on sq.parameters
-        self.sq_factory.expand(sq)
-
-        sq.parameters['starttime'].value = self.dt_edit_start.dateTime().toPyDateTime()
-        sq.parameters['endtime'].value = self.dt_edit_end.dateTime().toPyDateTime()
-        sq.parameters['bbox'].value = self.extent_group_box_bbox.outputExtent()
-
-        # TODO: as said, build this dynamically based on sq.parameters
-        variables = []
-        if self.chk_box_aqi.isChecked():
-            variables.append('AQIndex')
-        if self.chk_box_pm25.isChecked():
-            variables.append('PM25Concentration')
-        if self.chk_box_pm10.isChecked():
-            variables.append('PM10Concentration')
-        if self.chk_box_no2.isChecked():
-            variables.append('NO2Concentration')
-        if self.chk_box_o3.isChecked():
-            variables.append('O3Concentration')
-        sq.parameters['param'].value = variables
-
-        output_path = Path(self.output_dir_select_btn.filePath())
-        self.task = RasterLoader('enfuser', output_path, Settings.FMI_DOWNLOAD_URL.get(), sq)
-
-        # noinspection PyUnresolvedReferences
-        self.task.progressChanged.connect(lambda: self.progress_bar.setValue(self.task.progress()))
-        # noinspection PyArgumentList
-        QgsApplication.taskManager().addTask(self.task)
-        self._disable_ui()
-        self.task.taskTerminated.connect(self._enable_ui)
-        self.task.taskCompleted.connect(self._enable_ui)
-
-    def __load_clicked_old_old(self):
-        # TODO: Remove
-        params = {
-            FmiEnfuserLoaderAlg.AQI: (self.chk_box_aqi.isChecked()),
-            FmiEnfuserLoaderAlg.PM25: (self.chk_box_pm25.isChecked()),
-            FmiEnfuserLoaderAlg.PM10: (self.chk_box_pm10.isChecked()),
-            FmiEnfuserLoaderAlg.NO2: (self.chk_box_no2.isChecked()),
-            FmiEnfuserLoaderAlg.O3: (self.chk_box_o3.isChecked()),
-            FmiEnfuserLoaderAlg.START_TIME: (self.dt_edit_start.dateTime()),
-            FmiEnfuserLoaderAlg.END_TIME: (self.dt_edit_end.dateTime()),
-            FmiEnfuserLoaderAlg.EXTENT: (self.extent_group_box_bbox.outputExtent()),
-            FmiEnfuserLoaderAlg.OUT_DIR: self.output_dir_select_btn.filePath()
-        }
-        # noinspection PyArgumentList
-        alg = QgsApplication.processingRegistry().algorithmById(
-            f'{Fmi2QgisProcessingProvider.ID}:{FmiEnfuserLoaderAlg.ID}')
-        task = QgsProcessingAlgRunnerTask(alg, params, self.context, self.feedback)
-        # noinspection PyUnresolvedReferences
-        task.executed.connect(self._alg_completed)
-        # noinspection PyUnresolvedReferences
-        task.progressChanged.connect(lambda: self.progress_bar.setValue(task.progress()))
-        # noinspection PyArgumentList
-        QgsApplication.taskManager().addTask(task)
-        self._disable_ui()
-
-    def _alg_completed(self, succesful: bool, results: Dict[str, any]) -> None:
-        # TODO: Remove
-        self._enable_ui()
-        if succesful:
-            netcdf_path = Path(results[FmiEnfuserLoaderAlg.OUTPUT])
-            if self.chk_box_aqi.isChecked():
-                layer = EnfuserNetcdfLoader.layer_names[EnfuserNetcdfLoader.Products.AirQualityIndex]
-            else:
-                layer = ''
-            uri = f'NETCDF:"{netcdf_path}":{layer}'
-            layer_name = 'testlayer'
-            layer = QgsRasterLayer(uri, layer_name)
-            if layer.isValid():
-                # noinspection PyArgumentList
-                QgsProject.instance().addMapLayer(layer)
-        else:
-            LOGGER.error(tr('Error occurred'), extra=bar_msg(tr('See log for more details')))
 
     def _disable_ui(self):
         for item in self.responsive_items:
