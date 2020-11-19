@@ -28,7 +28,7 @@ from qgis.gui import QgisInterface
 from .core.processing.provider import Fmi2QgisProcessingProvider
 from .qgis_plugin_tools.tools.custom_logging import setup_logger
 from .qgis_plugin_tools.tools.i18n import setup_translation, tr
-from .qgis_plugin_tools.tools.resources import plugin_name
+from .qgis_plugin_tools.tools.resources import plugin_name, resources_path
 from .ui.main_dialog import MainDialog
 from .ui.wms_dialog import WMSDialog
 
@@ -127,16 +127,16 @@ class Plugin:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
         self.add_action(
-            "",
-            text=tr(plugin_name()),
+            resources_path('icons', 'icon.png'),
+            text=tr("Add WFS Layer"),
             callback=self.run,
             parent=self.iface.mainWindow(),
             add_to_toolbar=False
         )
 
         self.add_action(
-            "",
-            text=tr("Add WMS"),
+            resources_path('icons', 'icon.png'),
+            text=tr("Add WMS Layer"),
             callback=self.add_wms,
             parent=self.iface.mainWindow(),
             add_to_toolbar=False

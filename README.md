@@ -1,4 +1,8 @@
 # FMI2QGIS
+<img src="FMI2QGIS/resources/icons/icon_hr.png" alt="Logo of FMI2QGIS" width="250"/>
+
+
+
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/Tests/badge.svg)
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/Release/badge.svg)
 
