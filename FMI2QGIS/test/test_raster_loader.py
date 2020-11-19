@@ -21,6 +21,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
+from PyQt5.QtCore import QDateTime, Qt
+from qgis._core import QgsRasterLayer, QgsProject, QgsRasterLayerTemporalProperties, QgsDateTimeRange
 
 from ..core.processing.raster_loader import RasterLoader
 from ..core.wfs import Parameter
@@ -41,7 +43,7 @@ def test_download_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_sm_1,
 
     loader = RasterLoader('', tmpdir_pth, fmi_download_url, enfuser_sq)
 
-    test_file = Path(plugin_test_data_path('aq_small.nc'))
+    test_file = Path(plugin_test_data_path('enfuser_aq.nc'))
     test_file_name = 'test_aq_small.nc'
 
     def mock_download_to_file(*args, **kwargs) -> Path:
@@ -77,7 +79,7 @@ def test_construct_uri_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_
 
 def test_raster_layer_metadata(raster_loader):
     # TODO: add more tests with different rasters
-    test_file = Path(plugin_test_data_path('aq_small.nc'))
+    test_file = Path(plugin_test_data_path('enfuser_aq.nc'))
     raster_loader.path_to_file = test_file
     result = raster_loader._update_raster_metadata()
     metadata = raster_loader.metadata
@@ -92,6 +94,8 @@ def test_raster_layer_metadata(raster_loader):
 
 def test_raster_layer_metadata2(raster_loader, enfuser_sq):
     raster_loader.sq = enfuser_sq
+    enfuser_sq.parameters['param'].value = ['AQIndex', 'NO2Concentration', 'O3Concentration', 'PM10Concentration',
+                                            'PM25Concentration']
     test_file = Path(plugin_test_data_path('enfuser_all_variables.nc'))
     raster_loader.path_to_file = test_file
     result = raster_loader._update_raster_metadata()
@@ -111,8 +115,27 @@ def test_raster_layer_metadata2(raster_loader, enfuser_sq):
         'PM25Concentration': f'NETCDF:"{test_file}":mass_concentration_of_pm2p5_ambient_aerosol_in_air_4905'}
 
 
+def test_raster_layer_metadata3(raster_loader, enfuser_sq):
+    raster_loader.sq = enfuser_sq
+    enfuser_sq.parameters['param'].value = ['NO2Concentration', 'O3Concentration']
+    test_file = Path(plugin_test_data_path('enfuser_no2_o3.nc'))
+    raster_loader.path_to_file = test_file
+    result = raster_loader._update_raster_metadata()
+    metadata = raster_loader.metadata
+    assert result
+    assert metadata.time_step == timedelta(hours=1)
+    assert metadata.start_time == datetime(2020, 11, 19, 17, 0)
+    assert metadata.num_of_time_steps == 2
+    assert metadata.is_temporal
+    assert metadata.time_range.begin().toPyDateTime() == datetime(2020, 11, 19, 17, 0)
+    assert metadata.time_range.end().toPyDateTime() == datetime(2020, 11, 19, 18, 0, 1)
+    assert metadata.sub_dataset_dict == {
+        'NO2Concentration': f'NETCDF:"{test_file}":mass_concentration_of_nitrogen_dioxide_in_air_4902',
+        'O3Concentration': f'NETCDF:"{test_file}":mass_concentration_of_ozone_in_air_4903'}
+
+
 def test_raster_to_layer(raster_loader, enfuser_sq):
-    test_file = Path(plugin_test_data_path('aq_small.nc'))
+    test_file = Path(plugin_test_data_path('enfuser_aq.nc'))
     raster_loader.sq = enfuser_sq
     raster_loader.path_to_file = test_file
 
@@ -138,3 +161,27 @@ def test_raster_to_layer2(raster_loader):
     assert all((layer.isValid() for layer in layers))
     assert {layer.name() for layer in layers} == {'AQIndex', 'NO2Concentration', 'O3Concentration', 'PM10Concentration',
                                                   'PM25Concentration'}
+
+
+def test_adding_layer_temporal_settings(new_project, raster_loader, enfuser_sq):
+    test_file = Path(plugin_test_data_path('enfuser_no2_o3.nc'))
+    raster_loader.metadata.sub_dataset_dict = {
+        'NO2Concentration': f'NETCDF:"{test_file}":mass_concentration_of_nitrogen_dioxide_in_air_4902',
+        'O3Concentration': f'NETCDF:"{test_file}":mass_concentration_of_ozone_in_air_4903'}
+    raster_loader.metadata.time_step = timedelta(hours=1)
+    raster_loader.metadata.start_time = datetime(2020, 11, 19, 17, 0)
+    raster_loader.metadata.num_of_time_steps = 2
+    raster_loader.sq = enfuser_sq
+    raster_loader.path_to_file = test_file
+    raster_loader.finished(True)
+
+    assert len(raster_loader.layer_ids) == 2
+
+    for layer_id in raster_loader.layer_ids:
+        layer: QgsRasterLayer = QgsProject.instance().mapLayer(layer_id)
+
+        assert layer.isValid()
+        tprops: QgsRasterLayerTemporalProperties = layer.temporalProperties()
+        assert tprops.isActive()
+        assert tprops.fixedTemporalRange() == QgsDateTimeRange(QDateTime(2020, 11, 19, 17, 0, 0, 0, Qt.TimeSpec(1)),
+                                                               QDateTime(2020, 11, 19, 18, 0, 1, 0, Qt.TimeSpec(1)))

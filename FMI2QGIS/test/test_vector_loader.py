@@ -153,7 +153,7 @@ def test_convert_to_spatialite(tmpdir_pth, vector_loader):
     assert vector_loader.path_to_file == expected_spatialite_file
 
 
-def test_adding_layer_temporal_settings(vector_loader, air_quality_sq):
+def test_adding_layer_temporal_settings(new_project, vector_loader, air_quality_sq):
     test_file = Path(plugin_test_data_path('airquality.sqlite'))
     air_quality_sq.parameters['timestep'].value = 60
     vector_loader.sq = air_quality_sq
