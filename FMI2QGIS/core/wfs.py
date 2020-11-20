@@ -180,6 +180,7 @@ class WFSMetadata:
     TIME_FORMAT = '%Y-%m-%d %H:%M:%S'  # 2020-11-02 15:00:00
     DATETIME_FIELDS = ('date', 'time', 'datetime')
     DATETIME_TYPES = (9, 10, 11)  # Date, Dime, DateTime
+    TIME_DIMENSION_NAMES = ('time', 'time_h')
 
     def __init__(self):
         # Raster
@@ -218,7 +219,7 @@ class WFSMetadata:
                 dim_def = ds_metadata.get(f'NETCDF_DIM_{dimension}_DEF', '').strip('{').strip('}').split(',')
 
                 dim_units = ds_metadata.get(f'{dimension}#units', '')
-                if dimension == 'time' and dim_def:
+                if dimension in self.TIME_DIMENSION_NAMES and dim_def:
                     time_units, start_time = dim_units.split(' since ')  # eg. hours since 2020-10-05 18:00:00
                     if time_units == 'hours':
                         self.time_step = datetime.timedelta(hours=1)

@@ -25,10 +25,9 @@ import gdal
 from qgis.core import (QgsRasterLayer, QgsProject, )
 
 from .base_loader import BaseLoader
-from ..exceptions.loader_exceptions import LoaderException
 from ..wfs import StoredQuery
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
-from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
+from ...qgis_plugin_tools.tools.exceptions import QgsPluginException, QgsPluginNotImplementedException
 from ...qgis_plugin_tools.tools.i18n import tr
 from ...qgis_plugin_tools.tools.raster_layers import set_raster_renderer_to_singleband, set_fixed_temporal_range
 from ...qgis_plugin_tools.tools.resources import plugin_name
@@ -133,39 +132,36 @@ class RasterLoader(BaseLoader):
     def _update_raster_metadata(self) -> bool:
         """
         Update raster metadata
-        :return: Whether successfull or not
+        :return: Whether successful or not
         """
         try:
             ds: gdal.Dataset = gdal.Open(str(self.path_to_file))
             sub_datasets = ds.GetSubDatasets()
             if sub_datasets:
                 sub_dataset_parameters = [param for param in self.sq.parameters.values() if param.has_variables()]
-                if not sub_dataset_parameters:
-                    self.exception = LoaderException(tr('This part of the plugin is not implemented yet'),
-                                                     bar_msg=bar_msg(tr('Please send log file to Github as issue')))
+                if not sub_dataset_parameters or not sub_dataset_parameters[0].value:
+                    self.exception = QgsPluginNotImplementedException(
+                        tr('This part of the plugin is not implemented yet. Code 1'),
+                        bar_msg=bar_msg(tr('Please send log file to Github as issue')))
                     return False
                 sub_dataset_parameter = sub_dataset_parameters[0]
-                if len(sub_datasets) == len(sub_dataset_parameter.variables) + 1:
+                sub_dataset_variables = sub_dataset_parameter.value.split(',')
+                if len(sub_datasets) == len(sub_dataset_variables) + 1:
                     sub_datasets = [sub_dataset for sub_dataset in sub_datasets if
                                     not sub_dataset[0].endswith('time_bounds_h')]
-                    if len(sub_datasets) == len(sub_dataset_parameter.variables):
-                        self.metadata.sub_dataset_dict = {sub_dataset_parameter.variables[i].alias: sub_datasets[i][0]
-                                                          for i in range(len(sub_datasets))}
-                    else:
-                        # TODO
-                        pass
+                if len(sub_datasets) == len(sub_dataset_variables):
+                    self.metadata.sub_dataset_dict = {sub_dataset_variables[i]: sub_datasets[i][0]
+                                                      for i in range(len(sub_datasets))}
                 else:
-                    # TODO
-                    self.exception = LoaderException(tr('This part of the plugin is not implemented yet'),
-                                                     bar_msg=bar_msg(tr('Please send log file to Github as issue')))
+                    self.exception = QgsPluginNotImplementedException(
+                        tr('This part of the plugin is not implemented yet. Code 2'),
+                        bar_msg=bar_msg(tr('Please send log file to Github as issue')))
                     return False
 
-                # TODO: Check variable(s) and add to metadata
                 first_path = sub_datasets[0][0]
                 ds: gdal.Dataset = gdal.Open(first_path)
 
-            ds_metadata: Dict[str, str] = ds.GetMetadata()
-            self.metadata.update_from_gdal_metadata(ds_metadata)
+            self.metadata.update_from_gdal_metadata(ds.GetMetadata())
         finally:
             ds = None
 

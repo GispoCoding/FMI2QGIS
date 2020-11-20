@@ -93,7 +93,7 @@ def enfuser_sq(sqs, sq_factory) -> StoredQuery:
 
 @pytest.fixture
 def enfuser_layer_sm(tmpdir_pth) -> QgsRasterLayer:
-    test_file = Path(plugin_test_data_path('aq_small.nc'))
+    test_file = Path(plugin_test_data_path('enfuser_aq.nc'))
     copied_file = shutil.copy(test_file, tmpdir_pth)
     uri = f'NETCDF:{copied_file}:index_of_airquality_194'
     return QgsRasterLayer(uri, 'enfuser_test')
