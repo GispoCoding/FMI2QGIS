@@ -43,7 +43,7 @@ def test_download_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_sm_1,
 
     loader = RasterLoader('', tmpdir_pth, fmi_download_url, enfuser_sq)
 
-    test_file = Path(plugin_test_data_path('enfuser_aq.nc'))
+    test_file = Path(plugin_test_data_path('aq_small.nc'))
     test_file_name = 'test_aq_small.nc'
 
     def mock_download_to_file(*args, **kwargs) -> Path:
@@ -79,7 +79,7 @@ def test_construct_uri_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_
 
 def test_raster_layer_metadata(raster_loader):
     # TODO: add more tests with different rasters
-    test_file = Path(plugin_test_data_path('enfuser_aq.nc'))
+    test_file = Path(plugin_test_data_path('aq_small.nc'))
     raster_loader.path_to_file = test_file
     result = raster_loader._update_raster_metadata()
     metadata = raster_loader.metadata
@@ -135,7 +135,7 @@ def test_raster_layer_metadata3(raster_loader, enfuser_sq):
 
 
 def test_raster_to_layer(raster_loader, enfuser_sq):
-    test_file = Path(plugin_test_data_path('enfuser_aq.nc'))
+    test_file = Path(plugin_test_data_path('aq_small.nc'))
     raster_loader.sq = enfuser_sq
     raster_loader.path_to_file = test_file
 

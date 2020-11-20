@@ -45,7 +45,7 @@ def test_download(tmpdir_pth, fmi_download_url, feedback, extent_sm_1, monkeypat
     start_time = datetime.strptime('2020-11-03T14:00:00Z', enfuser_loader.time_format)
     end_time = datetime.strptime('2020-11-04T14:00:00Z', enfuser_loader.time_format)
 
-    test_file = Path(plugin_test_data_path('enfuser_aq.nc'))
+    test_file = Path(plugin_test_data_path('aq_small.nc'))
     test_file_name = 'test_aq_small.nc'
 
     def mock_fetch_raw(uri: str, encoding: str = 'utf-8'):
