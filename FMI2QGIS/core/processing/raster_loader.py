@@ -132,7 +132,7 @@ class RasterLoader(BaseLoader):
     def _update_raster_metadata(self) -> bool:
         """
         Update raster metadata
-        :return: Whether successfull or not
+        :return: Whether successful or not
         """
         try:
             ds: gdal.Dataset = gdal.Open(str(self.path_to_file))
@@ -149,25 +149,19 @@ class RasterLoader(BaseLoader):
                 if len(sub_datasets) == len(sub_dataset_variables) + 1:
                     sub_datasets = [sub_dataset for sub_dataset in sub_datasets if
                                     not sub_dataset[0].endswith('time_bounds_h')]
-                    if len(sub_datasets) == len(sub_dataset_variables):
-                        self.metadata.sub_dataset_dict = {sub_dataset_variables[i]: sub_datasets[i][0]
-                                                          for i in range(len(sub_datasets))}
-                    else:
-                        self.exception = QgsPluginNotImplementedException(
-                            tr('This part of the plugin is not implemented yet. Code 2'),
-                            bar_msg=bar_msg(tr('Please send log file to Github as issue')))
-                        return False
+                if len(sub_datasets) == len(sub_dataset_variables):
+                    self.metadata.sub_dataset_dict = {sub_dataset_variables[i]: sub_datasets[i][0]
+                                                      for i in range(len(sub_datasets))}
                 else:
                     self.exception = QgsPluginNotImplementedException(
-                        tr('This part of the plugin is not implemented yet. Code 3'),
+                        tr('This part of the plugin is not implemented yet. Code 2'),
                         bar_msg=bar_msg(tr('Please send log file to Github as issue')))
                     return False
 
                 first_path = sub_datasets[0][0]
                 ds: gdal.Dataset = gdal.Open(first_path)
 
-            ds_metadata: Dict[str, str] = ds.GetMetadata()
-            self.metadata.update_from_gdal_metadata(ds_metadata)
+            self.metadata.update_from_gdal_metadata(ds.GetMetadata())
         finally:
             ds = None
 
