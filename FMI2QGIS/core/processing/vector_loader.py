@@ -41,7 +41,7 @@ class VectorLoader(BaseLoader):
     MESSAGE_CATEGORY = 'FmiVectorLoader'
 
     def __init__(self, description: str, download_dir: Path, wfs_url: str, wfs_version: str, sq: StoredQuery,
-                 max_features: Optional[int] = None):
+                 add_to_map: bool, max_features: Optional[int] = None):
         """
         :param download_dir:Download directory of the output file(s)
         :param wfs_url: FMI wfs url
@@ -53,6 +53,7 @@ class VectorLoader(BaseLoader):
         self.wfs_url = wfs_url
         self.wfs_version = wfs_version
         self.sq = sq
+        self.add_to_map = add_to_map
 
     def run(self):
         """
@@ -99,7 +100,7 @@ class VectorLoader(BaseLoader):
         """
         if result and self.path_to_file.is_file():
             layer = self.vector_to_layer()
-            if layer.isValid():
+            if layer.isValid() and self.add_to_map:
                 if self.metadata.time_field_idx is not None and self.sq.time_step > 0:
                     try:
                         set_temporal_settings(layer, self.metadata.temporal_field, self.sq.time_step)
