@@ -53,7 +53,6 @@ class RasterLoader(BaseLoader):
         self.url = fmi_download_url
         self.sq = sq
         self.add_to_map = add_to_map
-        print(add_to_map)
 
     @property
     def is_manually_temporal(self) -> bool:
@@ -161,9 +160,7 @@ class RasterLoader(BaseLoader):
                     return False
 
                 first_path = sub_datasets[0][0]
-                print("ennen")
                 ds: gdal.Dataset = gdal.Open(first_path)
-                print("after")
 
             self.metadata.update_from_gdal_metadata(ds.GetMetadata())
         finally:

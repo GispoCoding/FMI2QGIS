@@ -73,7 +73,7 @@ class MainDialog(QDialog, FORM_CLASS):
         self.context: QgsProcessingContext = QgsProcessingContext()
         self.feedback: QgsProcessingFeedback = LoggerProcessingFeedBack(use_logger=True)
 
-        self.responsive_items = {self.btn_load, self.btn_refresh, self.btn_select}
+        self.responsive_items = {self.btn_load, self.btn_refresh, self.btn_select, self.chk_box_add_to_map}
 
         self.task: Optional[BaseLoader] = None
         self.sq_factory = StoredQueryFactory(Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get())
