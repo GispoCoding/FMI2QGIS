@@ -21,7 +21,7 @@ import datetime
 import enum
 import logging
 import xml.etree.ElementTree as ET
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Set
 from urllib.parse import urlsplit, parse_qs
 
 from PyQt5.QtCore import QVariant
@@ -62,6 +62,7 @@ class Parameter:
         self.abstract = abstract
         self.type = type
         self.variables: List[ParameterVariable] = []
+        self.possible_values: Set[any] = set()
         self._value: any = None
 
     @staticmethod
@@ -80,6 +81,11 @@ class Parameter:
         if param_name == 'parameters':
             param_name = 'param'
         return Parameter(param_name, param_title, param_abstract, param_type)
+
+    @staticmethod
+    def create_from_existing_param(name: str, value: any) -> 'Parameter':
+        # TODO: quess the type from value and name
+        return Parameter(name, '', '', QVariant.String)
 
     @staticmethod
     def _round_datetime(dt: datetime.datetime) -> datetime.datetime:
@@ -101,12 +107,18 @@ class Parameter:
             if not isinstance(val, datetime.datetime):
                 raise ()
             _val = datetime.datetime.strftime(self._round_datetime(val), self.TIME_FORMAT)
-        elif self.type in [QVariant.Rect, QVariant.RectF]:
+        elif self.type in (QVariant.Rect, QVariant.RectF):
             _val = extent_to_bbox(val)
         elif self.name == 'param':
             if isinstance(val, list):
                 _val = ','.join(val)
         self._value = _val if _val != '' else None
+
+    def add_possible_value(self, value: any):
+        _val = str(value)
+        if self.type == QVariant.DateTime:
+            _val = datetime.datetime.strptime(value, self.TIME_FORMAT)
+        self.possible_values.add(_val)
 
     def has_variables(self) -> bool:
         return self.name == 'param' and self.type == QVariant.StringList
@@ -287,6 +299,10 @@ class StoredQueryFactory:
                 f'&count={count}&storedquery_id={sq.id}')
 
     def list_queries(self) -> List[StoredQuery]:
+        """
+        List stored queries provided by the service
+        :return: List of stored queries
+        """
         stored_queries: List[StoredQuery] = []
 
         content = fetch(self.__describe_stored_queries_url)
@@ -299,20 +315,45 @@ class StoredQueryFactory:
         return stored_queries
 
     def expand(self, sq: StoredQuery) -> None:
+        """
+        Gather extra information for the stored query
+        :param sq: StoredQuery object
+        """
         if sq.type == StoredQuery.Type.Raster:
-            content = fetch(self.__get_feature_url(sq, 1))
+            content = fetch(self.__get_feature_url(sq, 10))
             root = ET.ElementTree(ET.fromstring(content)).getroot()
-            grid_observation_elem = list(list(root)[0])[0]
+            grid_observation_first_elem = list(list(root)[0])[0]
 
             # Observed property url
-            ob_url = grid_observation_elem.find('{%s}observedProperty' % Namespace.OM.value).items()[0][-1]
+            ob_url = grid_observation_first_elem.find('{%s}observedProperty' % Namespace.OM.value).items()[0][-1]
             for param in sq.parameters.values():
                 if param.has_variables():
                     param.populate_variables(ob_url)
 
-            process_url = grid_observation_elem.find('{%s}procedure' % Namespace.OM.value).items()[0][-1]
+            process_url = grid_observation_first_elem.find('{%s}procedure' % Namespace.OM.value).items()[0][-1]
             sq.producer = process_url.split('/')[-1]
             sq.format = parse_qs(urlsplit(ob_url).query).get('units', [''])[0]
+
+            for wfs_member in list(root):
+                grid_series_obs = list(wfs_member)[0]
+                file_reference_url = list(grid_series_obs.find(
+                    '{%s}result' % Namespace.OM.value))[0].find(
+                    '{%s}rangeSet' % Namespace.GML.value).find(
+                    '{%s}File' % Namespace.GML.value).find(
+                    '{%s}fileReference' % Namespace.GML.value).text
+                query_params = parse_qs(urlsplit(file_reference_url).query)
+
+                for param_name, param_value_list in query_params.items():
+                    if param_value_list and param_name not in ['origintime', 'producer', 'param']:
+                        param_value = param_value_list[0]
+                        if param_name not in sq.parameters:
+                            sq.parameters[param_name] = Parameter.create_from_existing_param(param_name, param_value)
+                        param = sq.parameters[param_name]
+                        if param_name == 'format' and param_value != 'netcdf' and 'netcdf' not in param.possible_values:
+                            LOGGER.warning(f'Stored query {sq.id} uses different format than NetCDF')
+                            param.add_possible_value('netcdf')
+
+                        param.add_possible_value(param_value)
 
 
 def raise_based_on_response(xml_content: str) -> None:

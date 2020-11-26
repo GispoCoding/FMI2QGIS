@@ -40,3 +40,4 @@ class Namespace(enum.Enum):
     OM = 'http://www.opengis.net/om/2.0'
     OMOP = 'http://inspire.ec.europa.eu/schemas/omop/2.9'
     WMS = 'http://www.opengis.net/wms'
+    GML = 'http://www.opengis.net/gml/3.2'

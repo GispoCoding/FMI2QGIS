@@ -38,6 +38,7 @@ QGIS_APP, CANVAS, IFACE, PARENT = get_qgis_app()
 # Stored query ids
 ENFUSER_ID = 'fmi::forecast::enfuser::airquality::helsinki-metropolitan::grid'
 AIR_QUALITY_ID = 'fmi::observations::airquality::hourly::simple'
+HYBRID_GRID_ID = 'fmi::forecast::harmonie::hybrid::grid'
 
 # WMS layer ids
 ANJALANKOSKI_DBZH = 'Radar:anjalankoski_dbzh'
