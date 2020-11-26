@@ -62,7 +62,7 @@ class Parameter:
         self.abstract = abstract
         self.type = type
         self.variables: List[ParameterVariable] = []
-        self.possible_values: Set[any] = set()
+        self._possible_values: Set[any] = set()
         self._value: any = None
 
     @staticmethod
@@ -83,7 +83,7 @@ class Parameter:
         return Parameter(param_name, param_title, param_abstract, param_type)
 
     @staticmethod
-    def create_from_existing_param(name: str, value: any) -> 'Parameter':
+    def create_from_query_param(name: str, value: any) -> 'Parameter':
         # TODO: quess the type from value and name
         return Parameter(name, '', '', QVariant.String)
 
@@ -114,11 +114,15 @@ class Parameter:
                 _val = ','.join(val)
         self._value = _val if _val != '' else None
 
+    @property
+    def possible_values(self) -> List[any]:
+        return list(self._possible_values)
+
     def add_possible_value(self, value: any):
         _val = str(value)
         if self.type == QVariant.DateTime:
             _val = datetime.datetime.strptime(value, self.TIME_FORMAT)
-        self.possible_values.add(_val)
+        self._possible_values.add(_val)
 
     def has_variables(self) -> bool:
         return self.name == 'param' and self.type == QVariant.StringList
@@ -347,13 +351,18 @@ class StoredQueryFactory:
                     if param_value_list and param_name not in ['origintime', 'producer', 'param']:
                         param_value = param_value_list[0]
                         if param_name not in sq.parameters:
-                            sq.parameters[param_name] = Parameter.create_from_existing_param(param_name, param_value)
+                            sq.parameters[param_name] = Parameter.create_from_query_param(param_name, param_value)
                         param = sq.parameters[param_name]
-                        if param_name == 'format' and param_value != 'netcdf' and 'netcdf' not in param.possible_values:
+                        if param_name == 'format' and param_value != 'netcdf' and 'netcdf' not in param._possible_values:
                             LOGGER.warning(f'Stored query {sq.id} uses different format than NetCDF')
                             param.add_possible_value('netcdf')
 
                         param.add_possible_value(param_value)
+                        if param.type == QVariant.DateTime and param_name.startswith('start') or param_name.startswith(
+                            'end'):
+                            for param_name2, param2 in sq.parameters.items():
+                                if param2.type == param.type and param_name2 != param_name:
+                                    param2.add_possible_value(param_value)
 
 
 def raise_based_on_response(xml_content: str) -> None:
