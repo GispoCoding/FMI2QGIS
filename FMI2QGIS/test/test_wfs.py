@@ -79,8 +79,8 @@ def test_sq_raster_expanding(wfs_url, wfs_version):
                                'PM10Concentration',
                                'PM25Concentration']
     assert set(enfuser_sq.parameters.keys()).difference(orig_params) == {'levels', 'projection', 'format'}
-    assert len(enfuser_sq.parameters['starttime'].possible_values) > 3
-    assert enfuser_sq.parameters['format'].possible_values == {'netcdf'}
+    assert len(enfuser_sq.parameters['starttime']._possible_values) > 3
+    assert enfuser_sq.parameters['format']._possible_values == {'netcdf'}
 
 
 def test_sq_raster_expanding2(wfs_url, wfs_version):
@@ -95,8 +95,8 @@ def test_sq_raster_expanding2(wfs_url, wfs_version):
     assert hybrid_sq.producer == 'harmonie_scandinavia_hybrid'
     assert param_variables == ['Pressure', 'GeomHeight', 'Temperature', 'Humidity', 'WindDirection', 'WindSpeedMS',
                                'WindUMS', 'WindVMS', 'VerticalVelocityMMS']
-    assert hybrid_sq.parameters['format'].possible_values == {'netcdf', 'grib2'}
-    assert hybrid_sq.parameters['levels'].possible_values == {
+    assert hybrid_sq.parameters['format']._possible_values == {'netcdf', 'grib2'}
+    assert hybrid_sq.parameters['levels']._possible_values == {
         '12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,'
         '41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65'}
 

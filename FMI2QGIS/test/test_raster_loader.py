@@ -75,7 +75,8 @@ def test_construct_uri_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_
                    '&starttime=2020-11-05T19:00:00Z'
                    '&endtime=2020-11-06T11:00:00Z'
                    '&bbox=24.97,60.2,24.99,60.21'
-                   '&param=AQIndex')
+                   '&param=AQIndex'
+                   '&origintime=2020-11-05T19:00:00Z')
 
 
 def test_raster_layer_metadata(raster_loader):
