@@ -29,10 +29,11 @@ from ..core.wfs import Parameter
 from ..qgis_plugin_tools.tools import network
 from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
 
+add_to_map = True
 
 @pytest.fixture
 def raster_loader(tmpdir_pth, fmi_download_url) -> RasterLoader:
-    return RasterLoader('', tmpdir_pth, fmi_download_url, None)
+    return RasterLoader('', tmpdir_pth, fmi_download_url, None, add_to_map)
 
 
 def test_download_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_sm_1, monkeypatch):
@@ -41,7 +42,7 @@ def test_download_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_sm_1,
     enfuser_sq.parameters['bbox'].value = extent_sm_1
     enfuser_sq.parameters['param'].value = ['AQIndex']
 
-    loader = RasterLoader('', tmpdir_pth, fmi_download_url, enfuser_sq)
+    loader = RasterLoader('', tmpdir_pth, fmi_download_url, enfuser_sq, add_to_map)
 
     test_file = Path(plugin_test_data_path('aq_small.nc'))
     test_file_name = 'test_aq_small.nc'
@@ -65,7 +66,7 @@ def test_construct_uri_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_
     enfuser_sq.parameters['endtime'].value = datetime.strptime('2020-11-06T11:00:00Z', Parameter.TIME_FORMAT)
     enfuser_sq.parameters['bbox'].value = extent_sm_1
     enfuser_sq.parameters['param'].value = ['AQIndex']
-    loader = RasterLoader('', tmpdir_pth, fmi_download_url, enfuser_sq)
+    loader = RasterLoader('', tmpdir_pth, fmi_download_url, enfuser_sq, add_to_map)
     uri = loader._construct_uri()
 
     assert uri == ('https://opendata.fmi.fi/download?'
