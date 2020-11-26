@@ -21,12 +21,12 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 
-from PyQt5.QtCore import QVariant, pyqtSignal
+from PyQt5.QtCore import QVariant, pyqtSignal, QDateTime
 from PyQt5.QtWidgets import (QDialog, QProgressBar, QTableWidget, QTableWidgetItem, QGridLayout, QWidget, QCheckBox,
                              QLabel, QVBoxLayout, QComboBox, QLineEdit, QSpinBox)
 from qgis.core import (QgsCoordinateReferenceSystem, QgsApplication, QgsProcessingContext,
                        QgsProcessingFeedback, )
-from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas, QgsDoubleSpinBox
+from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas, QgsDoubleSpinBox, QgsDateTimeEdit
 
 from ..core.processing.base_loader import BaseLoader
 from ..core.processing.raster_loader import RasterLoader
@@ -124,6 +124,7 @@ class MainDialog(QDialog, FORM_CLASS):
         row_idx = -1
         self.extent_group_box_bbox.setEnabled(False)
         for param_name, parameter in self.selected_stored_query.parameters.items():
+            possible_values = parameter.possible_values
             widgets = set()
             if parameter.type in (QVariant.Rect, QVariant.RectF):
                 self.parameter_rows[param_name] = widgets
@@ -133,6 +134,23 @@ class MainDialog(QDialog, FORM_CLASS):
             widget: QWidget = widget_for_field(parameter.type)
             if isinstance(widget, QComboBox) or isinstance(widget, QSpinBox) or isinstance(widget, QgsDoubleSpinBox):
                 widget = QLineEdit()
+                if possible_values:
+                    if len(possible_values) == 1:
+                        widget.setText(possible_values[0])
+                    else:
+                        widget = QComboBox()
+                        widget.addItems(possible_values)
+                        widget.setEditable(True)
+
+            if isinstance(widget, QgsDateTimeEdit) and possible_values:
+                widget.setDateTimeRange(min(possible_values), max(possible_values))
+                if param_name.startswith('end'):
+                    widget.setDateTime(max(possible_values))
+                else:
+                    widget.setDateTime(min(possible_values))
+                if len(possible_values) == 1:
+                    widget.setEnabled(False)
+
             widget.setToolTip(parameter.abstract)
 
             if parameter.type == QVariant.StringList:

@@ -7,10 +7,10 @@
   </property>
   <property name="geometry">
    <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>443</width>
-    <height>342</height>
+       <x>0</x>
+       <y>0</y>
+       <width>681</width>
+       <height>572</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -56,9 +56,6 @@
        </layout>
       </item>
       <item>
-       <widget class="QgsExtentGroupBox" name="extent_group_box_bbox"/>
-      </item>
-      <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QTableWidget" name="tbl_wdgt_stored_queries">
@@ -88,9 +85,38 @@
           </column>
          </widget>
         </item>
-        <item>
-         <layout class="QGridLayout" name="grid"/>
-        </item>
+           <item>
+               <widget class="QScrollArea" name="scrollArea">
+                   <property name="widgetResizable">
+                       <bool>true</bool>
+                   </property>
+                   <widget class="QWidget" name="scrollAreaWidgetContents">
+                       <property name="geometry">
+                           <rect>
+                               <x>0</x>
+                               <y>0</y>
+                               <width>635</width>
+                               <height>114</height>
+                           </rect>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_5">
+                           <item>
+                               <widget class="QgsExtentGroupBox" name="extent_group_box_bbox">
+                                   <property name="title">
+                                       <string>Bounding Box</string>
+                                   </property>
+                                   <property name="collapsed">
+                                       <bool>true</bool>
+                                   </property>
+                               </widget>
+                           </item>
+                           <item>
+                               <layout class="QGridLayout" name="grid"/>
+                           </item>
+                       </layout>
+                   </widget>
+               </widget>
+           </item>
        </layout>
       </item>
       <item>

@@ -75,6 +75,8 @@ class RasterLoader(BaseLoader):
             url += f'&format={self.sq.format}'
         url += '&' + '&'.join(
             [f'{name}={param.value}' for name, param in self.sq.parameters.items() if param.value is not None])
+        if 'starttime' in self.sq.parameters and 'levels' in self.sq.parameters:
+            url += f'&origintime={self.sq.parameters["starttime"].value}'
         return url
 
     def finished(self, result: bool) -> None:

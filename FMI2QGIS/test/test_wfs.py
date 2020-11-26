@@ -21,7 +21,7 @@ import pytest
 from PyQt5.QtCore import QVariant
 
 from ..core.exceptions.loader_exceptions import WfsException
-from .conftest import ENFUSER_ID, AIR_QUALITY_ID
+from .conftest import ENFUSER_ID, AIR_QUALITY_ID, HYBRID_GRID_ID
 from ..core.wfs import StoredQueryFactory, StoredQuery, raise_based_on_response
 
 
@@ -67,17 +67,38 @@ def test_sq_raster_expanding(wfs_url, wfs_version):
     factory = StoredQueryFactory(wfs_url, wfs_version)
     queries = factory.list_queries()
     enfuser_sq: StoredQuery = list(filter(lambda q: q.id == ENFUSER_ID, queries))[0]
+    orig_params = set(enfuser_sq.parameters.keys())
 
     factory.expand(enfuser_sq)
     param_variables = [pv.alias for pv in enfuser_sq.parameters['param'].variables]
 
     assert enfuser_sq.producer == 'enfuser_helsinki_metropolitan'
-    assert enfuser_sq.format == 'netcdf'
     assert param_variables == ['AQIndex',
                                'NO2Concentration',
                                'O3Concentration',
                                'PM10Concentration',
                                'PM25Concentration']
+    assert set(enfuser_sq.parameters.keys()).difference(orig_params) == {'levels', 'projection', 'format'}
+    assert len(enfuser_sq.parameters['starttime']._possible_values) > 3
+    assert enfuser_sq.parameters['format']._possible_values == {'netcdf'}
+
+
+def test_sq_raster_expanding2(wfs_url, wfs_version):
+    factory = StoredQueryFactory(wfs_url, wfs_version)
+    queries = factory.list_queries()
+    hybrid_sq: StoredQuery = list(filter(lambda q: q.id == HYBRID_GRID_ID, queries))[0]
+    orig_params = set(hybrid_sq.parameters.keys())
+
+    factory.expand(hybrid_sq)
+    param_variables = [pv.alias for pv in hybrid_sq.parameters['param'].variables]
+
+    assert hybrid_sq.producer == 'harmonie_scandinavia_hybrid'
+    assert param_variables == ['Pressure', 'GeomHeight', 'Temperature', 'Humidity', 'WindDirection', 'WindSpeedMS',
+                               'WindUMS', 'WindVMS', 'VerticalVelocityMMS']
+    assert hybrid_sq.parameters['format']._possible_values == {'netcdf', 'grib2'}
+    assert hybrid_sq.parameters['levels']._possible_values == {
+        '12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,'
+        '41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65'}
 
 
 def test_sq_vector_expanding(wfs_url, wfs_version):
