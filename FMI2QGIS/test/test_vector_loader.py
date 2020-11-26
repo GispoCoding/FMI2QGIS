@@ -30,10 +30,11 @@ from ..core.wfs import Parameter
 from ..qgis_plugin_tools.tools import network
 from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
 
+add_to_map = True
 
 @pytest.fixture
 def vector_loader(tmpdir_pth, wfs_url, wfs_version) -> VectorLoader:
-    return VectorLoader('', tmpdir_pth, wfs_url, wfs_version, None)
+    return VectorLoader('', tmpdir_pth, wfs_url, wfs_version, None, add_to_map)
 
 
 def test_download_airquality(tmpdir_pth, wfs_url, wfs_version, air_quality_sq, extent_sm_1, monkeypatch):
@@ -42,7 +43,7 @@ def test_download_airquality(tmpdir_pth, wfs_url, wfs_version, air_quality_sq, e
     air_quality_sq.parameters['timestep'].value = 60
     air_quality_sq.parameters['bbox'].value = extent_sm_1
 
-    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq)
+    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq, add_to_map)
 
     test_file = Path(plugin_test_data_path('airquality_small.xml.gz'))
     expected_output = Path(plugin_test_data_path('airquality.sqlite'))
@@ -71,7 +72,7 @@ def test_construct_uri_airquality(tmpdir_pth, wfs_url, wfs_version, air_quality_
     air_quality_sq.parameters['endtime'].value = datetime.strptime('2020-11-06T00:00:00Z', Parameter.TIME_FORMAT)
     air_quality_sq.parameters['timestep'].value = 60
     air_quality_sq.parameters['bbox'].value = extent_lg_1
-    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq)
+    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq, add_to_map)
     uri = loader._construct_uri()
     assert uri == ('https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0'
                    '&request=GetFeature'
@@ -86,7 +87,7 @@ def test_construct_uri_airquality2(tmpdir_pth, wfs_url, wfs_version, air_quality
     air_quality_sq.parameters['endtime'].value = datetime.strptime('2020-11-06T00:00:00Z', Parameter.TIME_FORMAT)
     air_quality_sq.parameters['timestep'].value = 60
     air_quality_sq.parameters['bbox'].value = extent_lg_1
-    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq, max_features=10)
+    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq, add_to_map, max_features=10)
     uri = loader._construct_uri()
     assert uri == ('https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0'
                    '&request=GetFeature'
@@ -104,7 +105,7 @@ def test_loader_with_invalid_parameters(new_project, tmpdir_pth, wfs_url, wfs_ve
     air_quality_sq.parameters['timestep'].value = 60
     air_quality_sq.parameters['bbox'].value = extent_lg_1
 
-    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq, max_features=1)
+    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq, add_to_map, max_features=1)
     result = loader.run()
 
     assert not result
@@ -115,7 +116,7 @@ def test_loader_with_invalid_parameters(new_project, tmpdir_pth, wfs_url, wfs_ve
 
 
 def test_vector_to_layer(tmpdir_pth, wfs_url, wfs_version, air_quality_sq, monkeypatch):
-    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq)
+    loader = VectorLoader('', tmpdir_pth, wfs_url, wfs_version, air_quality_sq, add_to_map)
     test_file = Path(plugin_test_data_path('airquality.sqlite'))
     loader.path_to_file = test_file
 

@@ -43,7 +43,7 @@ LOGGER = logging.getLogger(plugin_name())
 class RasterLoader(BaseLoader):
     MESSAGE_CATEGORY = 'FmiRasterLoader'
 
-    def __init__(self, description: str, download_dir: Path, fmi_download_url: str, sq: StoredQuery):
+    def __init__(self, description: str, download_dir: Path, fmi_download_url: str, sq: StoredQuery, add_to_map: bool):
         """
         :param download_dir:Download directory of the output file(s)
         :param fmi_download_url: FMI download url
@@ -52,6 +52,7 @@ class RasterLoader(BaseLoader):
         super().__init__(description, download_dir)
         self.url = fmi_download_url
         self.sq = sq
+        self.add_to_map = add_to_map
 
     @property
     def is_manually_temporal(self) -> bool:
@@ -88,7 +89,7 @@ class RasterLoader(BaseLoader):
         if result and self.path_to_file.is_file():
             layers = self.raster_to_layers()
             for layer in layers:
-                if layer.isValid():
+                if layer.isValid() and self.add_to_map:
                     # noinspection PyArgumentList
                     QgsProject.instance().addMapLayer(layer)
                     if self.metadata.is_temporal:

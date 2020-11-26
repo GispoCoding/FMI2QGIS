@@ -65,6 +65,7 @@ class MainDialog(QDialog, FORM_CLASS):
         self.extent_group_box_bbox.setCurrentExtent(canvas.extent(), crs)
         self.extent_group_box_bbox.setOutputCrs(QgsCoordinateReferenceSystem('EPSG:4326'))
         # self.extent_group_box_bbox.setMapCanvas(canvas)
+        self.chk_box_add_to_map: QCheckBox
 
         self.progress_bar.setValue(0)
 
@@ -72,7 +73,7 @@ class MainDialog(QDialog, FORM_CLASS):
         self.context: QgsProcessingContext = QgsProcessingContext()
         self.feedback: QgsProcessingFeedback = LoggerProcessingFeedBack(use_logger=True)
 
-        self.responsive_items = {self.btn_load, self.btn_refresh, self.btn_select}
+        self.responsive_items = {self.btn_load, self.btn_refresh, self.btn_select, self.chk_box_add_to_map}
 
         self.task: Optional[BaseLoader] = None
         self.sq_factory = StoredQueryFactory(Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get())
@@ -186,12 +187,14 @@ class MainDialog(QDialog, FORM_CLASS):
                     parameter.value = values
 
         output_path = Path(self.btn_output_dir_select.filePath())
+        add_to_map: bool = self.chk_box_add_to_map.isChecked()
 
         if self.selected_stored_query.type == StoredQuery.Type.Raster:
-            self.task = RasterLoader('', output_path, Settings.FMI_DOWNLOAD_URL.get(), self.selected_stored_query)
+            self.task = RasterLoader('', output_path, Settings.FMI_DOWNLOAD_URL.get(), self.selected_stored_query,
+                                     add_to_map)
         else:
             self.task = VectorLoader("", output_path, Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get(),
-                                     self.selected_stored_query)
+                                     self.selected_stored_query, add_to_map)
 
         # noinspection PyUnresolvedReferences
         self.task.progressChanged.connect(lambda: self.progress_bar.setValue(self.task.progress()))
