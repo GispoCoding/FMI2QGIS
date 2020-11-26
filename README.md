@@ -29,3 +29,19 @@ This plugins uses [Finnish Meteorological Institute's](https://en.ilmatieteenlai
 By downloading and using the FMI open data, you approve to the Finnish Meteorological Institute's open data 
 [license](https://en.ilmatieteenlaitos.fi/open-data-licence) (CC BY 4.0): 
 
+## Installation instructions
+
+The easiest way to install the plugin is to use the plugin repository within QGIS. So open QGIS, and proceed as follows:
+
+1. Launch the QGIS plugin manager (from the menu bar: Plugins > Manage and Install Plugins...).
+
+2. Go to the 'Settings' tab to make sure that you have checked the 'Show also experimental plugins' checkbox (currently the plugin is still in the development stage and flagged as 'experimental'):
+
+3. Go back to 'All' or 'Not installed' tab of the plugin manager and enter the plugin name (FMI2QGIS) to search bar:
+
+4. Choose the plugin and press 'Install Experimental Plugin'. 
+
+
+## Usage
+
+Coming soon...
