@@ -25,6 +25,7 @@ from qgis.gui import QgisInterface, QgsCollapsibleGroupBox, QgsDateTimeEdit
 
 from ..core.wms import WMSLayer, WMSLayerHandler
 from ..definitions.configurable_settings import Settings
+from ..qgis_plugin_tools.tools.custom_logging import bar_msg
 from ..qgis_plugin_tools.tools.i18n import tr
 from ..qgis_plugin_tools.tools.resources import load_ui, plugin_name
 
@@ -72,38 +73,39 @@ class WMSDialog(QDialog, FORM_CLASS):
         self.tbl_wms_layers: QTableWidget
         indexes = self.tbl_wms_layers.selectedIndexes()
         if not indexes:
+            LOGGER.warning(tr('Could not execute select'), extra=bar_msg(tr('Data source must be selected!')))
             return
+        else:
+            wms_layer = self.wms_layers[indexes[0].row()]
+            self.group_box_wms_params.setEnabled(any((wms_layer.is_temporal, wms_layer.has_elevation)))
+            self.group_box_wms_params.setCollapsed(not any((wms_layer.is_temporal, wms_layer.has_elevation)))
 
-        wms_layer = self.wms_layers[indexes[0].row()]
-        self.group_box_wms_params.setEnabled(any((wms_layer.is_temporal, wms_layer.has_elevation)))
-        self.group_box_wms_params.setCollapsed(not any((wms_layer.is_temporal, wms_layer.has_elevation)))
+            self.date_time_start: QgsDateTimeEdit
+            self.date_time_end: QgsDateTimeEdit
+            self.date_time_start.setEnabled(wms_layer.is_temporal)
+            self.date_time_end.setEnabled(wms_layer.is_temporal)
+            if wms_layer.is_temporal:
+                time_step_text = tr('With time steps {}{}', wms_layer.t_step, wms_layer.time_step_uom)
+                self.date_time_start.setDateTimeRange(wms_layer.start_time, wms_layer.end_time)
+                self.date_time_start.setDateTime(wms_layer.start_time)
+                self.date_time_start.setToolTip(time_step_text)
+                self.date_time_end.setDateTimeRange(wms_layer.start_time, wms_layer.end_time)
+                self.date_time_end.setDateTime(wms_layer.end_time)
+                self.date_time_end.setToolTip(time_step_text)
 
-        self.date_time_start: QgsDateTimeEdit
-        self.date_time_end: QgsDateTimeEdit
-        self.date_time_start.setEnabled(wms_layer.is_temporal)
-        self.date_time_end.setEnabled(wms_layer.is_temporal)
-        if wms_layer.is_temporal:
-            time_step_text = tr('With time steps {}{}', wms_layer.t_step, wms_layer.time_step_uom)
-            self.date_time_start.setDateTimeRange(wms_layer.start_time, wms_layer.end_time)
-            self.date_time_start.setDateTime(wms_layer.start_time)
-            self.date_time_start.setToolTip(time_step_text)
-            self.date_time_end.setDateTimeRange(wms_layer.start_time, wms_layer.end_time)
-            self.date_time_end.setDateTime(wms_layer.end_time)
-            self.date_time_end.setToolTip(time_step_text)
+            self.combo_box_elevation: QComboBox
+            self.combo_box_elevation.clear()
+            self.combo_box_elevation.setEnabled(wms_layer.has_elevation)
+            self.label_elevation_units.setText('')
+            if wms_layer.has_elevation:
+                self.combo_box_elevation.addItems(list(map(str, wms_layer.elevations)))
+                self.combo_box_elevation.setCurrentText(str(wms_layer.default_elevation))
+                self.combo_box_elevation.setToolTip(wms_layer.elevation_unit)
+                self.label_elevation_units: QLabel
+                self.label_elevation_units.setToolTip(wms_layer.elevation_unit)
+                self.label_elevation_units.setText(wms_layer.elevation_unit_symbol)
 
-        self.combo_box_elevation: QComboBox
-        self.combo_box_elevation.clear()
-        self.combo_box_elevation.setEnabled(wms_layer.has_elevation)
-        self.label_elevation_units.setText('')
-        if wms_layer.has_elevation:
-            self.combo_box_elevation.addItems(list(map(str, wms_layer.elevations)))
-            self.combo_box_elevation.setCurrentText(str(wms_layer.default_elevation))
-            self.combo_box_elevation.setToolTip(wms_layer.elevation_unit)
-            self.label_elevation_units: QLabel
-            self.label_elevation_units.setToolTip(wms_layer.elevation_unit)
-            self.label_elevation_units.setText(wms_layer.elevation_unit_symbol)
-
-        self.selected_wms_layer = wms_layer
+            self.selected_wms_layer = wms_layer
 
     def __add_wms_to_map(self):
         if self.selected_wms_layer:
@@ -116,6 +118,8 @@ class WMSDialog(QDialog, FORM_CLASS):
                 self.__show_temporal_controller()
 
             self.wms_layer_handler.add_to_map(self.selected_wms_layer, start_time, end_time, elevation)
+        else:
+            LOGGER.warning(tr('Could not add to map'), extra=bar_msg(tr('Data source must be selected!')))
 
     def __show_temporal_controller(self):
         """Sets Temporal Controller dock widget visible if it exists"""
