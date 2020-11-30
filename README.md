@@ -27,17 +27,39 @@ The easiest way to install the plugin is to use the plugin repository within QGI
 
 2. Go to the 'Settings' tab to make sure that you have checked the 'Show also experimental plugins' checkbox (currently the plugin is still in the development stage and flagged as 'experimental'):
 
+![Enable experimental plugins](/images/screenshots/enable_exp_plugins.gif?raw=true "Enable experimental plugins")
+
 3. Go back to 'All' or 'Not installed' tab of the plugin manager and enter the plugin name (FMI2QGIS) to search bar:
 
-4. Choose the plugin and press 'Install Experimental Plugin'. 
+4. Choose the plugin and press 'Install Experimental Plugin'.
+
+![Install the plugin](/images/screenshots/install_plugin.gif?raw=true "Install the plugin")
+ 
 
 
 ## Usage
 
-Coming soon...
+### Adding WFS layers
+
+1. Open the WFS layer dialog from the menu bar > Plugins > FMI2QGIS > Add WFS layers
+
+2. Select the folder where the data is downloaded (if none is selected, the download folder will be the default folder of the QGIS installation).
+If you want only to download the data and not add it to the map, uncheck the "Add data to canvas" option.
+
+3. Press "Refresh" to fetch the list of stored queries. 
+
+4. Find the correct item from the list, choose it, and press the "Select" button. The parameters available for the chosen
+item will be opened under the bounding box parameters. Choose correct parameters and click "load". Depending on the data
+and chosen parameters, this may take some time. Also note, that you have to choose the correct parameters according to the 
+stored query (for example, whether the data is observational or forecast). Also, the reasonable bounding boxes will depend 
+on the query. See example cases further below.
+
+![Selecting and loading WFS layers](/images/screenshots/select_and_load.gif?raw=true "Selecting and loading WFS layers")
+
+### Adding WMS layers
+
 
 ## Financial Support
-
 
 This software has been developed initially as a part of UIA-HOPE innovation competition organized by <a href="https://forumvirium.fi/en/">Forum Virium</a> and that has been financially supported by the European Union's <a href="https://www.uia-initiative.eu/en">Urban Innovative Actions</a> (UIA) Initiative and its <a href="https://www.uia-initiative.eu/en/uia-cities/helsinki">Healthy Outdoor Premises for Everyone</a> project (HOPE).
 
