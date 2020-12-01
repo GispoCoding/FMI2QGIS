@@ -78,6 +78,7 @@ class MainDialog(QDialog, FORM_CLASS):
         self.task: Optional[BaseLoader] = None
         self.sq_factory = StoredQueryFactory(Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get())
         self.stored_queries: List[StoredQuery] = []
+        self.selected_stored_query: Optional[StoredQuery]= None
 
         # populating dynamically the parameters of main dialog
         self.grid: QGridLayout
@@ -183,44 +184,48 @@ class MainDialog(QDialog, FORM_CLASS):
 
     def __load_wfs_layer(self):
 
-        for param_name, widgets in self.parameter_rows.items():
-            parameter = self.selected_stored_query.parameters[param_name]
-            if parameter.type in (QVariant.Rect, QVariant.RectF):
-                parameter.value = self.extent_group_box_bbox.outputExtent()
+        if self.selected_stored_query:
+            for param_name, widgets in self.parameter_rows.items():
+                parameter = self.selected_stored_query.parameters[param_name]
+                if parameter.type in (QVariant.Rect, QVariant.RectF):
+                    parameter.value = self.extent_group_box_bbox.outputExtent()
+                else:
+                    values = []
+                    for widget in widgets:
+                        if isinstance(widget, QLabel) or isinstance(widget, QVBoxLayout):
+                            continue
+                        if parameter.type == QVariant.DateTime:
+                            parameter.value = widget.dateTime().toPyDateTime()
+                            break
+                        elif parameter.has_variables():
+                            if widget.isChecked():
+                                values.append(widget.text())
+                        else:
+                            value = value_for_widget(widget)
+                            parameter.value = value
+                    if parameter.has_variables():
+                        parameter.value = values
+
+            output_path = Path(self.btn_output_dir_select.filePath())
+            add_to_map: bool = self.chk_box_add_to_map.isChecked()
+
+            if self.selected_stored_query.type == StoredQuery.Type.Raster:
+                self.task = RasterLoader('', output_path, Settings.FMI_DOWNLOAD_URL.get(), self.selected_stored_query,
+                                         add_to_map)
             else:
-                values = []
-                for widget in widgets:
-                    if isinstance(widget, QLabel) or isinstance(widget, QVBoxLayout):
-                        continue
-                    if parameter.type == QVariant.DateTime:
-                        parameter.value = widget.dateTime().toPyDateTime()
-                        break
-                    elif parameter.has_variables():
-                        if widget.isChecked():
-                            values.append(widget.text())
-                    else:
-                        value = value_for_widget(widget)
-                        parameter.value = value
-                if parameter.has_variables():
-                    parameter.value = values
+                self.task = VectorLoader("", output_path, Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get(),
+                                         self.selected_stored_query, add_to_map)
 
-        output_path = Path(self.btn_output_dir_select.filePath())
-        add_to_map: bool = self.chk_box_add_to_map.isChecked()
-
-        if self.selected_stored_query.type == StoredQuery.Type.Raster:
-            self.task = RasterLoader('', output_path, Settings.FMI_DOWNLOAD_URL.get(), self.selected_stored_query,
-                                     add_to_map)
+            # noinspection PyUnresolvedReferences
+            self.task.progressChanged.connect(lambda: self.progress_bar.setValue(self.task.progress()))
+            # noinspection PyArgumentList
+            QgsApplication.taskManager().addTask(self.task)
+            self._disable_ui()
+            self.task.taskCompleted.connect(lambda: self.__task_completed(True))
+            self.task.taskTerminated.connect(lambda: self.__task_completed(False))
         else:
-            self.task = VectorLoader("", output_path, Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get(),
-                                     self.selected_stored_query, add_to_map)
+            LOGGER.warning(tr('Could not execute load'), extra=bar_msg(tr('Data source must be selected!')))
 
-        # noinspection PyUnresolvedReferences
-        self.task.progressChanged.connect(lambda: self.progress_bar.setValue(self.task.progress()))
-        # noinspection PyArgumentList
-        QgsApplication.taskManager().addTask(self.task)
-        self._disable_ui()
-        self.task.taskCompleted.connect(lambda: self.__task_completed(True))
-        self.task.taskTerminated.connect(lambda: self.__task_completed(False))
 
     def __task_completed(self, result: bool):
         self._enable_ui()
