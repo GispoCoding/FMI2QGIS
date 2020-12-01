@@ -7,4 +7,15 @@
 * Initial tests
 
 
+### 0.1.0 - 1/12/2020
+
+* Plugin instructions and examples 
+* Improved support for most raster stored queries
+* Pre-fetch possible values for raster stored queries
+* Improved GUI
+* Improved error handling
+* Improved tests
+* <a href="https://github.com/GispoCoding/FMI2QGIS/compare/0.0.1...0.1.0">Full Changelog</a>
+
+
 ##
