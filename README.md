@@ -27,13 +27,18 @@ The easiest way to install the plugin is to use the plugin repository within QGI
 
 2. Go to the 'Settings' tab to make sure that you have checked the 'Show also experimental plugins' checkbox (currently the plugin is still in the development stage and flagged as 'experimental'):
 
-![Enable experimental plugins](/images/screenshots/enable_exp_plugins.gif?raw=true "Enable experimental plugins")
+
+<img src="/images/screenshots/enable_exp_plugins.PNG" alt="Enable experimental plugins" width="600" />
+
+<!-- ![Enable experimental plugins](/images/screenshots/enable_exp_plugins.PNG?raw=true "Enable experimental plugins") -->
 
 3. Go back to 'All' or 'Not installed' tab of the plugin manager and enter the plugin name (FMI2QGIS) to search bar:
 
 4. Choose the plugin and press 'Install Experimental Plugin'.
 
-![Install the plugin](/images/screenshots/install_plugin.gif?raw=true "Install the plugin")
+<img src="/images/screenshots/install_plugin.PNG" alt="Install the plugin" width="600" />
+
+<!-- ![Install the plugin](/images/screenshots/install_plugin.PNG?raw=true "Install the plugin") -->
 
 ## Usage
 
