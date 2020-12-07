@@ -19,8 +19,6 @@
 
 from qgis.core import QgsProcessingProvider
 
-from .algorithms import FmiEnfuserLoaderAlg
-
 
 class Fmi2QgisProcessingProvider(QgsProcessingProvider):
     ID = 'fmi2qgis'
@@ -29,7 +27,8 @@ class Fmi2QgisProcessingProvider(QgsProcessingProvider):
         QgsProcessingProvider.__init__(self)
 
     def loadAlgorithms(self):
-        for alg in [FmiEnfuserLoaderAlg()]:
+        # Add processing algorithms if there are any
+        for alg in []:
             self.addAlgorithm(alg)
 
     def id(self) -> str:
