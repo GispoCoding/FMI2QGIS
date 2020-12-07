@@ -6,7 +6,6 @@
 * Temporal controller is used if available to control NetCDF layers
 * Initial tests
 
-
 ### 0.1.0 - 1/12/2020
 
 * Plugin instructions and examples 
@@ -17,5 +16,8 @@
 * Improved tests
 * <a href="https://github.com/GispoCoding/FMI2QGIS/compare/0.0.1...0.1.0">Full Changelog</a>
 
+### 0.1.1 - 7/12/2020
+
+* Remove old enfuser processing algorithm to fix import error in QGIS < 3.14
 
 ##

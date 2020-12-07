@@ -153,7 +153,7 @@ class Plugin:
         )
 
         # noinspection PyArgumentList
-        QgsApplication.processingRegistry().addProvider(self.processing_provider)
+        # QgsApplication.processingRegistry().addProvider(self.processing_provider)
 
     def onClosePlugin(self):
         """Cleanup necessary items here when plugin dockwidget is closed"""
@@ -168,7 +168,7 @@ class Plugin:
             self.iface.removeToolBarIcon(action)
 
         # noinspection PyArgumentList
-        QgsApplication.processingRegistry().removeProvider(self.processing_provider)
+        # QgsApplication.processingRegistry().removeProvider(self.processing_provider)
 
     def run(self):
         """Run method that performs all the real work"""
