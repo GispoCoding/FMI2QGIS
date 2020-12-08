@@ -28,7 +28,7 @@ jobs:
         run: docker pull qgis/qgis:release-3_14
 
       - name: Pull qgis 3.10 LTR image
-          run: docker pull qgis/qgis:release-3_10
+        run: docker pull qgis/qgis:release-3_10
 
       # Runs all tests
       - name: Run tests (3.14)
