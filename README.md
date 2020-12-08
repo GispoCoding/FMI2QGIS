@@ -4,6 +4,7 @@
 
 
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/Tests/badge.svg)
+![](https://github.com/GispoCoding/FMI2QGIS/workflows/TestsLTR/badge.svg)
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/Release/badge.svg)
 
 

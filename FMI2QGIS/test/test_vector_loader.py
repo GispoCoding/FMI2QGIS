@@ -23,14 +23,21 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-from qgis._core import QgsProject, QgsVectorLayer, QgsUnitTypes
+from qgis.core import QgsProject, QgsVectorLayer
 
 from ..core.processing.vector_loader import VectorLoader
 from ..core.wfs import Parameter
+from ..qgis_plugin_tools.testing.utilities import qgis_supports_temporal
 from ..qgis_plugin_tools.tools import network
 from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
 
+try:
+    from qgis.core import QgsUnitTypes
+except ImportError:
+    QgsUnitTypes = None
+
 add_to_map = True
+
 
 @pytest.fixture
 def vector_loader(tmpdir_pth, wfs_url, wfs_version) -> VectorLoader:
@@ -154,6 +161,7 @@ def test_convert_to_spatialite(tmpdir_pth, vector_loader):
     assert vector_loader.path_to_file == expected_spatialite_file
 
 
+@pytest.mark.skipif(not qgis_supports_temporal(), reason='QGIS version does not support temporal utils')
 def test_adding_layer_temporal_settings(new_project, vector_loader, air_quality_sq):
     test_file = Path(plugin_test_data_path('airquality.sqlite'))
     air_quality_sq.parameters['timestep'].value = 60
@@ -173,3 +181,19 @@ def test_adding_layer_temporal_settings(new_project, vector_loader, air_quality_
     assert tprops.startField() == 'time'
     assert tprops.fixedDuration() == 60
     assert tprops.durationUnits() == QgsUnitTypes.TemporalMinutes
+
+
+@pytest.mark.skipif(qgis_supports_temporal(), reason='QGIS version does support temporal utils')
+def test_adding_layer_temporal_settings_if_no_temporal_props_are_available(new_project, vector_loader, air_quality_sq):
+    test_file = Path(plugin_test_data_path('airquality.sqlite'))
+    air_quality_sq.parameters['timestep'].value = 60
+    vector_loader.sq = air_quality_sq
+    vector_loader.path_to_file = test_file
+    vector_loader.metadata.fields = ['gml_id', 'Time', 'ParameterName', 'ParameterValue']
+    vector_loader.metadata.time_field_idx = 1
+    vector_loader.finished(True)
+
+    assert vector_loader.layer_ids
+
+    layer: QgsVectorLayer = QgsProject.instance().mapLayer(list(vector_loader.layer_ids)[0])
+    assert layer.isValid()

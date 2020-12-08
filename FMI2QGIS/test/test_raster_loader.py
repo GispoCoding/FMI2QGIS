@@ -22,14 +22,21 @@ from pathlib import Path
 
 import pytest
 from PyQt5.QtCore import QDateTime, Qt
-from qgis._core import QgsRasterLayer, QgsProject, QgsRasterLayerTemporalProperties, QgsDateTimeRange
+from qgis.core import QgsRasterLayer, QgsProject, QgsDateTimeRange
 
+from ..qgis_plugin_tools.testing.utilities import qgis_supports_temporal
 from ..core.processing.raster_loader import RasterLoader
 from ..core.wfs import Parameter
 from ..qgis_plugin_tools.tools import network
 from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
 
+try:
+    from qgis.core import QgsRasterLayerTemporalProperties
+except ImportError:
+    QgsRasterLayerTemporalProperties = None
+
 add_to_map = True
+
 
 @pytest.fixture
 def raster_loader(tmpdir_pth, fmi_download_url) -> RasterLoader:
@@ -165,6 +172,7 @@ def test_raster_to_layer2(raster_loader):
                                                   'PM25Concentration'}
 
 
+@pytest.mark.skipif(not qgis_supports_temporal(), reason='QGIS version does not support temporal utils')
 def test_adding_layer_temporal_settings(new_project, raster_loader, enfuser_sq):
     test_file = Path(plugin_test_data_path('enfuser_no2_o3.nc'))
     raster_loader.metadata.sub_dataset_dict = {
@@ -187,3 +195,23 @@ def test_adding_layer_temporal_settings(new_project, raster_loader, enfuser_sq):
         assert tprops.isActive()
         assert tprops.fixedTemporalRange() == QgsDateTimeRange(QDateTime(2020, 11, 19, 17, 0, 0, 0, Qt.TimeSpec(1)),
                                                                QDateTime(2020, 11, 19, 18, 0, 1, 0, Qt.TimeSpec(1)))
+
+
+@pytest.mark.skipif(qgis_supports_temporal(), reason='QGIS version does support temporal utils')
+def test_temporal_fails_properly(new_project, raster_loader, enfuser_sq):
+    test_file = Path(plugin_test_data_path('enfuser_no2_o3.nc'))
+    raster_loader.metadata.sub_dataset_dict = {
+        'NO2Concentration': f'NETCDF:"{test_file}":mass_concentration_of_nitrogen_dioxide_in_air_4902',
+        'O3Concentration': f'NETCDF:"{test_file}":mass_concentration_of_ozone_in_air_4903'}
+    raster_loader.metadata.time_step = timedelta(hours=1)
+    raster_loader.metadata.start_time = datetime(2020, 11, 19, 17, 0)
+    raster_loader.metadata.num_of_time_steps = 2
+    raster_loader.sq = enfuser_sq
+    raster_loader.path_to_file = test_file
+    raster_loader.finished(True)
+
+    assert len(raster_loader.layer_ids) == 2
+
+    for layer_id in raster_loader.layer_ids:
+        layer: QgsRasterLayer = QgsProject.instance().mapLayer(layer_id)
+        assert layer.isValid()

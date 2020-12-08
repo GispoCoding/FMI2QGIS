@@ -1,4 +1,6 @@
 .gitattributes export-ignore
 .editorconfig export-ignore
 test export-ignore
-
+build.py export-ignore
+resources/i18n/.gitignore export-ignore
+logs/.gitignore export-ignore
