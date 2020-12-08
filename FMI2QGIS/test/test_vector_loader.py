@@ -23,14 +23,20 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-from qgis._core import QgsProject, QgsVectorLayer, QgsUnitTypes
+from qgis.core import QgsProject, QgsVectorLayer
 
 from ..core.processing.vector_loader import VectorLoader
 from ..core.wfs import Parameter
 from ..qgis_plugin_tools.tools import network
 from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
 
+try:
+    from qgis.core import QgsUnitTypes
+except ImportError:
+    QgsUnitTypes = None
+
 add_to_map = True
+
 
 @pytest.fixture
 def vector_loader(tmpdir_pth, wfs_url, wfs_version) -> VectorLoader:
@@ -154,6 +160,7 @@ def test_convert_to_spatialite(tmpdir_pth, vector_loader):
     assert vector_loader.path_to_file == expected_spatialite_file
 
 
+@pytest.mark.skipif(QgsUnitTypes is None, reason='Older QGIS version than 3.14')
 def test_adding_layer_temporal_settings(new_project, vector_loader, air_quality_sq):
     test_file = Path(plugin_test_data_path('airquality.sqlite'))
     air_quality_sq.parameters['timestep'].value = 60

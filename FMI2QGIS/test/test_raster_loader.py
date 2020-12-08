@@ -22,14 +22,20 @@ from pathlib import Path
 
 import pytest
 from PyQt5.QtCore import QDateTime, Qt
-from qgis._core import QgsRasterLayer, QgsProject, QgsRasterLayerTemporalProperties, QgsDateTimeRange
+from qgis.core import QgsRasterLayer, QgsProject, QgsDateTimeRange
 
 from ..core.processing.raster_loader import RasterLoader
 from ..core.wfs import Parameter
 from ..qgis_plugin_tools.tools import network
 from ..qgis_plugin_tools.tools.resources import plugin_test_data_path
 
+try:
+    from qgis.core import QgsRasterLayerTemporalProperties
+except ImportError:
+    QgsRasterLayerTemporalProperties = None
+
 add_to_map = True
+
 
 @pytest.fixture
 def raster_loader(tmpdir_pth, fmi_download_url) -> RasterLoader:
@@ -165,6 +171,7 @@ def test_raster_to_layer2(raster_loader):
                                                   'PM25Concentration'}
 
 
+@pytest.mark.skipif(QgsRasterLayerTemporalProperties is None, reason='Older QGIS version than 3.14')
 def test_adding_layer_temporal_settings(new_project, raster_loader, enfuser_sq):
     test_file = Path(plugin_test_data_path('enfuser_no2_o3.nc'))
     raster_loader.metadata.sub_dataset_dict = {

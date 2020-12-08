@@ -18,7 +18,7 @@
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 from datetime import datetime
 
-from qgis._core import QgsProject, QgsTemporalUtils
+from qgis.core import QgsProject
 
 from .conftest import ANJALANKOSKI_DBZH
 from ..core.wms import WMSLayerHandler
@@ -45,16 +45,6 @@ def test_wms_layer_handler_url1(wms_layer_handler, test_wms_1):
                    '&styles&crs=EPSG:4326&allowTemporalUpdates=true&type=wmst'
                    '&temporalSource=provider'
                    '&timeDimensionExtent=2020-11-04T09:40:00.000000Z/2020-11-11T07:50:00.000000Z/PT5M')
-
-
-def test_wms_layer_handler_url_with_elevation(wms_layer_handler, test_wms_1):
-    url = wms_layer_handler._construct_qgis_url(test_wms_1, elevation=5.0)
-    assert url == ('url=https://openwms.fmi.fi/geoserver/wms?request%3DGetCapabilities'
-                   '&layers=Radar:anjalankoski_dbzh&dpiMode=7&format=image/png'
-                   '&styles&crs=EPSG:4326&allowTemporalUpdates=true&type=wmst'
-                   '&temporalSource=provider'
-                   '&timeDimensionExtent=2020-11-04T09:40:00.000000Z/2020-11-11T07:50:00.000000Z/PT5M'
-                   '&elevation=5.0')
 
 
 def test_wms_layer_handler_url_with_elevation(wms_layer_handler, test_wms_1):
