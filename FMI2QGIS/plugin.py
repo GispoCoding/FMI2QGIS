@@ -26,7 +26,7 @@ from qgis.core import QgsApplication, QgsDateTimeRange, QgsMapLayer, QgsProject,
 from qgis.gui import QgisInterface
 
 from .core.processing.provider import Fmi2QgisProcessingProvider
-from .qgis_plugin_tools.tools.custom_logging import setup_logger
+from .qgis_plugin_tools.tools.custom_logging import setup_logger, teardown_logger
 from .qgis_plugin_tools.tools.i18n import setup_translation, tr
 from .qgis_plugin_tools.tools.raster_layers import set_band_based_on_range
 from .qgis_plugin_tools.tools.resources import plugin_name, resources_path
@@ -166,6 +166,9 @@ class Plugin:
                 tr(plugin_name()),
                 action)
             self.iface.removeToolBarIcon(action)
+
+        teardown_logger(plugin_name())
+
 
         # noinspection PyArgumentList
         # QgsApplication.processingRegistry().removeProvider(self.processing_provider)
