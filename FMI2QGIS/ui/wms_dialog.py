@@ -43,7 +43,6 @@ class WMSDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface
 
-        self.btn_refresh_wms.clicked.connect(self.__refresh_wms_layers)
         self.btn_select_wms.clicked.connect(self.__wms_layer_selected)
         self.btn_add_wms.clicked.connect(self.__add_wms_to_map)
 
@@ -54,6 +53,8 @@ class WMSDialog(QDialog, FORM_CLASS):
         self.wms_layer_handler = WMSLayerHandler(Settings.FMI_WMS_URL.get())
         self.wms_layers: List[WMSLayer] = []
         self.selected_wms_layer: Optional[WMSLayer] = None
+
+        self.__refresh_wms_layers()
 
     def __refresh_wms_layers(self):
         self.wms_layers = self.wms_layer_handler.list_wms_layers()
