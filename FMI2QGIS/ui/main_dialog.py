@@ -52,7 +52,6 @@ class MainDialog(QDialog, FORM_CLASS):
         self.iface = iface
 
         self.btn_load.clicked.connect(self.__load_wfs_layer)
-        self.btn_refresh.clicked.connect(self.__refresh_stored_wfs_queries)
         self.btn_select.clicked.connect(self.__select_wfs_layer)
 
         # Typing
@@ -73,16 +72,19 @@ class MainDialog(QDialog, FORM_CLASS):
         self.context: QgsProcessingContext = QgsProcessingContext()
         self.feedback: QgsProcessingFeedback = LoggerProcessingFeedBack(use_logger=True)
 
-        self.responsive_items = {self.btn_load, self.btn_refresh, self.btn_select, self.chk_box_add_to_map}
+        self.responsive_items = {self.btn_load, self.btn_select, self.chk_box_add_to_map}
 
         self.task: Optional[BaseLoader] = None
         self.sq_factory = StoredQueryFactory(Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get())
         self.stored_queries: List[StoredQuery] = []
-        self.selected_stored_query: Optional[StoredQuery]= None
+        self.selected_stored_query: Optional[StoredQuery] = None
 
         # populating dynamically the parameters of main dialog
         self.grid: QGridLayout
         self.parameter_rows: Dict[str, Set[QWidget]] = {}
+
+        # populating the layer list when opening
+        self.__refresh_stored_wfs_queries()
 
     def __refresh_stored_wfs_queries(self):
 

@@ -7,10 +7,10 @@
   </property>
   <property name="geometry">
    <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>681</width>
-       <height>572</height>
+    <x>0</x>
+    <y>0</y>
+    <width>679</width>
+    <height>565</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,38 +85,38 @@
           </column>
          </widget>
         </item>
-           <item>
-               <widget class="QScrollArea" name="scrollArea">
-                   <property name="widgetResizable">
-                       <bool>true</bool>
-                   </property>
-                   <widget class="QWidget" name="scrollAreaWidgetContents">
-                       <property name="geometry">
-                           <rect>
-                               <x>0</x>
-                               <y>0</y>
-                               <width>635</width>
-                               <height>114</height>
-                           </rect>
-                       </property>
-                       <layout class="QVBoxLayout" name="verticalLayout_5">
-                           <item>
-                               <widget class="QgsExtentGroupBox" name="extent_group_box_bbox">
-                                   <property name="title">
-                                       <string>Bounding Box</string>
-                                   </property>
-                                   <property name="collapsed">
-                                       <bool>true</bool>
-                                   </property>
-                               </widget>
-                           </item>
-                           <item>
-                               <layout class="QGridLayout" name="grid"/>
-                           </item>
-                       </layout>
-                   </widget>
-               </widget>
-           </item>
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>649</width>
+             <height>196</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QgsExtentGroupBox" name="extent_group_box_bbox">
+              <property name="title">
+               <string>Bounding Box</string>
+              </property>
+              <property name="collapsed">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QGridLayout" name="grid"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>
@@ -138,13 +138,6 @@ p, li { white-space: pre-wrap; }
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QPushButton" name="btn_refresh">
-            <property name="text">
-             <string>Refresh</string>
-            </property>
-           </widget>
-          </item>
           <item>
            <widget class="QPushButton" name="btn_select">
             <property name="text">
