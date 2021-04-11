@@ -26,7 +26,7 @@ from PyQt5.QtWidgets import (QDialog, QProgressBar, QTableWidget, QTableWidgetIt
                              QLabel, QVBoxLayout, QComboBox, QLineEdit, QSpinBox)
 from qgis.core import (QgsCoordinateReferenceSystem, QgsApplication, QgsProcessingContext,
                        QgsProcessingFeedback, )
-from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas, QgsDoubleSpinBox, QgsDateTimeEdit
+from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas, QgsDoubleSpinBox, QgsDateTimeEdit, QgsFilterLineEdit
 
 from ..core.processing.base_loader import BaseLoader
 from ..core.processing.raster_loader import RasterLoader
@@ -53,10 +53,13 @@ class MainDialog(QDialog, FORM_CLASS):
 
         self.btn_load.clicked.connect(self.__load_wfs_layer)
         self.btn_select.clicked.connect(self.__select_wfs_layer)
+        self.btn_clear_search.clicked.connect(self.__clear_stored_wfs_queries_search)
+        self.btn_search.clicked.connect(self.__search_stored_wfs_layers)
 
         # Typing
         self.extent_group_box_bbox: QgsExtentGroupBox
         self.progress_bar: QProgressBar
+        self.search_ln_ed: QgsFilterLineEdit
 
         canvas: QgsMapCanvas = self.iface.mapCanvas()
         crs = canvas.mapSettings().destinationCrs()
@@ -72,7 +75,8 @@ class MainDialog(QDialog, FORM_CLASS):
         self.context: QgsProcessingContext = QgsProcessingContext()
         self.feedback: QgsProcessingFeedback = LoggerProcessingFeedBack(use_logger=True)
 
-        self.responsive_items = {self.btn_load, self.btn_select, self.chk_box_add_to_map}
+        self.responsive_items = {self.btn_load, self.btn_select, self.chk_box_add_to_map, self.btn_clear_search,
+                                 self.btn_search}
 
         self.task: Optional[BaseLoader] = None
         self.sq_factory = StoredQueryFactory(Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get())
@@ -101,6 +105,15 @@ class MainDialog(QDialog, FORM_CLASS):
             id_item = QTableWidgetItem(sq.id)
             id_item.setToolTip(sq.id)
             self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
+
+    def __search_stored_wfs_layers(self, search_user_input):
+        pass
+
+    def __clear_stored_wfs_queries_search(self):
+        #self.search_ln_ed.
+        pass
+
+
 
     def __select_wfs_layer(self):
 
