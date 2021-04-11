@@ -54,7 +54,9 @@ class MainDialog(QDialog, FORM_CLASS):
         self.btn_load.clicked.connect(self.__load_wfs_layer)
         self.btn_select.clicked.connect(self.__select_wfs_layer)
         self.btn_clear_search.clicked.connect(self.__clear_stored_wfs_queries_search)
-        self.btn_search.clicked.connect(self.__search_stored_wfs_layers)
+        self.search_user_input = 'Climate Scenarios'
+        #self.btn_search.clicked.connect(self.__search_stored_wfs_layers(self.search_user_input))
+        self.btn_search.clicked.connect(self.__search_functionality)
 
         # Typing
         self.extent_group_box_bbox: QgsExtentGroupBox
@@ -106,12 +108,58 @@ class MainDialog(QDialog, FORM_CLASS):
             id_item.setToolTip(sq.id)
             self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
 
-    def __search_stored_wfs_layers(self, search_user_input):
-        pass
+    def __search_functionality(self):
+
+        self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
+        self.tbl_wdgt_stored_queries: QTableWidget
+        self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
+        self.tbl_wdgt_stored_queries.setColumnCount(3)
+        #self.search_term == 'Climate Scenarios'
+        self.search_ln_ed: QgsFilterLineEdit
+        self.search_word = self.search_ln_ed.value()
+
+
+        for i, sq in enumerate(self.stored_queries):
+            if sq.title != self.search_word: #'Climate Scenarios':
+                self.tbl_wdgt_stored_queries.hideRow(i)
+            #if self.stored_queries[i].title == 'Climate Scenarios':
+
+    def __search_stored_wfs_layers(self, user_input):
+
+        self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
+        self.tbl_wdgt_stored_queries: QTableWidget
+        self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
+        self.tbl_wdgt_stored_queries.setColumnCount(3)
+
+        for i, sq in enumerate(self.stored_queries):
+            if sq.title == user_input:
+                self.tbl_wdgt_stored_queries.setItem(i, 0, QTableWidgetItem(sq.title))
+                abstract_item = QTableWidgetItem(sq.abstract)
+                abstract_item.setToolTip(sq.abstract)
+                self.tbl_wdgt_stored_queries.setItem(i, 1, abstract_item)
+                id_item = QTableWidgetItem(sq.id)
+                id_item.setToolTip(sq.id)
+                self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
+            else:
+                LOGGER.warning(tr('Could not find'), extra=bar_msg(tr('Change search term!')))
+
+                """ for i in enumerate(self.stored_queries[i]):
+        for i in range(len(self.stored_queries)):
+            if search_user_input == self.stored_queries[i].title:
+                self.tbl_wdgt_stored_queries.setItem(i, 0, QTableWidgetItem(self.stored_queries[i].title))
+                abstract_item = QTableWidgetItem(self.stored_queries[i].abstract)
+                abstract_item.setToolTip(self.stored_queries[i].abstract)
+                self.tbl_wdgt_stored_queries.setItem(i, 1, abstract_item)
+                id_item = QTableWidgetItem(self.stored_queries[i].id)
+                id_item.setToolTip(self.stored_queries[i].id)
+                self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
+            else:
+                LOGGER.warning(tr('Could not find'), extra=bar_msg(tr('Change search term!')))"""
 
     def __clear_stored_wfs_queries_search(self):
-        #self.search_ln_ed.
-        pass
+        self.search_ln_ed.clearValue()
+        self.__refresh_stored_wfs_queries()
+        #pass
 
 
 
