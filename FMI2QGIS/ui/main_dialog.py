@@ -55,12 +55,12 @@ class MainDialog(QDialog, FORM_CLASS):
         self.btn_load.clicked.connect(self.__load_wfs_layer)
         self.btn_select.clicked.connect(self.__select_wfs_layer)
         self.btn_clear_search.clicked.connect(self.__clear_stored_wfs_queries_search)
-        self.btn_search.clicked.connect(self.__search_stored_wfs_layers)
 
         # Typing
         self.extent_group_box_bbox: QgsExtentGroupBox
         self.progress_bar: QProgressBar
         self.search_ln_ed: QgsFilterLineEdit
+        self.search_ln_ed.valueChanged.connect(self.__search_stored_wfs_layers)
 
         canvas: QgsMapCanvas = self.iface.mapCanvas()
         crs = canvas.mapSettings().destinationCrs()
@@ -76,8 +76,7 @@ class MainDialog(QDialog, FORM_CLASS):
         self.context: QgsProcessingContext = QgsProcessingContext()
         self.feedback: QgsProcessingFeedback = LoggerProcessingFeedBack(use_logger=True)
 
-        self.responsive_items = {self.btn_load, self.btn_select, self.chk_box_add_to_map, self.btn_clear_search,
-                                 self.btn_search}
+        self.responsive_items = {self.btn_load, self.btn_select, self.chk_box_add_to_map, self.btn_clear_search}
 
         self.task: Optional[BaseLoader] = None
         self.sq_factory = StoredQueryFactory(Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get())
@@ -114,53 +113,21 @@ class MainDialog(QDialog, FORM_CLASS):
         self.tbl_wdgt_stored_queries: QTableWidget
         self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
         self.tbl_wdgt_stored_queries.setColumnCount(3)
-        self.search_ln_ed: QgsFilterLineEdit
-        self.search_word = self.search_ln_ed.value()
+        self.search_string = self.search_ln_ed.value()
 
         for i, sq in enumerate(self.stored_queries):
-            #if sq.title != self.search_word:
-            if not re.search(self.search_word, sq.title):
+            string_to_match = sq.title.lower()
+            search_string = self.search_string.lower()
+            if not re.search(search_string, string_to_match):
                 self.tbl_wdgt_stored_queries.hideRow(i)
-
-
-    def __search_stored_wfs_layers_old(self, user_input):
-
-        self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
-        self.tbl_wdgt_stored_queries: QTableWidget
-        self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
-        self.tbl_wdgt_stored_queries.setColumnCount(3)
-
-        for i, sq in enumerate(self.stored_queries):
-            if sq.title == user_input:
-                self.tbl_wdgt_stored_queries.setItem(i, 0, QTableWidgetItem(sq.title))
-                abstract_item = QTableWidgetItem(sq.abstract)
-                abstract_item.setToolTip(sq.abstract)
-                self.tbl_wdgt_stored_queries.setItem(i, 1, abstract_item)
-                id_item = QTableWidgetItem(sq.id)
-                id_item.setToolTip(sq.id)
-                self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
             else:
-                LOGGER.warning(tr('Could not find'), extra=bar_msg(tr('Change search term!')))
-
-                """ for i in enumerate(self.stored_queries[i]):
-        for i in range(len(self.stored_queries)):
-            if search_user_input == self.stored_queries[i].title:
-                self.tbl_wdgt_stored_queries.setItem(i, 0, QTableWidgetItem(self.stored_queries[i].title))
-                abstract_item = QTableWidgetItem(self.stored_queries[i].abstract)
-                abstract_item.setToolTip(self.stored_queries[i].abstract)
-                self.tbl_wdgt_stored_queries.setItem(i, 1, abstract_item)
-                id_item = QTableWidgetItem(self.stored_queries[i].id)
-                id_item.setToolTip(self.stored_queries[i].id)
-                self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
-            else:
-                LOGGER.warning(tr('Could not find'), extra=bar_msg(tr('Change search term!')))"""
+                self.tbl_wdgt_stored_queries.showRow(i)
 
     def __clear_stored_wfs_queries_search(self):
 
         self.search_ln_ed.clearValue()
         for i, sq in enumerate(self.stored_queries):
             self.tbl_wdgt_stored_queries.showRow(i)
-
 
 
     def __select_wfs_layer(self):

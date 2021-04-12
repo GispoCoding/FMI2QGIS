@@ -62,7 +62,7 @@
           <item>
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Search for layers</string>
+             <string>Search for data</string>
             </property>
            </widget>
           </item>
@@ -74,16 +74,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="btn_search">
-            <property name="text">
-             <string>Search</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QPushButton" name="btn_clear_search">
             <property name="text">
-             <string>Clear</string>
+             <string>Clear search</string>
             </property>
            </widget>
           </item>
