@@ -18,6 +18,7 @@
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import re
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 
@@ -117,7 +118,8 @@ class MainDialog(QDialog, FORM_CLASS):
         self.search_word = self.search_ln_ed.value()
 
         for i, sq in enumerate(self.stored_queries):
-            if sq.title != self.search_word:
+            #if sq.title != self.search_word:
+            if not re.search(self.search_word, sq.title):
                 self.tbl_wdgt_stored_queries.hideRow(i)
 
 
