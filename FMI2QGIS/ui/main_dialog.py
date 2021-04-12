@@ -54,9 +54,7 @@ class MainDialog(QDialog, FORM_CLASS):
         self.btn_load.clicked.connect(self.__load_wfs_layer)
         self.btn_select.clicked.connect(self.__select_wfs_layer)
         self.btn_clear_search.clicked.connect(self.__clear_stored_wfs_queries_search)
-        self.search_user_input = 'Climate Scenarios'
-        #self.btn_search.clicked.connect(self.__search_stored_wfs_layers(self.search_user_input))
-        self.btn_search.clicked.connect(self.__search_functionality)
+        self.btn_search.clicked.connect(self.__search_stored_wfs_layers)
 
         # Typing
         self.extent_group_box_bbox: QgsExtentGroupBox
@@ -108,23 +106,22 @@ class MainDialog(QDialog, FORM_CLASS):
             id_item.setToolTip(sq.id)
             self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
 
-    def __search_functionality(self):
+
+    def __search_stored_wfs_layers(self):
 
         self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
         self.tbl_wdgt_stored_queries: QTableWidget
         self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
         self.tbl_wdgt_stored_queries.setColumnCount(3)
-        #self.search_term == 'Climate Scenarios'
         self.search_ln_ed: QgsFilterLineEdit
         self.search_word = self.search_ln_ed.value()
 
-
         for i, sq in enumerate(self.stored_queries):
-            if sq.title != self.search_word: #'Climate Scenarios':
+            if sq.title != self.search_word:
                 self.tbl_wdgt_stored_queries.hideRow(i)
-            #if self.stored_queries[i].title == 'Climate Scenarios':
 
-    def __search_stored_wfs_layers(self, user_input):
+
+    def __search_stored_wfs_layers_old(self, user_input):
 
         self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
         self.tbl_wdgt_stored_queries: QTableWidget
@@ -157,9 +154,10 @@ class MainDialog(QDialog, FORM_CLASS):
                 LOGGER.warning(tr('Could not find'), extra=bar_msg(tr('Change search term!')))"""
 
     def __clear_stored_wfs_queries_search(self):
+
         self.search_ln_ed.clearValue()
-        self.__refresh_stored_wfs_queries()
-        #pass
+        for i, sq in enumerate(self.stored_queries):
+            self.tbl_wdgt_stored_queries.showRow(i)
 
 
 
