@@ -86,6 +86,7 @@ class MainDialog(QDialog, FORM_CLASS):
         # populating dynamically the parameters of main dialog
         self.grid: QGridLayout
         self.parameter_rows: Dict[str, Set[QWidget]] = {}
+        self.tbl_wdgt_stored_queries: QTableWidget
 
         # populating the layer list when opening
         self.__refresh_stored_wfs_queries()
@@ -93,7 +94,6 @@ class MainDialog(QDialog, FORM_CLASS):
     def __refresh_stored_wfs_queries(self):
 
         self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
-        self.tbl_wdgt_stored_queries: QTableWidget
         self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
         self.tbl_wdgt_stored_queries.setColumnCount(3)
 
@@ -110,7 +110,6 @@ class MainDialog(QDialog, FORM_CLASS):
     def __search_stored_wfs_layers(self):
 
         self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
-        self.tbl_wdgt_stored_queries: QTableWidget
         self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
         self.tbl_wdgt_stored_queries.setColumnCount(3)
         self.search_string = self.search_ln_ed.value()
@@ -132,7 +131,6 @@ class MainDialog(QDialog, FORM_CLASS):
 
     def __select_wfs_layer(self):
 
-        self.tbl_wdgt_stored_queries: QTableWidget
         indexes = self.tbl_wdgt_stored_queries.selectedIndexes()
         if not indexes:
             LOGGER.warning(tr('Could not execute select'), extra=bar_msg(tr('Data source must be selected first!')))

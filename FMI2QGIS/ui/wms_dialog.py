@@ -18,10 +18,11 @@
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import re
 from typing import List, Optional
 
 from PyQt5.QtWidgets import QDialog, QDockWidget, QTableWidget, QTableWidgetItem, QCheckBox, QComboBox, QLabel
-from qgis.gui import QgisInterface, QgsCollapsibleGroupBox, QgsDateTimeEdit
+from qgis.gui import QgisInterface, QgsCollapsibleGroupBox, QgsDateTimeEdit, QgsFilterLineEdit
 
 from ..core.wms import WMSLayer, WMSLayerHandler
 from ..definitions.configurable_settings import Settings
@@ -45,6 +46,10 @@ class WMSDialog(QDialog, FORM_CLASS):
 
         self.btn_select_wms.clicked.connect(self.__wms_layer_selected)
         self.btn_add_wms.clicked.connect(self.__add_wms_to_map)
+        self.btn_clear_wms_search.clicked.connect(self.__clear_wms_search)
+
+        self.ln_ed_wms_search: QgsFilterLineEdit
+        self.ln_ed_wms_search.valueChanged.connect(self.__search_wms_layers)
 
         self.group_box_wms_params: QgsCollapsibleGroupBox
         self.group_box_wms_params.setCollapsed(True)
@@ -54,12 +59,12 @@ class WMSDialog(QDialog, FORM_CLASS):
         self.wms_layers: List[WMSLayer] = []
         self.selected_wms_layer: Optional[WMSLayer] = None
 
+        self.tbl_wms_layers: QTableWidget
+
         self.__refresh_wms_layers()
 
     def __refresh_wms_layers(self):
         self.wms_layers = self.wms_layer_handler.list_wms_layers()
-
-        self.tbl_wms_layers: QTableWidget
         self.tbl_wms_layers.setColumnCount(3)
         self.tbl_wms_layers.setRowCount(len(self.wms_layers))
 
@@ -69,6 +74,25 @@ class WMSDialog(QDialog, FORM_CLASS):
             abstract_item = QTableWidgetItem(wms_layer.abstract)
             abstract_item.setToolTip(wms_layer.abstract)
             self.tbl_wms_layers.setItem(idx, 2, abstract_item)
+
+    def __search_wms_layers(self):
+        self.wms_layers = self.wms_layer_handler.list_wms_layers()
+        self.tbl_wms_layers.setColumnCount(3)
+        self.tbl_wms_layers.setRowCount(len(self.wms_layers))
+        self.search_string = self.ln_ed_wms_search.value()
+
+        for idx, wms_layer in enumerate(self.wms_layers):
+            string_to_match = wms_layer.name.lower()
+            search_string = self.search_string.lower()
+            if not re.search(search_string, string_to_match):
+                self.tbl_wms_layers.hideRow(idx)
+            else:
+                self.tbl_wms_layers.showRow(idx)
+
+    def __clear_wms_search(self):
+        self.ln_ed_wms_search.clearValue()
+        for idx, wms_layer in enumerate(self.wms_layers):
+            self.tbl_wms_layers.showRow(idx)
 
     def __wms_layer_selected(self):
         self.tbl_wms_layers: QTableWidget
