@@ -113,14 +113,19 @@ class MainDialog(QDialog, FORM_CLASS):
         self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
         self.tbl_wdgt_stored_queries.setColumnCount(3)
         self.search_string = self.search_ln_ed.value()
+        search_string = self.search_string.lower()
 
         for i, sq in enumerate(self.stored_queries):
-            string_to_match = sq.title.lower()
-            search_string = self.search_string.lower()
-            if not re.search(search_string, string_to_match):
-                self.tbl_wdgt_stored_queries.hideRow(i)
-            else:
+            sq_table_fields = [sq.title, sq.abstract, sq.id]
+            used_fields = [field for field in sq_table_fields if field is not None]
+            found_match = []
+            for item in used_fields:
+                if re.search(search_string, item.lower()):
+                    found_match.append(item)
+            if found_match:
                 self.tbl_wdgt_stored_queries.showRow(i)
+            else:
+                self.tbl_wdgt_stored_queries.hideRow(i)
 
     def __clear_stored_wfs_queries_search(self):
 

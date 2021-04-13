@@ -76,18 +76,24 @@ class WMSDialog(QDialog, FORM_CLASS):
             self.tbl_wms_layers.setItem(idx, 2, abstract_item)
 
     def __search_wms_layers(self):
+
         self.wms_layers = self.wms_layer_handler.list_wms_layers()
         self.tbl_wms_layers.setColumnCount(3)
         self.tbl_wms_layers.setRowCount(len(self.wms_layers))
         self.search_string = self.ln_ed_wms_search.value()
+        search_string = self.search_string.lower()
 
         for idx, wms_layer in enumerate(self.wms_layers):
-            string_to_match = wms_layer.name.lower()
-            search_string = self.search_string.lower()
-            if not re.search(search_string, string_to_match):
-                self.tbl_wms_layers.hideRow(idx)
-            else:
+            wms_layer_fields = [wms_layer.name, wms_layer.title, wms_layer.abstract]
+            used_fields = [field for field in wms_layer_fields if field is not None]
+            found_match = []
+            for item in used_fields:
+                if re.search(search_string, item.lower()):
+                    found_match.append(item)
+            if found_match:
                 self.tbl_wms_layers.showRow(idx)
+            else:
+                self.tbl_wms_layers.hideRow(idx)
 
     def __clear_wms_search(self):
         self.ln_ed_wms_search.clearValue()
