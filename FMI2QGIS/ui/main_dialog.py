@@ -18,6 +18,7 @@
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import re
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 
@@ -26,7 +27,7 @@ from PyQt5.QtWidgets import (QDialog, QProgressBar, QTableWidget, QTableWidgetIt
                              QLabel, QVBoxLayout, QComboBox, QLineEdit, QSpinBox)
 from qgis.core import (QgsCoordinateReferenceSystem, QgsApplication, QgsProcessingContext,
                        QgsProcessingFeedback, )
-from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas, QgsDoubleSpinBox, QgsDateTimeEdit
+from qgis.gui import QgsExtentGroupBox, QgisInterface, QgsMapCanvas, QgsDoubleSpinBox, QgsDateTimeEdit, QgsFilterLineEdit
 
 from ..core.processing.base_loader import BaseLoader
 from ..core.processing.raster_loader import RasterLoader
@@ -53,10 +54,13 @@ class MainDialog(QDialog, FORM_CLASS):
 
         self.btn_load.clicked.connect(self.__load_wfs_layer)
         self.btn_select.clicked.connect(self.__select_wfs_layer)
+        self.btn_clear_search.clicked.connect(self.__clear_stored_wfs_queries_search)
 
         # Typing
         self.extent_group_box_bbox: QgsExtentGroupBox
         self.progress_bar: QProgressBar
+        self.search_ln_ed: QgsFilterLineEdit
+        self.search_ln_ed.valueChanged.connect(self.__search_stored_wfs_layers)
 
         canvas: QgsMapCanvas = self.iface.mapCanvas()
         crs = canvas.mapSettings().destinationCrs()
@@ -72,7 +76,7 @@ class MainDialog(QDialog, FORM_CLASS):
         self.context: QgsProcessingContext = QgsProcessingContext()
         self.feedback: QgsProcessingFeedback = LoggerProcessingFeedBack(use_logger=True)
 
-        self.responsive_items = {self.btn_load, self.btn_select, self.chk_box_add_to_map}
+        self.responsive_items = {self.btn_load, self.btn_select, self.chk_box_add_to_map, self.btn_clear_search}
 
         self.task: Optional[BaseLoader] = None
         self.sq_factory = StoredQueryFactory(Settings.FMI_WFS_URL.get(), Settings.FMI_WFS_VERSION.get())
@@ -82,6 +86,7 @@ class MainDialog(QDialog, FORM_CLASS):
         # populating dynamically the parameters of main dialog
         self.grid: QGridLayout
         self.parameter_rows: Dict[str, Set[QWidget]] = {}
+        self.tbl_wdgt_stored_queries: QTableWidget
 
         # populating the layer list when opening
         self.__refresh_stored_wfs_queries()
@@ -89,7 +94,6 @@ class MainDialog(QDialog, FORM_CLASS):
     def __refresh_stored_wfs_queries(self):
 
         self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
-        self.tbl_wdgt_stored_queries: QTableWidget
         self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
         self.tbl_wdgt_stored_queries.setColumnCount(3)
 
@@ -102,9 +106,36 @@ class MainDialog(QDialog, FORM_CLASS):
             id_item.setToolTip(sq.id)
             self.tbl_wdgt_stored_queries.setItem(i, 2, id_item)
 
+
+    def __search_stored_wfs_layers(self):
+
+        self.stored_queries: List[StoredQuery] = self.sq_factory.list_queries()
+        self.tbl_wdgt_stored_queries.setRowCount(len(self.stored_queries))
+        self.tbl_wdgt_stored_queries.setColumnCount(3)
+        self.search_string = self.search_ln_ed.value()
+        search_string = self.search_string.lower()
+
+        for i, sq in enumerate(self.stored_queries):
+            sq_table_fields = [sq.title, sq.abstract, sq.id]
+            used_fields = [field for field in sq_table_fields if field is not None]
+            found_match = []
+            for item in used_fields:
+                if re.search(search_string, item.lower()):
+                    found_match.append(item)
+            if found_match:
+                self.tbl_wdgt_stored_queries.showRow(i)
+            else:
+                self.tbl_wdgt_stored_queries.hideRow(i)
+
+    def __clear_stored_wfs_queries_search(self):
+
+        self.search_ln_ed.clearValue()
+        for i, sq in enumerate(self.stored_queries):
+            self.tbl_wdgt_stored_queries.showRow(i)
+
+
     def __select_wfs_layer(self):
 
-        self.tbl_wdgt_stored_queries: QTableWidget
         indexes = self.tbl_wdgt_stored_queries.selectedIndexes()
         if not indexes:
             LOGGER.warning(tr('Could not execute select'), extra=bar_msg(tr('Data source must be selected first!')))
