@@ -1,37 +1,15 @@
-## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/GispoCoding/FMI2QGIS/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## FMI2QGIS demo site
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+This site has a collection of visualizations created as a part of the FMI2QGIS project.
 
-### Markdown
+[3D visualization of NO2 emissions in Helsinki region.](https://gispocoding.github.io/FMI2QGIS/3dno2/)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+![PM2.5](https://github.com/GispoCoding/FMI2QGIS/blob/gh-pages/imgs/pm25.gif)
 
-```markdown
-Syntax highlighted code block
+![CO esmissions](https://github.com/GispoCoding/FMI2QGIS/blob/gh-pages/imgs/co.gif)
 
-# Header 1
-## Header 2
-### Header 3
+![NO2 esmissions](https://github.com/GispoCoding/FMI2QGIS/blob/gh-pages/imgs/no2.gif)
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/GispoCoding/FMI2QGIS/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+![SO2 esmissions](https://github.com/GispoCoding/FMI2QGIS/blob/gh-pages/imgs/so2.gif)
