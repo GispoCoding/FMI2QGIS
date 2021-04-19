@@ -33,7 +33,7 @@ PM2.5 refers to atmospheric particulate matter that have a diameter of less than
 ### Global CO emissions
 ![CO emissions](./thumbnails/co.gif?raw=true)
  
-Brighter colors on the map indicate higher levels of emissions in the forecast. The map shows a 5 day period in April 2021. 
+Carbon monoxide (CO) is produced in the incomplete combustion of carbon-containing fuels, such as gasoline, natural gas, oil, coal, and wood. Map clearly highlights the most densely populated areas in the world and brighter colors on the map indicate higher levels of CO emissions. . The map shows a 5 day period in April 2021. 
 
 [Click to open full version.](https://gispocoding.github.io/FMI2QGIS/imgs/co.gif)
 
@@ -42,7 +42,7 @@ Brighter colors on the map indicate higher levels of emissions in the forecast. 
 ### Global NO2 emissions
 ![NO2 emissions](./thumbnails/no2.gif?raw=true)
 
-NO2 is produced when fossil fuels (coal, natural gas and so on) are burned. Darker colors on the map indicate higher levels of emissions in the forecast. The map shows a 5 day period in April 2021. Global shipping routes can be clearly seen from the animation.
+NO2 is produced when fossil fuels (coal, natural gas and so on) are burned. Darker colors on the map indicate higher levels of emissions in the forecast. The map shows a 5 day period in April 2021. Global shipping routes can be clearly seen from the animation. You can clearly see how time of day has a clear effect on the NO2 emission forecast as the color changes brighter from east to west in the animation. 
 
 [Click to open full version.](https://gispocoding.github.io/FMI2QGIS/imgs/no2.gif)
 
@@ -51,7 +51,7 @@ NO2 is produced when fossil fuels (coal, natural gas and so on) are burned. Dark
 ### Global SO2 emissions
 ![SO2 emissions](./thumbnails/so2.gif?raw=true)
 
-Looks like the world is on fire, but actually this map is showing similar emissions as the ones before. Sulfur dioxide (SO2) originates from burning fossil fuels. Brighter colors on the map indicate higher levels of SO2 emissions in the SILAM forecast. The map shows a 5 day period in April 2021. 
+Looks like the world is on fire, but actually this map is showing similar emissions as the ones before. Also sulfur dioxide (SO2) originates from burning fossil fuels. Brighter colors on the map indicate higher levels of SO2 emissions in the SILAM forecast. The map shows a 5 day period in April 2021. 
 
 [Click to open full version.](https://gispocoding.github.io/FMI2QGIS/imgs/so2.gif?raw=true)
 
@@ -60,7 +60,7 @@ Looks like the world is on fire, but actually this map is showing similar emissi
 ### PM 2.5 pollution in Helsinki region in 3D
 ![ PM 2.5 pollution](./imgs/pm25_3200x1600.png?raw=true)
 
-This rendering of annual (2019) 
+This rendering of annual (2019) PM 2.5 levels in Helsinki region shows an exaggerated three dimensional view. Higher peaks indicate higher level of pollution and main traffic corridors are clearly highlighted, especially in the full resolution version aims 
 
 [Click to open full version.](https://gispocoding.github.io/FMI2QGIS/imgs/pm25_3200x1600.png)
 
