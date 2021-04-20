@@ -1,4 +1,5 @@
 
+
 ## FMI2QGIS demo site
 
 This site has a collection of visualizations created as a part of the FMI2QGIS project. Click on links to view full versions.
@@ -33,7 +34,7 @@ PM2.5 refers to atmospheric particulate matter that have a diameter of less than
 ### Global CO emissions
 ![CO emissions](./thumbnails/co.gif?raw=true)
  
-Carbon monoxide (CO) is produced in the incomplete combustion of carbon-containing fuels, such as gasoline, natural gas, oil, coal, and wood. Map clearly highlights the most densely populated areas in the world and brighter colors on the map indicate higher levels of CO emissions. . The map shows a 5 day period in April 2021. 
+Carbon monoxide (CO) is produced in the incomplete combustion of carbon-containing fuels, such as gasoline, natural gas, oil, coal, and wood. Map clearly highlights the most densely populated areas around the world and brighter colors on the map indicate higher levels of CO emissions. The map shows a 5 day period in April 2021. 
 
 [Click to open full version.](https://gispocoding.github.io/FMI2QGIS/imgs/co.gif)
 
@@ -60,7 +61,7 @@ Looks like the world is on fire, but actually this map is showing similar emissi
 ### PM 2.5 pollution in Helsinki region in 3D
 ![ PM 2.5 pollution](./imgs/pm25_3200x1600.png?raw=true)
 
-This rendering of annual (2019) PM 2.5 levels in Helsinki region shows an exaggerated three dimensional view. Higher peaks indicate higher level of pollution and main traffic corridors are clearly highlighted, especially in the full resolution version aims 
+This rendering of annual (2019) PM 2.5 levels in Helsinki region shows an exaggerated three dimensional view. Higher peaks indicate higher level of pollution and main traffic corridors are clearly highlighted, especially in the full resolution version aims to give an overview of the conditions in the whole region. 
 
 [Click to open full version.](https://gispocoding.github.io/FMI2QGIS/imgs/pm25_3200x1600.png)
 
