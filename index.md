@@ -68,7 +68,7 @@ This rendering of annual (2019) PM 2.5 levels in Helsinki region shows an exagge
  *Data: [HSY (2021): Annual air quality map](https://ilmanlaatuvuosikartta.hsy.fi/)* 
 
 ### Carbon sinks in Helsinki region
-![ Carbon sinks](./imgs/carbon_sinks.png?raw=true)
+![ Carbon sinks](./thumbnails/carbon_sinks.png?raw=true)
 
 A carbon sinks are reservoirs which accumulate and store some carbon-containing chemical compound. Carbon sinks have a connection to better air quality and this map visualizes carbon sinks in Helsinki region. Forest areas are clearly highlighted e.g. in Nuuksio in Espoo as well as Helsinki Central Park. 
 
