@@ -7,7 +7,7 @@ This site has a collection of visualizations created as a part of the FMI2QGIS p
 ### 24H ENFUSER air quality animation
 ![24 hours of ENFUSER air quality information](./thumbnails/enfuser_24h.gif?raw=true)
 
-This short animation shows how air quality index changes in 24 hours in Helsinki region. Darker colors in the visualization indicate lower air quality index. The data is a forecast. Impact of traffic can be clearly seen in the animation. This data is collected in one 24 hour period in April 2021. 
+This short animation shows how air quality index (AQI) changes in 24 hours in Helsinki region. Brighter colors in the visualization indicate lower air quality. The data is a forecast. Impact of traffic can be clearly seen in the animation. This data is collected in one 24 hour period in April 2021. 
 
 [Click to open full version.](https://gispocoding.github.io/FMI2QGIS/imgs/enfuser_24h.gif)
 
