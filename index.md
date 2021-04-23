@@ -72,6 +72,8 @@ This rendering of annual (2019) PM 2.5 levels in Helsinki region shows an exagge
 
 A carbon sinks are reservoirs which accumulate and store some carbon-containing chemical compound. Carbon sinks have a connection to better air quality and this map visualizes carbon sinks in Helsinki region. Forest areas are clearly highlighted e.g. in Nuuksio in Espoo as well as Helsinki Central Park. 
 
+Data produced in 2020 and based on data collected originally in 2017.
+
 [Click to open full version.](https://gispocoding.github.io/FMI2QGIS/imgs/carbon_sinks.png)
 
  *Data: [HSY (2021): Selvitys pääkaupunkiseudun hiilinieluista ja -varastoista
