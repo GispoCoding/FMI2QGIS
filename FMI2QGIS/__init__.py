@@ -1,5 +1,5 @@
 #  Gispo Ltd., hereby disclaims all copyright interest in the program FMI2QGIS
-#  Copyright (C) 2020 Gispo Ltd (https://www.gispo.fi/).
+#  Copyright (C) 2020-2021 Gispo Ltd (https://www.gispo.fi/).
 #
 #
 #  This file is part of FMI2QGIS.
@@ -17,14 +17,22 @@
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
+
 import os
+
+from qgis.gui import QgisInterface
+
 from .qgis_plugin_tools.infrastructure.debugging import setup_pydevd
 
-if os.environ.get('QGIS_PLUGIN_USE_DEBUGGER') == 'pydevd':
-    if os.environ.get('IN_TESTS', "0") != "1" and os.environ.get('QGIS_PLUGIN_IN_CI', "0") != "1":
+if os.environ.get("QGIS_PLUGIN_USE_DEBUGGER") == "pydevd":
+    if (
+        os.environ.get("IN_TESTS", "0") != "1"
+        and os.environ.get("QGIS_PLUGIN_IN_CI", "0") != "1"
+    ):
         setup_pydevd()
 
 
-def classFactory(iface):
+def classFactory(iface: QgisInterface):  # noqa N802
     from .plugin import Plugin
+
     return Plugin(iface)

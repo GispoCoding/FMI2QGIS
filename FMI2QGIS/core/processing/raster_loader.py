@@ -1,5 +1,5 @@
 #  Gispo Ltd., hereby disclaims all copyright interest in the program FMI2QGIS
-#  Copyright (C) 2020 Gispo Ltd (https://www.gispo.fi/).
+#  Copyright (C) 2020-2021 Gispo Ltd (https://www.gispo.fi/).
 #
 #
 #  This file is part of FMI2QGIS.
@@ -19,18 +19,24 @@
 
 import logging
 from pathlib import Path
-from typing import Dict, Set
+from typing import Set
 
 import gdal
-from qgis.core import (QgsRasterLayer, QgsProject, )
+from qgis.core import QgsProject, QgsRasterLayer
 
-from .base_loader import BaseLoader
-from ..wfs import StoredQuery
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
-from ...qgis_plugin_tools.tools.exceptions import QgsPluginException, QgsPluginNotImplementedException
+from ...qgis_plugin_tools.tools.exceptions import (
+    QgsPluginException,
+    QgsPluginNotImplementedException,
+)
 from ...qgis_plugin_tools.tools.i18n import tr
-from ...qgis_plugin_tools.tools.raster_layers import set_raster_renderer_to_singleband, set_fixed_temporal_range
+from ...qgis_plugin_tools.tools.raster_layers import (
+    set_fixed_temporal_range,
+    set_raster_renderer_to_singleband,
+)
 from ...qgis_plugin_tools.tools.resources import plugin_name
+from ..wfs import StoredQuery
+from .base_loader import BaseLoader
 
 try:
     from qgis.core import QgsRasterLayerTemporalProperties
@@ -41,9 +47,16 @@ LOGGER = logging.getLogger(plugin_name())
 
 
 class RasterLoader(BaseLoader):
-    MESSAGE_CATEGORY = 'FmiRasterLoader'
+    MESSAGE_CATEGORY = "FmiRasterLoader"
 
-    def __init__(self, description: str, download_dir: Path, fmi_download_url: str, sq: StoredQuery, add_to_map: bool):
+    def __init__(
+        self,
+        description: str,
+        download_dir: Path,
+        fmi_download_url: str,
+        sq: StoredQuery,
+        add_to_map: bool,
+    ) -> None:
         """
         :param download_dir:Download directory of the output file(s)
         :param fmi_download_url: FMI download url
@@ -70,18 +83,27 @@ class RasterLoader(BaseLoader):
         return result
 
     def _construct_uri(self) -> str:
-        url = self.url + f'?producer={self.sq.producer}'
-        if 'format' not in self.sq.parameters or self.sq.parameters['format'].value is None:
-            url += f'&format={self.sq.format}'
-        url += '&' + '&'.join(
-            [f'{name}={param.value}' for name, param in self.sq.parameters.items() if param.value is not None])
-        if 'starttime' in self.sq.parameters and 'levels' in self.sq.parameters:
+        url = self.url + f"?producer={self.sq.producer}"
+        if (
+            "format" not in self.sq.parameters
+            or self.sq.parameters["format"].value is None
+        ):
+            url += f"&format={self.sq.format}"
+        url += "&" + "&".join(
+            [
+                f"{name}={param.value}"
+                for name, param in self.sq.parameters.items()
+                if param.value is not None
+            ]
+        )
+        if "starttime" in self.sq.parameters and "levels" in self.sq.parameters:
             url += f'&origintime={self.sq.parameters["starttime"].value}'
         return url
 
     def finished(self, result: bool) -> None:
         """
-        This function is automatically called when the task has completed (successfully or not).
+        This function is automatically called when the task has completed
+        (successfully or not).
 
         finished is always called from the main thread, so it's safe
         to do GUI operations and raise Python exceptions here.
@@ -99,22 +121,37 @@ class RasterLoader(BaseLoader):
                         try:
                             set_fixed_temporal_range(layer, self.metadata.time_range)
                         except AttributeError:
-                            LOGGER.warning(tr('Your QGIS version does not support temporal properties'),
-                                           extra=bar_msg(tr('Please update your QGIS to support Temporal Controller')))
+                            LOGGER.warning(
+                                tr(
+                                    "Your QGIS version does not "
+                                    "support temporal properties"
+                                ),
+                                extra=bar_msg(
+                                    tr(
+                                        "Please update your QGIS to "
+                                        "support Temporal Controller"
+                                    )
+                                ),
+                            )
 
                     self.layer_ids.add(layer.id())
 
         # Error handling
         else:
             if self.exception is None:
-                LOGGER.warning(tr('Task was not successful'), extra=bar_msg(tr('Task was probably cancelled by user')))
+                LOGGER.warning(
+                    tr("Task was not successful"),
+                    extra=bar_msg(tr("Task was probably cancelled by user")),
+                )
             else:
                 try:
                     raise self.exception
                 except QgsPluginException as e:
                     LOGGER.exception(str(e), extra=e.bar_msg)
                 except Exception as e:
-                    LOGGER.exception(tr('Unhandled exception occurred'), extra=bar_msg(e))
+                    LOGGER.exception(
+                        tr("Unhandled exception occurred"), extra=bar_msg(e)
+                    )
 
     def raster_to_layers(self) -> Set[QgsRasterLayer]:
         """
@@ -141,28 +178,39 @@ class RasterLoader(BaseLoader):
             ds: gdal.Dataset = gdal.Open(str(self.path_to_file))
             sub_datasets = ds.GetSubDatasets()
             if sub_datasets:
-                sub_dataset_parameters = [param for param in self.sq.parameters.values() if param.has_variables()]
+                sub_dataset_parameters = [
+                    param
+                    for param in self.sq.parameters.values()
+                    if param.has_variables()
+                ]
                 if not sub_dataset_parameters or not sub_dataset_parameters[0].value:
                     self.exception = QgsPluginNotImplementedException(
-                        tr('This part of the plugin is not implemented yet. Code 1'),
-                        bar_msg=bar_msg(tr('Please send log file to Github as issue')))
+                        tr("This part of the plugin is not implemented yet. Code 1"),
+                        bar_msg=bar_msg(tr("Please send log file to Github as issue")),
+                    )
                     return False
                 sub_dataset_parameter = sub_dataset_parameters[0]
-                sub_dataset_variables = sub_dataset_parameter.value.split(',')
+                sub_dataset_variables = sub_dataset_parameter.value.split(",")
                 if len(sub_datasets) == len(sub_dataset_variables) + 1:
-                    sub_datasets = [sub_dataset for sub_dataset in sub_datasets if
-                                    not sub_dataset[0].endswith('time_bounds_h')]
+                    sub_datasets = [
+                        sub_dataset
+                        for sub_dataset in sub_datasets
+                        if not sub_dataset[0].endswith("time_bounds_h")
+                    ]
                 if len(sub_datasets) == len(sub_dataset_variables):
-                    self.metadata.sub_dataset_dict = {sub_dataset_variables[i]: sub_datasets[i][0]
-                                                      for i in range(len(sub_datasets))}
+                    self.metadata.sub_dataset_dict = {
+                        sub_dataset_variables[i]: sub_datasets[i][0]
+                        for i in range(len(sub_datasets))
+                    }
                 else:
                     self.exception = QgsPluginNotImplementedException(
-                        tr('This part of the plugin is not implemented yet. Code 2'),
-                        bar_msg=bar_msg(tr('Please send log file to Github as issue')))
+                        tr("This part of the plugin is not implemented yet. Code 2"),
+                        bar_msg=bar_msg(tr("Please send log file to Github as issue")),
+                    )
                     return False
 
                 first_path = sub_datasets[0][0]
-                ds: gdal.Dataset = gdal.Open(first_path)
+                ds: gdal.Dataset = gdal.Open(first_path)  # type: ignore
 
             self.metadata.update_from_gdal_metadata(ds.GetMetadata())
         finally:

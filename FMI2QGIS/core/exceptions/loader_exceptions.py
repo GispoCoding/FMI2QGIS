@@ -1,5 +1,5 @@
 #  Gispo Ltd., hereby disclaims all copyright interest in the program FMI2QGIS
-#  Copyright (C) 2020 Gispo Ltd (https://www.gispo.fi/).
+#  Copyright (C) 2020-2021 Gispo Ltd (https://www.gispo.fi/).
 #
 #
 #  This file is part of FMI2QGIS.
@@ -23,8 +23,10 @@ from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
 class InvalidParameterException(QgsPluginException):
     pass
 
+
 class LoaderException(QgsPluginException):
     pass
+
 
 class BadRequestException(QgsPluginException):
     pass
