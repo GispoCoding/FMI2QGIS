@@ -6,6 +6,7 @@
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/Tests/badge.svg)
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/TestsLTR/badge.svg)
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/Release/badge.svg)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
 Plugin to view and download Finnish Meteorological Institute's open data
