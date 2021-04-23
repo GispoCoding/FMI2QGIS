@@ -38,7 +38,7 @@ After deploying and restarting QGIS you should see the plugin in the QGIS instal
 where you have to activate it.
 
 ## Testing
-Install Docker, docker-compose and python packages listed in [requirements.txt](../requirements.txt)
+Install Docker, docker-compose and python packages listed in [requirements-dev.txt](../requirements-dev.txt)
 to run tests with:
 
 ```shell script
