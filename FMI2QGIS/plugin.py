@@ -1,5 +1,5 @@
 #  Gispo Ltd., hereby disclaims all copyright interest in the program FMI2QGIS
-#  Copyright (C) 2020 Gispo Ltd (https://www.gispo.fi/).
+#  Copyright (C) 2020-2021 Gispo Ltd (https://www.gispo.fi/).
 #
 #
 #  This file is part of FMI2QGIS.
@@ -17,12 +17,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
-from typing import Callable, Optional, Set
+from typing import Callable, List, Optional, Set
 
-from PyQt5.QtCore import QTranslator, QCoreApplication
+from PyQt5.QtCore import QCoreApplication, QTranslator
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QWidget, QDockWidget
-from qgis.core import QgsApplication, QgsDateTimeRange, QgsMapLayer, QgsProject, QgsRasterLayer
+from PyQt5.QtWidgets import QAction, QDockWidget, QWidget
+from qgis.core import QgsDateTimeRange, QgsMapLayer, QgsProject, QgsRasterLayer
 from qgis.gui import QgisInterface
 
 from .core.processing.provider import Fmi2QgisProcessingProvider
@@ -38,13 +38,13 @@ try:
 except ImportError:
     QgsTemporalController = None
 
-TEMPORAL_CONTROLLER = 'Temporal Controller'
+TEMPORAL_CONTROLLER = "Temporal Controller"
 
 
 class Plugin:
     """QGIS Plugin Implementation."""
 
-    def __init__(self, iface: QgisInterface):
+    def __init__(self, iface: QgisInterface) -> None:
 
         self.iface = iface
 
@@ -60,7 +60,7 @@ class Plugin:
         else:
             pass
 
-        self.actions = []
+        self.actions: List[QAction] = []
         self.menu = tr(plugin_name())
 
         self.processing_provider = Fmi2QgisProcessingProvider()
@@ -77,7 +77,8 @@ class Plugin:
         add_to_toolbar: bool = True,
         status_tip: Optional[str] = None,
         whats_this: Optional[str] = None,
-        parent: Optional[QWidget] = None) -> QAction:
+        parent: Optional[QWidget] = None,
+    ) -> QAction:
         """Add a toolbar icon to the toolbar.
 
         :param icon_path: Path to the icon for this action. Can be a resource
@@ -126,81 +127,82 @@ class Plugin:
             self.iface.addToolBarIcon(action)
 
         if add_to_menu:
-            self.iface.addPluginToMenu(
-                self.menu,
-                action)
+            self.iface.addPluginToMenu(self.menu, action)
 
         self.actions.append(action)
 
         return action
 
-    def initGui(self):
+    def initGui(self):  # noqa N802
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
         self.add_action(
-            resources_path('icons', 'icon.png'),
+            resources_path("icons", "icon.png"),
             text=tr("Add WFS Layer"),
             callback=self.run,
             parent=self.iface.mainWindow(),
-            add_to_toolbar=False
+            add_to_toolbar=False,
         )
 
         self.add_action(
-            resources_path('icons', 'icon.png'),
+            resources_path("icons", "icon.png"),
             text=tr("Add WMS Layer"),
             callback=self.add_wms,
             parent=self.iface.mainWindow(),
-            add_to_toolbar=False
+            add_to_toolbar=False,
         )
 
         # noinspection PyArgumentList
         # QgsApplication.processingRegistry().addProvider(self.processing_provider)
 
-    def onClosePlugin(self):
+    def onClosePlugin(self) -> None:  # noqa N802
         """Cleanup necessary items here when plugin dockwidget is closed"""
         pass
 
-    def unload(self):
+    def unload(self) -> None:
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
-            self.iface.removePluginMenu(
-                tr(plugin_name()),
-                action)
+            self.iface.removePluginMenu(tr(plugin_name()), action)
             self.iface.removeToolBarIcon(action)
 
         teardown_logger(plugin_name())
 
-
         # noinspection PyArgumentList
         # QgsApplication.processingRegistry().removeProvider(self.processing_provider)
 
-    def run(self):
+    def run(self) -> None:
         """Run method that performs all the real work"""
         self.__show_temporal_controller()
         dialog = MainDialog(self.iface)
 
-        def update_layers(layer_ids):
+        def update_layers(layer_ids: List[str]) -> None:
             self.manually_handled_temporal_layer_ids.update(set(layer_ids))
 
         dialog.temporal_layers_added.connect(update_layers)
         dialog.exec()
 
-    def add_wms(self):
+    def add_wms(self) -> None:
         self.__show_temporal_controller()
         dialog = WMSDialog(self.iface)
         dialog.exec()
 
-    ## Temporal common functionality
-    def __show_temporal_controller(self):
+    # Temporal common functionality
+    def __show_temporal_controller(self) -> None:
         """Sets Temporal Controller dock widget visible if it exists"""
         dock_widget: QDockWidget
-        for dock_widget in self.iface.mainWindow().findChildren(QDockWidget, TEMPORAL_CONTROLLER):
+        for dock_widget in self.iface.mainWindow().findChildren(
+            QDockWidget, TEMPORAL_CONTROLLER
+        ):
             if not dock_widget.isVisible():
                 dock_widget.setVisible(True)
-            temporal_controller: QgsTemporalController = self.iface.mapCanvas().temporalController()
+            temporal_controller: QgsTemporalController = (
+                self.iface.mapCanvas().temporalController()
+            )
             # noinspection PyUnresolvedReferences
-            temporal_controller.updateTemporalRange.connect(self.__temporal_range_changed)
+            temporal_controller.updateTemporalRange.connect(
+                self.__temporal_range_changed
+            )
 
-    def __temporal_range_changed(self, t_range: QgsDateTimeRange):
+    def __temporal_range_changed(self, t_range: QgsDateTimeRange) -> None:
         """Update manually handled temporal layers"""
         obsolete_layer_ids = set()
         layer: QgsMapLayer

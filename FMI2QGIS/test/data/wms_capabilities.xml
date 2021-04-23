@@ -1719,7 +1719,7 @@
         <Style>
           <Name>sea-surface-salinity</Name>
           <Title>Colormap style sea surface salinity (per mille)</Title>
-          <Abstract>Colormap style for sea surface salinity in the Baltic sea. 
+          <Abstract>Colormap style for sea surface salinity in the Baltic sea.
           Features dual color scales for 40-10 per mille and for 8-1 per mille salinities</Abstract>
           <LegendURL width="20" height="20">
             <Format>image/png</Format>

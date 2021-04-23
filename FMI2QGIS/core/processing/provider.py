@@ -1,5 +1,5 @@
 #  Gispo Ltd., hereby disclaims all copyright interest in the program FMI2QGIS
-#  Copyright (C) 2020 Gispo Ltd (https://www.gispo.fi/).
+#  Copyright (C) 2020-2021 Gispo Ltd (https://www.gispo.fi/).
 #
 #
 #  This file is part of FMI2QGIS.
@@ -21,21 +21,21 @@ from qgis.core import QgsProcessingProvider
 
 
 class Fmi2QgisProcessingProvider(QgsProcessingProvider):
-    ID = 'fmi2qgis'
+    ID = "fmi2qgis"
 
-    def __init__(self):
+    def __init__(self) -> None:
         QgsProcessingProvider.__init__(self)
 
-    def loadAlgorithms(self):
+    def loadAlgorithms(self) -> None:  # noqa N802
         # Add processing algorithms if there are any
-        for alg in []:
+        for alg in []:  # type: ignore
             self.addAlgorithm(alg)
 
     def id(self) -> str:
         return Fmi2QgisProcessingProvider.ID
 
-    def name(self):
-        return self.tr('FMI2QGIS')
+    def name(self) -> str:
+        return self.tr("FMI2QGIS")
 
-    def longName(self):
+    def longName(self) -> str:  # noqa N802
         return self.name()

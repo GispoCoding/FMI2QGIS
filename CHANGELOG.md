@@ -12,7 +12,7 @@
 
 ### 0.1.0 - 01/12/2020
 
-* Plugin instructions and examples 
+* Plugin instructions and examples
 * Improved support for most raster stored queries
 * Pre-fetch possible values for raster stored queries
 * Improved GUI

@@ -1,5 +1,5 @@
 #  Gispo Ltd., hereby disclaims all copyright interest in the program FMI2QGIS
-#  Copyright (C) 2020 Gispo Ltd (https://www.gispo.fi/).
+#  Copyright (C) 2020-2021 Gispo Ltd (https://www.gispo.fi/).
 #
 #
 #  This file is part of FMI2QGIS.
@@ -18,22 +18,25 @@
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 
 from pathlib import Path
-from typing import Tuple, Optional, Set
+from typing import Optional, Set, Tuple
 
-from qgis.core import QgsMessageLog, Qgis, QgsTask
+from qgis.core import Qgis, QgsMessageLog, QgsTask
 
-from ..exceptions.loader_exceptions import BadRequestException
-from ..wfs import raise_based_on_response, WFSMetadata
 from ...qgis_plugin_tools.tools import network
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
-from ...qgis_plugin_tools.tools.exceptions import QgsPluginNetworkException, QgsPluginNotImplementedException
+from ...qgis_plugin_tools.tools.exceptions import (
+    QgsPluginNetworkException,
+    QgsPluginNotImplementedException,
+)
 from ...qgis_plugin_tools.tools.i18n import tr
+from ..exceptions.loader_exceptions import BadRequestException
+from ..wfs import WFSMetadata, raise_based_on_response
 
 
 class BaseLoader(QgsTask):
-    MESSAGE_CATEGORY = ''
+    MESSAGE_CATEGORY = ""
 
-    def __init__(self, description: str, download_dir: Path):
+    def __init__(self, description: str, download_dir: Path) -> None:
         """
         :param description: Description of the task
         :param download_dir:Download directory of the output file(s)
@@ -76,7 +79,9 @@ class BaseLoader(QgsTask):
 
             try:
                 # TODO: add a way to cancel the download
-                output = network.download_to_file(uri, self.download_dir, output_name=self.file_name)
+                output = network.download_to_file(
+                    uri, self.download_dir, output_name=self.file_name
+                )
                 output = self._process_downloaded_file(output)
                 self._log(f'File path is: "{output}"')
                 self.setProgress(70)
@@ -84,11 +89,13 @@ class BaseLoader(QgsTask):
                     result = True
             except QgsPluginNetworkException as e:
                 self.exception = e
-                error_message = e.bar_msg['details']
-                if 'Bad Request' in error_message:
-                    raise BadRequestException(tr('Bad request'),
-                                              bar_msg=bar_msg(tr('Try with different parameters')))
-                elif '<?xml' in error_message:
+                error_message = e.bar_msg["details"]  # type: ignore
+                if "Bad Request" in error_message:
+                    raise BadRequestException(
+                        tr("Bad request"),
+                        bar_msg=bar_msg(tr("Try with different parameters")),
+                    )
+                elif "<?xml" in error_message:
                     raise_based_on_response(error_message)
 
         except Exception as e:
@@ -105,9 +112,9 @@ class BaseLoader(QgsTask):
         """
         Constructs the uri for the download
         """
-        raise QgsPluginNotImplementedException('This method should be overridden')
+        raise QgsPluginNotImplementedException("This method should be overridden")
 
-    def _log(self, msg: str, level=Qgis.Info) -> None:
+    def _log(self, msg: str, level: int = Qgis.Info) -> None:
         """
         Used to log messages instead of LOGGER while in task thread
         """
