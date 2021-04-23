@@ -29,6 +29,7 @@ class Settings(enum.Enum):
     FMI_WFS_URL = "https://opendata.fmi.fi/wfs"
     FMI_WFS_VERSION = "2.0.0"
     FMI_WMS_URL = "https://openwms.fmi.fi/geoserver/wms"
+    MESH_PROVIDER_LIB = "mdal"
 
     def get(self, typehint: type = str) -> Any:
         """Gets the value of the setting"""

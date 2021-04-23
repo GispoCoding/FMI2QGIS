@@ -229,7 +229,7 @@ def test_adding_layer_temporal_settings(new_project, raster_loader, enfuser_sq):
 
 
 @pytest.mark.skipif(
-    qgis_supports_temporal(), reason="QGIS version does support temporal utils"
+    not qgis_supports_temporal(), reason="QGIS version does support temporal utils"
 )
 def test_temporal_fails_properly(new_project, raster_loader, enfuser_sq):
     test_file = Path(plugin_test_data_path("enfuser_no2_o3.nc"))
