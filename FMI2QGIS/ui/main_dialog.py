@@ -50,6 +50,7 @@ from qgis.gui import (
     QgsDoubleSpinBox,
     QgsExtentGroupBox,
     QgsFilterLineEdit,
+    QgsMessageBar,
 )
 
 from ..core.processing.base_loader import BaseLoader
@@ -58,7 +59,10 @@ from ..core.processing.raster_loader import RasterLoader
 from ..core.processing.vector_loader import VectorLoader
 from ..core.wfs import StoredQuery, StoredQueryFactory
 from ..definitions.configurable_settings import Settings
-from ..qgis_plugin_tools.tools.custom_logging import bar_msg
+from ..qgis_plugin_tools.tools.custom_logging import (
+    bar_msg,
+    use_custom_msg_bar_in_logger,
+)
 from ..qgis_plugin_tools.tools.fields import value_for_widget, widget_for_field
 from ..qgis_plugin_tools.tools.i18n import tr
 from ..qgis_plugin_tools.tools.logger_processing import LoggerProcessingFeedBack
@@ -75,6 +79,9 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
         QDialog.__init__(self, parent)
         self.setupUi(self)
         self.iface = iface
+
+        self.message_bar: QgsMessageBar
+        use_custom_msg_bar_in_logger(plugin_name(), self.message_bar)
 
         self.btn_load.clicked.connect(self.__load_wfs_layer)
         self.btn_select.clicked.connect(self.__select_wfs_layer)

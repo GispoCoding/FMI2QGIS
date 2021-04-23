@@ -9,14 +9,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1221</width>
-    <height>792</height>
+    <width>917</width>
+    <height>622</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>FMI2QGIS</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
+   <item>
+    <widget class="QgsMessageBar" name="message_bar">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -135,8 +145,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1193</width>
-           <height>300</height>
+           <width>889</width>
+           <height>205</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -236,11 +246,18 @@ p, li { white-space: pre-wrap; }
    <class>QgsFileWidget</class>
    <extends>QWidget</extends>
    <header>qgsfilewidget.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>QgsFilterLineEdit</class>
    <extends>QLineEdit</extends>
    <header>qgsfilterlineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsMessageBar</class>
+   <extends>QFrame</extends>
+   <header>qgis.gui</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
