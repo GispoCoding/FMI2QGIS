@@ -42,6 +42,7 @@ from qgis.core import (
     QgsCoordinateReferenceSystem,
     QgsProcessingContext,
     QgsProcessingFeedback,
+    QgsRectangle,
 )
 from qgis.gui import (
     QgisInterface,
@@ -200,6 +201,55 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
             if parameter.type in (QVariant.Rect, QVariant.RectF):
                 self.parameter_rows[param_name] = widgets
                 self.extent_group_box_bbox.setEnabled(True)
+                if possible_values:
+                    dataset_extent = QgsRectangle(
+                        *(map(float, possible_values[0].split(",")))
+                    )
+                    current_extent: QgsRectangle = (
+                        self.extent_group_box_bbox.outputExtent()
+                    )
+                    extent_msg = tr(
+                        "Your extent: {}, dataset maximum extent: {}",
+                        current_extent.toString(2),
+                        dataset_extent.toString(2),
+                    )
+
+                    if dataset_extent.area() / current_extent.area() > 100:
+                        LOGGER.warning(
+                            tr("Big difference in bounding boxes"),
+                            extra=bar_msg(
+                                tr(
+                                    "You might want to get a larger extent. {}",
+                                    extent_msg,
+                                )
+                            ),
+                        )
+                    elif current_extent.area() / dataset_extent.area() > 100:
+                        LOGGER.warning(
+                            tr("Big difference in bounding boxes"),
+                            extra=bar_msg(
+                                tr(
+                                    "You might want to get a smaller extent. {}",
+                                    extent_msg,
+                                )
+                            ),
+                        )
+
+                    if not current_extent.toRectF().intersects(
+                        dataset_extent.toRectF()
+                    ):
+                        LOGGER.warning(
+                            tr(
+                                "Your bounding box and dataset bounding "
+                                "box do not intersect"
+                            ),
+                            extra=bar_msg(
+                                tr(
+                                    "You might want to change your extent. {}",
+                                    extent_msg,
+                                )
+                            ),
+                        )
                 continue
             row_idx += 1
             widget: QWidget = widget_for_field(parameter.type)  # type: ignore
