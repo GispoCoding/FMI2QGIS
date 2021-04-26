@@ -49,7 +49,6 @@ from qgis.gui import (
     QgsDoubleSpinBox,
     QgsExtentGroupBox,
     QgsFilterLineEdit,
-    QgsMapCanvas,
 )
 
 from ..core.processing.base_loader import BaseLoader
@@ -85,14 +84,19 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
         self.search_ln_ed: QgsFilterLineEdit
         self.search_ln_ed.valueChanged.connect(self.__search_stored_wfs_layers)
 
-        canvas: QgsMapCanvas = self.iface.mapCanvas()
-        crs = canvas.mapSettings().destinationCrs()
-        self.extent_group_box_bbox.setOriginalExtent(canvas.extent(), crs)
-        self.extent_group_box_bbox.setCurrentExtent(canvas.extent(), crs)
+        self.extent_group_box_bbox.setOriginalExtent(
+            self.iface.mapCanvas().extent(),
+            self.iface.mapCanvas().mapSettings().destinationCrs(),
+        )
+        self.extent_group_box_bbox.setCurrentExtent(
+            self.iface.mapCanvas().extent(),
+            self.iface.mapCanvas().mapSettings().destinationCrs(),
+        )
         self.extent_group_box_bbox.setOutputCrs(
             QgsCoordinateReferenceSystem("EPSG:4326")
         )
-        # self.extent_group_box_bbox.setMapCanvas(canvas)
+        self.extent_group_box_bbox.setMapCanvas(self.iface.mapCanvas(), False)
+        self.extent_group_box_bbox.setOutputExtentFromCurrent()
         self.chk_box_add_to_map: QCheckBox
 
         self.progress_bar.setValue(0)
