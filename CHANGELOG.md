@@ -1,5 +1,16 @@
 # CHANGELOG
 
+### 0.2.0 - 28/04/2021
+
+* Add support for mesh layers
+* Add searching and filtering of different data sources
+* Improve GUI
+* Improve error handling
+* Fix the extent/bbox functionality
+* Use newest qgis_plugin_tools
+* Remove the experimental status of the plugin
+
+
 ### 0.1.2 - 08/12/2020
 
 * Fix import errors in QGIS 3.10
