@@ -270,6 +270,23 @@ class WFSMetadata:
             )
         return None
 
+    def fix_gdal_metadata(self, metadata: Dict[str, str]) -> Dict[str, str]:
+        """
+        Replaces unknown time dimension names with "time"
+        :param metadata: Dictionary of gdal metadata
+        :return: fixed gdal metadata
+        """
+        d = {}
+        for key, value in metadata.items():
+            key_ = key.replace(
+                self.TIME_DIMENSION_NAMES[1], self.TIME_DIMENSION_NAMES[0]
+            )
+            value_ = value.replace(
+                self.TIME_DIMENSION_NAMES[1], self.TIME_DIMENSION_NAMES[0]
+            )
+            d[key_] = value_
+        return d
+
     def update_from_gdal_metadata(self, ds_metadata: Dict[str, str]) -> None:
         if self.NETCDF_DIM_EXTRA in ds_metadata:
             # Is netcdf file and has extra dimensions (probably time)

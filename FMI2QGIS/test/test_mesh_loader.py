@@ -17,11 +17,17 @@
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
 # type: ignore
-
+import shutil
 from datetime import datetime
 from pathlib import Path
 
 import pytest
+from qgis._core import (
+    QgsMeshDataProvider,
+    QgsMeshDataProviderTemporalCapabilities,
+    QgsUnitTypes,
+)
+from qgis.core import QgsMeshLayerTemporalProperties
 
 from ..core.processing.mesh_loader import MeshLoader
 from ..core.wfs import Parameter
@@ -96,36 +102,143 @@ def test_construct_uri_enfuser(tmpdir_pth, fmi_download_url, enfuser_sq, extent_
     )
 
 
-def test_raster_to_layer(mesh_loader, enfuser_sq):
+def test_mesh_conversion(mesh_loader, enfuser_sq):
     test_file = Path(plugin_test_data_path("aq_small.nc"))
     mesh_loader.sq = enfuser_sq
     mesh_loader.path_to_file = test_file
+    conversion_succeeded = mesh_loader._convert_to_mesh_compatible_files()
+    layers = mesh_loader._files_to_mesh_layers()
 
-    layers = mesh_loader.raster_to_layers()
+    assert conversion_succeeded
     assert len(layers) == 1
+    assert {path.name for path in mesh_loader.paths_to_files.values()} == {
+        "aq_small.nc"
+    }
+
     layer = list(layers)[0]
+
+    temp_props: QgsMeshLayerTemporalProperties = layer.temporalProperties()
+    provider: QgsMeshDataProvider = layer.dataProvider()
+    temp_capabilities: QgsMeshDataProviderTemporalCapabilities = (
+        provider.temporalCapabilities()
+    )
+
     assert layer.isValid()
     assert layer.name() == "FMI-ENFUSER air quality forecast as grid"
+    assert layer.datasetGroupCount() == 1
+    assert (
+        layer.datasetGroupTreeRootItem().child(0).name()
+        == "Air Quality Index near ground level in scale of 1 to 5"
+    )
+    assert not layer.datasetGroupTreeRootItem().child(0).isVector()
+
+    assert temp_props.isActive()
+    assert temp_props.timeExtent().begin().toPyDateTime() == datetime(
+        2020, 11, 2, 15, 0
+    )
+    assert temp_props.timeExtent().end().toPyDateTime() == datetime(
+        2020, 11, 3, 10, 0, 0
+    )
+    assert temp_capabilities.timeExtent() == temp_props.timeExtent()
+    assert temp_capabilities.temporalUnit() == QgsUnitTypes.TemporalHours
 
 
-def test_raster_to_layer2(mesh_loader):
-    test_file = Path(plugin_test_data_path("enfuser_all_variables.nc"))
+@pytest.mark.parametrize(
+    "f_name,s_time,e_time",
+    [
+        (
+            "enfuser_all_variables",
+            datetime(2020, 11, 19, 12, 0),
+            datetime(2020, 11, 19, 12, 0),
+        ),
+        (
+            "enfuser_all_variables_and_time",
+            datetime(2021, 4, 25, 12, 0),
+            datetime(2021, 4, 26, 12, 0),
+        ),
+    ],
+)
+def test_files_to_mesh_layers2(
+    mesh_loader, enfuser_sq, tmpdir_pth, f_name, s_time, e_time
+):
+    test_file = Path(tmpdir_pth, f"{f_name}.nc")
+    shutil.copy2(Path(plugin_test_data_path(f"{f_name}.nc")), test_file)
+    mesh_loader.sq = enfuser_sq
     mesh_loader.path_to_file = test_file
-    mesh_loader.metadata.sub_dataset_dict = {
-        "AQIndex": f'NETCDF:"{test_file}":index_of_airquality_194',
-        "NO2Concentration": f'NETCDF:"{test_file}":mass_concentration_of_nitrogen_dioxide_in_air_4902',
-        "O3Concentration": f'NETCDF:"{test_file}":mass_concentration_of_ozone_in_air_4903',
-        "PM10Concentration": f'NETCDF:"{test_file}":mass_concentration_of_pm10_ambient_aerosol_in_air_4904',
-        "PM25Concentration": f'NETCDF:"{test_file}":mass_concentration_of_pm2p5_ambient_aerosol_in_air_4905',
+    conversion_succeeded = mesh_loader._convert_to_mesh_compatible_files()
+    assert conversion_succeeded
+    assert {path.name for path in mesh_loader.paths_to_files.values()} == {
+        f"{f_name}_index_of_airquality_194.nc",
+        f"{f_name}_mass_concentration_of_nitrogen_dioxide_in_air_4902.nc",
+        f"{f_name}_mass_concentration_of_ozone_in_air_4903.nc",
+        f"{f_name}_mass_concentration_of_pm10_ambient_aerosol_in_air_4904.nc",
+        f"{f_name}_mass_concentration_of_pm2p5_ambient_aerosol_in_air_4905.nc",
+    }
+    assert all(path.exists() for path in mesh_loader.paths_to_files.values())
+
+    layers = mesh_loader._files_to_mesh_layers()
+
+    assert len(layers) == 5
+
+    assert {layer.name() for layer in layers} == {
+        "Air Quality Index near ground level in scale of 1 to 5",
+        "NO2 mass concentration",
+        "O3 mass concentration",
+        "PM10 mass concentration",
+        "PM25 mass concentration",
+    }
+    for layer in layers:
+        temp_props: QgsMeshLayerTemporalProperties = layer.temporalProperties()
+        provider: QgsMeshDataProvider = layer.dataProvider()
+        temp_capabilities: QgsMeshDataProviderTemporalCapabilities = (
+            provider.temporalCapabilities()
+        )
+
+        assert layer.isValid()
+        assert layer.datasetGroupCount() == 1
+        assert not layer.datasetGroupTreeRootItem().child(0).isVector()
+
+        assert temp_props.isActive()
+        assert temp_props.timeExtent().begin().toPyDateTime() == s_time
+        assert temp_props.timeExtent().end().toPyDateTime() == e_time
+        assert temp_capabilities.timeExtent() == temp_props.timeExtent()
+        assert temp_capabilities.temporalUnit() == QgsUnitTypes.TemporalHours
+
+
+def test_mesh_conversion_with_grib(mesh_loader, enfuser_sq):
+    test_file = Path(plugin_test_data_path("grib_data.grb2"))
+    mesh_loader.sq = enfuser_sq
+    mesh_loader.path_to_file = test_file
+    conversion_succeeded = mesh_loader._convert_to_mesh_compatible_files()
+    layers = mesh_loader._files_to_mesh_layers()
+
+    assert conversion_succeeded
+    assert len(layers) == 1
+    assert {path.name for path in mesh_loader.paths_to_files.values()} == {
+        "grib_data.grb2"
     }
 
-    layers = mesh_loader.raster_to_layers()
-    assert len(layers) == 5
-    assert all((layer.isValid() for layer in layers))
-    assert {layer.name() for layer in layers} == {
-        "AQIndex",
-        "NO2Concentration",
-        "O3Concentration",
-        "PM10Concentration",
-        "PM25Concentration",
-    }
+    layer = list(layers)[0]
+
+    temp_props: QgsMeshLayerTemporalProperties = layer.temporalProperties()
+    provider: QgsMeshDataProvider = layer.dataProvider()
+    temp_capabilities: QgsMeshDataProviderTemporalCapabilities = (
+        provider.temporalCapabilities()
+    )
+
+    assert layer.isValid()
+    assert layer.name() == "FMI-ENFUSER air quality forecast as grid"
+    assert layer.datasetGroupCount() == 2
+    assert (
+        layer.datasetGroupTreeRootItem().child(0).name()
+        == "Precipitation rate [kg/(m^2 s)]"
+    )
+    assert not layer.datasetGroupTreeRootItem().child(0).isVector()
+    assert layer.datasetGroupTreeRootItem().child(1).name() == "Temperature [C]"
+    assert not layer.datasetGroupTreeRootItem().child(1).isVector()
+
+    assert temp_props.isActive()
+    assert temp_props.timeExtent().begin().toPyDateTime() == datetime(2010, 1, 1, 0, 0)
+    assert temp_props.timeExtent().end().toPyDateTime() == datetime(2070, 12, 1, 0, 0)
+    assert temp_capabilities.timeExtent() == temp_props.timeExtent()
+    assert temp_capabilities.temporalUnit() == QgsUnitTypes.TemporalHours
