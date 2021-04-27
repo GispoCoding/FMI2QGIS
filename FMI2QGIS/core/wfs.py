@@ -20,8 +20,9 @@
 import datetime
 import enum
 import logging
+import re
 import xml.etree.ElementTree as ET  # noqa
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 from urllib.parse import parse_qs, urlsplit
 
 from osgeo import ogr
@@ -70,7 +71,7 @@ class Parameter:
         self.abstract = abstract
         self.type = type
         self.variables: List[ParameterVariable] = []
-        self._possible_values: Set[Any] = set()
+        self._possible_values: List[Any] = []
         self._value: Any = None
 
     @staticmethod
@@ -136,7 +137,8 @@ class Parameter:
         _val: Any = str(value)
         if self.type == QVariant.DateTime:
             _val = datetime.datetime.strptime(value, self.TIME_FORMAT)
-        self._possible_values.add(_val)
+        if _val not in self._possible_values:
+            self._possible_values.append(_val)
 
     def has_variables(self) -> bool:
         return self.name == "param" and self.type == QVariant.StringList
@@ -269,6 +271,19 @@ class WFSMetadata:
             )
         return None
 
+    def fix_gdal_metadata(self, metadata: Dict[str, str]) -> Dict[str, str]:
+        """
+        Replaces unknown time dimension names with "time"
+        :param metadata: Dictionary of gdal metadata
+        :return: fixed gdal metadata
+        """
+        d = {}
+        for key, value in metadata.items():
+            key_ = re.sub(r"time_\d?h", self.TIME_DIMENSION_NAMES[0], key)
+            value_ = re.sub(r"time_\d?h", self.TIME_DIMENSION_NAMES[0], value)
+            d[key_] = value_
+        return d
+
     def update_from_gdal_metadata(self, ds_metadata: Dict[str, str]) -> None:
         if self.NETCDF_DIM_EXTRA in ds_metadata:
             # Is netcdf file and has extra dimensions (probably time)
@@ -399,6 +414,7 @@ class StoredQueryFactory:
                 "{%s}procedure" % Namespace.OM.value
             ).items()[0][-1]
             sq.producer = process_url.split("/")[-1]
+            # noinspection PyTypeChecker
             sq.format = parse_qs(urlsplit(ob_url).query).get("units", [""])[0]
 
             for wfs_member in list(root):
@@ -429,6 +445,7 @@ class StoredQueryFactory:
                                 param_name, param_value
                             )
                         param = sq.parameters[param_name]
+                        param.add_possible_value(param_value)
                         if (
                             param_name == "format"
                             and param_value != "netcdf"
@@ -440,7 +457,6 @@ class StoredQueryFactory:
                             )
                             param.add_possible_value("netcdf")
 
-                        param.add_possible_value(param_value)
                         if (
                             param.type == QVariant.DateTime
                             and str(param_name).startswith("start")

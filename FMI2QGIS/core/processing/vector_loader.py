@@ -26,7 +26,6 @@ from osgeo import gdal, ogr
 from qgis.core import QgsProject, QgsVectorLayer
 
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
-from ...qgis_plugin_tools.tools.exceptions import QgsPluginException
 from ...qgis_plugin_tools.tools.i18n import tr
 from ...qgis_plugin_tools.tools.layers import set_temporal_settings
 from ...qgis_plugin_tools.tools.resources import plugin_name
@@ -145,19 +144,7 @@ class VectorLoader(BaseLoader):
         # Error handling
         else:
             if self.exception is None:
-                LOGGER.warning(
-                    tr("Task was not successful"),
-                    extra=bar_msg(tr("Task was probably cancelled by user")),
-                )
-            else:
-                try:
-                    raise self.exception
-                except QgsPluginException as e:
-                    LOGGER.exception(str(e), extra=e.bar_msg)
-                except Exception as e:
-                    LOGGER.exception(
-                        tr("Unhandled exception occurred"), extra=bar_msg(e)
-                    )
+                self._report_error(LOGGER)
 
     def _update_vector_metadata(self) -> None:
         """

@@ -250,7 +250,7 @@ def test_adding_layer_temporal_settings(new_project, vector_loader, air_quality_
 
 
 @pytest.mark.skipif(
-    qgis_supports_temporal(), reason="QGIS version does support temporal utils"
+    not qgis_supports_temporal(), reason="QGIS version does support temporal utils"
 )
 def test_adding_layer_temporal_settings_if_no_temporal_props_are_available(
     new_project, vector_loader, air_quality_sq

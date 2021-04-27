@@ -24,9 +24,18 @@ jobs:
         with:
           submodules: true
 
-      - name: Pull qgis 3.14 image
-        run: docker pull qgis/qgis:release-3_14
+      - name: Pull qgis 3.18 image
+        run: docker pull qgis/qgis:release-3_18
 
       # Runs all tests
-      - name: Run tests (3.14)
-        run: docker run --rm --net=host --volume `pwd`:/app -w=/app -e QGIS_PLUGIN_IN_CI=1 qgis/qgis:release-3_14 sh -c "pip3 install -q pytest && xvfb-run -s '+extension GLX -screen 0 1024x768x24' pytest -v"
+      - name: Run tests (3.18)
+        run: docker run --rm --net=host --volume `pwd`:/app -w=/app -e QGIS_PLUGIN_IN_CI=1 qgis/qgis:release-3_18 sh -c "pip3 install -q pytest pytest-cov && xvfb-run -s '+extension GLX -screen 0 1024x768x24' pytest -v --cov --cov-report=xml"
+
+      # Upload coverage report
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          fail_ci_if_error: false # set to true when upload is working
+          verbose: false

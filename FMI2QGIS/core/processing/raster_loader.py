@@ -25,10 +25,7 @@ import gdal
 from qgis.core import QgsProject, QgsRasterLayer
 
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
-from ...qgis_plugin_tools.tools.exceptions import (
-    QgsPluginException,
-    QgsPluginNotImplementedException,
-)
+from ...qgis_plugin_tools.tools.exceptions import QgsPluginNotImplementedException
 from ...qgis_plugin_tools.tools.i18n import tr
 from ...qgis_plugin_tools.tools.raster_layers import (
     set_fixed_temporal_range,
@@ -139,19 +136,7 @@ class RasterLoader(BaseLoader):
         # Error handling
         else:
             if self.exception is None:
-                LOGGER.warning(
-                    tr("Task was not successful"),
-                    extra=bar_msg(tr("Task was probably cancelled by user")),
-                )
-            else:
-                try:
-                    raise self.exception
-                except QgsPluginException as e:
-                    LOGGER.exception(str(e), extra=e.bar_msg)
-                except Exception as e:
-                    LOGGER.exception(
-                        tr("Unhandled exception occurred"), extra=bar_msg(e)
-                    )
+                self._report_error(LOGGER)
 
     def raster_to_layers(self) -> Set[QgsRasterLayer]:
         """

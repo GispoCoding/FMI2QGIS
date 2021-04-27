@@ -16,7 +16,7 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with FMI2QGIS.  If not, see <https://www.gnu.org/licenses/>.
-
+import logging
 from pathlib import Path
 from typing import Optional, Set, Tuple
 
@@ -25,6 +25,7 @@ from qgis.core import Qgis, QgsMessageLog, QgsTask
 from ...qgis_plugin_tools.tools import network
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
 from ...qgis_plugin_tools.tools.exceptions import (
+    QgsPluginException,
     QgsPluginNetworkException,
     QgsPluginNotImplementedException,
 )
@@ -120,3 +121,20 @@ class BaseLoader(QgsTask):
         """
         # noinspection PyCallByClass,PyTypeChecker
         QgsMessageLog.logMessage(msg, self.MESSAGE_CATEGORY, level)
+
+    def _report_error(self, logger: logging.Logger) -> None:
+        """
+        Used to log error message if the process ended in exception
+        """
+        if self.exception is None:
+            logger.warning(
+                tr("Task was not successful"),
+                extra=bar_msg(tr("Task was probably cancelled by user")),
+            )
+        else:
+            try:
+                raise self.exception
+            except QgsPluginException as e:
+                logger.exception(str(e), extra=e.bar_msg)
+            except Exception as e:
+                logger.exception(tr("Unhandled exception occurred"), extra=bar_msg(e))

@@ -53,6 +53,7 @@ from qgis.gui import (
 )
 
 from ..core.processing.base_loader import BaseLoader
+from ..core.processing.mesh_loader import MeshLoader
 from ..core.processing.raster_loader import RasterLoader
 from ..core.processing.vector_loader import VectorLoader
 from ..core.wfs import StoredQuery, StoredQueryFactory
@@ -340,7 +341,7 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
             add_to_map: bool = self.chk_box_add_to_map.isChecked()
 
             if self.selected_stored_query.type == StoredQuery.Type.Raster:
-                self.task = RasterLoader(
+                self.task = MeshLoader(
                     "",
                     output_path,
                     Settings.FMI_DOWNLOAD_URL.get(),
@@ -375,7 +376,7 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
     def __task_completed(self, result: bool) -> None:
         assert self.task
         self._enable_ui()
-        if result:
+        if result and isinstance(self.task, RasterLoader):
             if self.task.is_manually_temporal:
                 self.temporal_layers_added.emit(self.task.layer_ids)
 
