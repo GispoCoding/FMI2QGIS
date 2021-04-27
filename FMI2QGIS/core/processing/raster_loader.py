@@ -25,10 +25,7 @@ import gdal
 from qgis.core import QgsProject, QgsRasterLayer
 
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg
-from ...qgis_plugin_tools.tools.exceptions import (
-    QgsPluginException,
-    QgsPluginNotImplementedException,
-)
+from ...qgis_plugin_tools.tools.exceptions import QgsPluginNotImplementedException
 from ...qgis_plugin_tools.tools.i18n import tr
 from ...qgis_plugin_tools.tools.raster_layers import (
     set_fixed_temporal_range,
