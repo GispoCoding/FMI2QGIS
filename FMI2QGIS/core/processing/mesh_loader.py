@@ -74,10 +74,11 @@ class MeshLoader(RasterLoader):
 
     def _convert_to_mesh_compatible_files(self) -> bool:
         """
-        Some Netcdf files from FMI have "time_bounds_h" variable as the first subdataset.
-        QgsMeshLayer seems to expect that the first dataset is spatial and fails to show mesh
-        layer if that is not the case. Also some FMI layers have temporal dimension called "time_h".
-        QgsMeshLayer seems to work only with temporal variables called "time" so metadata has to be uptaded.
+        Some Netcdf files from FMI have "time_bounds_h" variable as the first
+        subdataset. QgsMeshLayer seems to expect that the first dataset is spatial
+        and fails to show mesh layer if that is not the case. Also some FMI layers
+        have temporal dimension called "time_h". QgsMeshLayer seems to work only
+        with temporal variables called "time" so metadata has to be updated.
 
         :return: Whether conversion was successful or not
         """
