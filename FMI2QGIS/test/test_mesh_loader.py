@@ -125,7 +125,10 @@ def test_mesh_conversion(mesh_loader, enfuser_sq):
 
     assert layer.isValid()
     assert layer.name() == "FMI-ENFUSER air quality forecast as grid"
-    assert layer.datasetGroupCount() == 1
+    try:
+        assert layer.datasetGroupCount() == 1
+    except AttributeError:  # method added in 3.16
+        pass
     assert (
         layer.datasetGroupTreeRootItem().child(0).name()
         == "Air Quality Index near ground level in scale of 1 to 5"

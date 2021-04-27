@@ -3,7 +3,7 @@ name=FMI2QGIS
 description=Plugin to view and download Finnish Meteorological Institute's open data
 about=This plugin is used to view and download <a href="https://en.ilmatieteenlaitos.fi/">Finnish Meteorological Institute's</a> (later FMI) <a href="https://en.ilmatieteenlaitos.fi/open-data">open data</a>. By downloading and using the FMI open data, you approve to the Finnish Meteorological Institute's open data <a href="https://en.ilmatieteenlaitos.fi/open-data-licence">license</a> (CC BY 4.0). This software has been developed initially as a part of UIA-HOPE innovation competition organized by <a href="https://forumvirium.fi/en/">Forum Virium</a> and that has been financially supported by the European Union's <a href="https://www.uia-initiative.eu/en">Urban Innovative Actions</a> (UIA) Initiative and its <a href="https://www.uia-initiative.eu/en/uia-cities/helsinki">Healthy Outdoor Premises for Everyone</a> project (HOPE).
 version=0.0.1
-qgisMinimumVersion=3.10
+qgisMinimumVersion=3.14
 author=Gispo Ltd.
 email=jaakko@gispo.fi
 changelog=
