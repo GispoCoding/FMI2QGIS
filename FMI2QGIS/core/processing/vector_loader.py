@@ -86,9 +86,15 @@ class VectorLoader(BaseLoader):
             downloaded_file_path.parent,
             downloaded_file_path.name.replace(".", "_utf8."),
         )
-        with gzip.open(downloaded_file_path, "rb") as f:
-            with open(output, "w") as f2:
-                f2.write(f.read().decode("utf-8"))
+        try:
+            with gzip.open(downloaded_file_path, "rb") as f:
+                with open(output, "w") as f2:
+                    f2.write(f.read().decode("utf-8"))
+        except OSError:
+            self._log(f"File {downloaded_file_path} is not gzipped")
+            with open(downloaded_file_path, "rb") as f:  # type: ignore
+                with open(output, "w") as f2:
+                    f2.write(f.read().decode("utf-8"))
         return output
 
     def _construct_uri(self) -> str:
@@ -119,7 +125,7 @@ class VectorLoader(BaseLoader):
         """
         if result and self.path_to_file.is_file():
             layer = self.vector_to_layer()
-            if layer.isValid() and self.add_to_map:
+            if layer.isValid() and layer.featureCount() > 0 and self.add_to_map:
                 if self.metadata.time_field_idx is not None and self.sq.time_step > 0:
                     try:
                         set_temporal_settings(
@@ -141,6 +147,14 @@ class VectorLoader(BaseLoader):
                 # noinspection PyArgumentList
                 QgsProject.instance().addMapLayer(layer)
                 self.layer_ids.add(layer.id())
+
+            else:
+                LOGGER.warning(
+                    tr("Empty layer"),
+                    extra=bar_msg(
+                        tr(" The layer is empty and will not be added to the map.")
+                    ),
+                )
 
         # Error handling
         else:
@@ -171,7 +185,7 @@ class VectorLoader(BaseLoader):
             )
         else:
             try:
-                ds: ogr.DataSource = driver.Open(str(self.path_to_file))
+                ds: Optional[ogr.DataSource] = driver.Open(str(self.path_to_file))
                 self.metadata.update_from_ogr_data_source(ds)
             finally:
                 ds = None
@@ -217,7 +231,7 @@ class VectorLoader(BaseLoader):
         )
 
         try:
-            ds: ogr.DataSource = gdal.VectorTranslate(
+            ds: Optional[ogr.DataSource] = gdal.VectorTranslate(
                 str(new_file), str(self.path_to_file), options=options
             )
             if self.metadata.is_datasource_valid(ds):
