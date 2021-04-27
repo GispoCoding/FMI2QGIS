@@ -42,8 +42,8 @@ from qgis.core import (
     QgsCoordinateReferenceSystem,
     QgsProcessingContext,
     QgsProcessingFeedback,
-    QgsRectangle,
     QgsProject,
+    QgsRectangle,
 )
 from qgis.gui import (
     QgisInterface,
@@ -102,7 +102,12 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
         self.extent_group_box_bbox.setOutputCrs(
             QgsCoordinateReferenceSystem("EPSG:4326")
         )
-        self.extent_group_box_bbox.setMapCanvas(self.iface.mapCanvas(), False)
+        try:
+            self.extent_group_box_bbox.setMapCanvas(
+                self.iface.mapCanvas(), drawOnCanvasOption=False
+            )
+        except TypeError:
+            self.extent_group_box_bbox.setMapCanvas(self.iface.mapCanvas())
         self.extent_group_box_bbox.setOutputExtentFromCurrent()
         self.chk_box_add_to_map: QCheckBox
         self.btn_output_dir_select: QgsFileWidget
