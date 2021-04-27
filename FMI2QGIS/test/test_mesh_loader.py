@@ -195,7 +195,10 @@ def test_files_to_mesh_layers2(
         )
 
         assert layer.isValid()
-        assert layer.datasetGroupCount() == 1
+        try:
+            assert layer.datasetGroupCount() == 1
+        except AttributeError:  # method added in 3.16
+            pass
         assert not layer.datasetGroupTreeRootItem().child(0).isVector()
 
         assert temp_props.isActive()
@@ -228,7 +231,10 @@ def test_mesh_conversion_with_grib(mesh_loader, enfuser_sq):
 
     assert layer.isValid()
     assert layer.name() == "FMI-ENFUSER air quality forecast as grid"
-    assert layer.datasetGroupCount() == 2
+    try:
+        assert layer.datasetGroupCount() == 2
+    except AttributeError:  # method added in 3.16
+        pass
     assert (
         layer.datasetGroupTreeRootItem().child(0).name()
         == "Precipitation rate [kg/(m^2 s)]"
