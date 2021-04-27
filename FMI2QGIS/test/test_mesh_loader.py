@@ -22,12 +22,12 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-from qgis._core import (
+from qgis.core import (
     QgsMeshDataProvider,
     QgsMeshDataProviderTemporalCapabilities,
+    QgsMeshLayerTemporalProperties,
     QgsUnitTypes,
 )
-from qgis.core import QgsMeshLayerTemporalProperties
 
 from ..core.processing.mesh_loader import MeshLoader
 from ..core.wfs import Parameter
@@ -207,6 +207,61 @@ def test_files_to_mesh_layers2(
         assert temp_props.isActive()
         assert temp_props.timeExtent().begin().toPyDateTime() == s_time
         assert temp_props.timeExtent().end().toPyDateTime() == e_time
+        assert temp_capabilities.timeExtent() == temp_props.timeExtent()
+        assert temp_capabilities.temporalUnit() == QgsUnitTypes.TemporalHours
+
+
+def test_files_to_mesh_layers3(mesh_loader, enfuser_sq, tmpdir_pth):
+    f_name = "hilatar"
+    test_file = Path(tmpdir_pth, f"{f_name}.nc")
+    shutil.copy2(Path(plugin_test_data_path(f"{f_name}.nc")), test_file)
+    mesh_loader.sq = enfuser_sq
+    mesh_loader.path_to_file = test_file
+    conversion_succeeded = mesh_loader._convert_to_mesh_compatible_files()
+    assert conversion_succeeded
+    assert {path.name for path in mesh_loader.paths_to_files.values()} == {
+        f"{f_name}_nhx_accumulated_6h_dry_deposition_1182.nc",
+        f"{f_name}_nhx_accumulated_6h_wet_deposition_1183.nc",
+        f"{f_name}_nox_accumulated_6h_dry_deposition_1180.nc",
+        f"{f_name}_nox_accumulated_6h_wet_deposition_1181.nc",
+        f"{f_name}_sulfur_accumulated_6h_dry_deposition_1184.nc",
+        f"{f_name}_sulfur_accumulated_6h_wet_deposition_1185.nc",
+    }
+    assert all(path.exists() for path in mesh_loader.paths_to_files.values())
+
+    layers = mesh_loader._files_to_mesh_layers()
+
+    assert len(layers) == 6
+
+    assert {layer.name() for layer in layers} == {
+        "Surface 6h accumulated NHx dry deposition expressed as nitrogen",
+        "Surface 6h accumulated NHx wet deposition expressed as nitrogen",
+        "Surface 6h accumulated NOx dry deposition expressed as nitrogen",
+        "Surface 6h accumulated NOx wet deposition expressed as nitrogen",
+        "Surface 6h accumulated oxidized sulpfur dry deposition expressed as sulfur",
+        "Surface 6h accumulated oxidized sulpfur wet deposition expressed as sulfur",
+    }
+    for layer in layers:
+        temp_props: QgsMeshLayerTemporalProperties = layer.temporalProperties()
+        provider: QgsMeshDataProvider = layer.dataProvider()
+        temp_capabilities: QgsMeshDataProviderTemporalCapabilities = (
+            provider.temporalCapabilities()
+        )
+
+        assert layer.isValid()
+        try:
+            assert layer.datasetGroupCount() == 1
+        except AttributeError:  # method added in 3.16
+            pass
+        assert not layer.datasetGroupTreeRootItem().child(0).isVector()
+
+        assert temp_props.isActive()
+        assert temp_props.timeExtent().begin().toPyDateTime() == datetime(
+            2011, 1, 1, 0, 0
+        )
+        assert temp_props.timeExtent().end().toPyDateTime() == datetime(
+            2011, 2, 1, 0, 0
+        )
         assert temp_capabilities.timeExtent() == temp_props.timeExtent()
         assert temp_capabilities.temporalUnit() == QgsUnitTypes.TemporalHours
 

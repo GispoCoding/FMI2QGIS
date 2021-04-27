@@ -20,6 +20,7 @@
 import datetime
 import enum
 import logging
+import re
 import xml.etree.ElementTree as ET  # noqa
 from typing import Any, Dict, List, Optional
 from urllib.parse import parse_qs, urlsplit
@@ -278,12 +279,8 @@ class WFSMetadata:
         """
         d = {}
         for key, value in metadata.items():
-            key_ = key.replace(
-                self.TIME_DIMENSION_NAMES[1], self.TIME_DIMENSION_NAMES[0]
-            )
-            value_ = value.replace(
-                self.TIME_DIMENSION_NAMES[1], self.TIME_DIMENSION_NAMES[0]
-            )
+            key_ = re.sub(r"time_\d?h", self.TIME_DIMENSION_NAMES[0], key)
+            value_ = re.sub(r"time_\d?h", self.TIME_DIMENSION_NAMES[0], value)
             d[key_] = value_
         return d
 

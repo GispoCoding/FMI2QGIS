@@ -90,7 +90,7 @@ class MeshLoader(RasterLoader):
                 sub_datasets = [
                     sub_ds
                     for sub_ds, _ in ds.GetSubDatasets()
-                    if not sub_ds.endswith("time_bounds_h")
+                    if "time_bounds_" not in sub_ds
                 ]
             finally:
                 ds = None
