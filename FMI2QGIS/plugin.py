@@ -26,7 +26,11 @@ from qgis.core import QgsDateTimeRange, QgsMapLayer, QgsProject, QgsRasterLayer
 from qgis.gui import QgisInterface
 
 from .core.processing.provider import Fmi2QgisProcessingProvider
-from .qgis_plugin_tools.tools.custom_logging import setup_logger, teardown_logger
+from .qgis_plugin_tools.tools.custom_logging import (
+    setup_logger,
+    teardown_logger,
+    use_custom_msg_bar_in_logger,
+)
 from .qgis_plugin_tools.tools.i18n import setup_translation, tr
 from .qgis_plugin_tools.tools.raster_layers import set_band_based_on_range
 from .qgis_plugin_tools.tools.resources import plugin_name, resources_path
@@ -173,6 +177,7 @@ class Plugin:
         """Run method that performs all the real work"""
         self.__show_temporal_controller()
         dialog = MainDialog(self.iface)
+        use_custom_msg_bar_in_logger(plugin_name(), dialog.message_bar)
 
         def update_layers(layer_ids: List[str]) -> None:
             self.manually_handled_temporal_layer_ids.update(set(layer_ids))
@@ -183,6 +188,7 @@ class Plugin:
     def add_wms(self) -> None:
         self.__show_temporal_controller()
         dialog = WMSDialog(self.iface)
+        use_custom_msg_bar_in_logger(plugin_name(), dialog.message_bar)
         dialog.exec()
 
     # Temporal common functionality

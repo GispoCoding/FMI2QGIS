@@ -43,12 +43,14 @@ from qgis.core import (
     QgsProcessingContext,
     QgsProcessingFeedback,
     QgsRectangle,
+    QgsProject,
 )
 from qgis.gui import (
     QgisInterface,
     QgsDateTimeEdit,
     QgsDoubleSpinBox,
     QgsExtentGroupBox,
+    QgsFileWidget,
     QgsFilterLineEdit,
     QgsMessageBar,
 )
@@ -59,10 +61,7 @@ from ..core.processing.raster_loader import RasterLoader
 from ..core.processing.vector_loader import VectorLoader
 from ..core.wfs import StoredQuery, StoredQueryFactory
 from ..definitions.configurable_settings import Settings
-from ..qgis_plugin_tools.tools.custom_logging import (
-    bar_msg,
-    use_custom_msg_bar_in_logger,
-)
+from ..qgis_plugin_tools.tools.custom_logging import bar_msg
 from ..qgis_plugin_tools.tools.fields import value_for_widget, widget_for_field
 from ..qgis_plugin_tools.tools.i18n import tr
 from ..qgis_plugin_tools.tools.logger_processing import LoggerProcessingFeedBack
@@ -81,7 +80,6 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
         self.iface = iface
 
         self.message_bar: QgsMessageBar
-        use_custom_msg_bar_in_logger(plugin_name(), self.message_bar)
 
         self.btn_load.clicked.connect(self.__load_wfs_layer)
         self.btn_select.clicked.connect(self.__select_wfs_layer)
@@ -107,6 +105,10 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
         self.extent_group_box_bbox.setMapCanvas(self.iface.mapCanvas(), False)
         self.extent_group_box_bbox.setOutputExtentFromCurrent()
         self.chk_box_add_to_map: QCheckBox
+        self.btn_output_dir_select: QgsFileWidget
+        self.btn_output_dir_select.setFilePath(
+            str(Path(QgsProject.absoluteFilePath(QgsProject.instance())).parent)
+        )
 
         self.progress_bar.setValue(0)
 
@@ -320,7 +322,10 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
 
     def __load_wfs_layer(self) -> None:
 
+        if not self.__check_output_folder(self.btn_output_dir_select.filePath()):
+            return
         if self.selected_stored_query:
+            output_path = Path(self.btn_output_dir_select.filePath())
             for param_name, widgets in self.parameter_rows.items():
                 parameter = self.selected_stored_query.parameters[param_name]
                 if parameter.type in (QVariant.Rect, QVariant.RectF):
@@ -344,7 +349,7 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
                     if parameter.has_variables():
                         parameter.value = values
 
-            output_path = Path(self.btn_output_dir_select.filePath())
+            # output_path = Path(self.btn_output_dir_select.filePath())
             add_to_map: bool = self.chk_box_add_to_map.isChecked()
 
             if self.selected_stored_query.type == StoredQuery.Type.Raster:
@@ -379,6 +384,19 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
                 tr("Could not execute load"),
                 extra=bar_msg(tr("Data source must be selected!")),
             )
+
+    def __check_output_folder(self, output_path: str) -> bool:
+
+        if output_path and output_path != ".":
+            return True
+        else:
+            LOGGER.warning(
+                tr("Could not execute load"),
+                extra=bar_msg(
+                    tr("Output directory for the download must be selected!")
+                ),
+            )
+            return False
 
     def __task_completed(self, result: bool) -> None:
         assert self.task

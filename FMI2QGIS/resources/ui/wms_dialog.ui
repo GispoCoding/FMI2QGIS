@@ -18,6 +18,16 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
+    <widget class="QgsMessageBar" name="message_bar">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
       <widget class="QGroupBox" name="groupBox">
@@ -237,6 +247,12 @@
    <class>QgsFilterLineEdit</class>
    <extends>QLineEdit</extends>
    <header>qgsfilterlineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsMessageBar</class>
+   <extends>QFrame</extends>
+   <header>qgis.gui</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
