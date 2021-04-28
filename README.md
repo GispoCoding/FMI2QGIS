@@ -16,6 +16,8 @@ Plugin to view and download Finnish Meteorological Institute's open data
 This plugin is used to view and download [Finnish Meteorological Institute's](https://en.ilmatieteenlaitos.fi/) (later FMI)
 [open data](https://en.ilmatieteenlaitos.fi/open-data).
 
+Visualizations made with this data as a part of the project can be found [here](https://gispocoding.github.io/FMI2QGIS/).
+
 ### Development
 
 Refer to [development](docs/development.md) for developing this QGIS3 plugin.
@@ -96,6 +98,8 @@ defined by the coordinate points (24.58, 60.1321), (24.58, 60.368), (25.1998, 60
 Including all the different concentration types (PM2.5, PM10, NO2, O3 and AQI) for a 24 hour period on the whole region
 will result in a downloaded NetCDF file of about 2.5 GB. To reduce the size and time of the download, it is useful to reduce
 the temporal and spatial extent of the download as much as possible, or to download only some of the concentrations.
+
+Some visualizations made with the data can be found [here](https://gispocoding.github.io/FMI2QGIS/).
 
 - More examples coming.
 

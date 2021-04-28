@@ -13,5 +13,5 @@ homepage=https://github.com/GispoCoding/FMI2QGIS
 tracker=https://github.com/GispoCoding/FMI2QGIS/issues
 category=Plugins
 icon=resources/icons/icon_hr.png
-experimental=True
+experimental=False
 deprecated=False
