@@ -21,7 +21,7 @@ import logging
 from pathlib import Path
 from typing import Set
 
-import gdal
+from osgeo import gdal
 from qgis.core import QgsProject, QgsRasterLayer
 
 from ...qgis_plugin_tools.tools.custom_logging import bar_msg

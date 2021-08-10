@@ -26,8 +26,8 @@ from typing import Any, Dict, List, Optional
 from urllib.parse import parse_qs, urlsplit
 
 from osgeo import ogr
-from PyQt5.QtCore import QVariant
 from qgis.core import QgsDateTimeRange
+from qgis.PyQt.QtCore import QVariant
 
 from ..definitions.configurable_settings import Namespace
 from ..qgis_plugin_tools.tools.custom_logging import bar_msg

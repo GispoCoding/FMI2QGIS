@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 0.2.1 - 10/08/2021
+
+* Fix invalid GDAL import error
+
 ### 0.2.0 - 28/04/2021
 
 * Add support for mesh layers
