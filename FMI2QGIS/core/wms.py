@@ -81,7 +81,7 @@ class WMSLayer:
                 self.title = elem.text
             elif tag.endswith("Abstract"):
                 self.abstract = elem.text
-            elif tag.endswith("Dimension") and elem.attrib.get("name") == "time":
+            elif tag.endswith("Dimension") and elem.attrib.get("name") == "time" and elem.text:
                 start_time, end_time, step = elem.text.split("/")  # type: ignore
                 self.start_time = datetime.datetime.strptime(
                     start_time, self.TIME_FORMAT
@@ -90,7 +90,7 @@ class WMSLayer:
                 step = step.strip("PT")
                 self.t_step = int(step[:-1])
                 self.time_step_uom = step[-1]
-            elif tag.endswith("Dimension") and elem.attrib.get("name") == "elevation":
+            elif tag.endswith("Dimension") and elem.attrib.get("name") == "elevation" and elem.text:
                 self.elevations = list(map(float, elem.text.split(",")))  # type: ignore
                 self.default_elevation = float(
                     elem.attrib.get("default", self.elevations[0])
