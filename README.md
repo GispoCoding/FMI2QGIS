@@ -6,7 +6,7 @@
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/Tests/badge.svg)
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/TestsLTR/badge.svg)
 ![](https://github.com/GispoCoding/FMI2QGIS/workflows/Release/badge.svg)
-[![codecov.io](https://codecov.io/github/GispoCoding/FMI2QGIS/coverage.svg?branch=master)]
+![codecov.io](https://codecov.io/github/GispoCoding/FMI2QGIS/coverage.svg?branch=master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 

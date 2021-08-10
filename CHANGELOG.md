@@ -3,6 +3,7 @@
 ### 0.2.1 - 10/08/2021
 
 * Fix invalid GDAL import error
+* Apply flake8-qgis linting
 
 ### 0.2.0 - 28/04/2021
 
