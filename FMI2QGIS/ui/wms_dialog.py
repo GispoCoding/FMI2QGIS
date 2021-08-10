@@ -21,7 +21,8 @@ import logging
 import re
 from typing import List, Optional
 
-from PyQt5.QtWidgets import (
+from qgis.gui import QgsCollapsibleGroupBox, QgsDateTimeEdit, QgsFilterLineEdit
+from qgis.PyQt.QtWidgets import (
     QComboBox,
     QDialog,
     QDockWidget,
@@ -30,12 +31,7 @@ from PyQt5.QtWidgets import (
     QTableWidgetItem,
     QWidget,
 )
-from qgis.gui import (
-    QgisInterface,
-    QgsCollapsibleGroupBox,
-    QgsDateTimeEdit,
-    QgsFilterLineEdit,
-)
+from qgis.utils import iface
 
 from ..core.wms import WMSLayer, WMSLayerHandler
 from ..definitions.configurable_settings import Settings
@@ -52,10 +48,9 @@ LOGGER = logging.getLogger(plugin_name())
 class WMSDialog(QDialog, FORM_CLASS):  # type: ignore
     # TODO: merge this class and dialog with main_dialog
 
-    def __init__(self, iface: QgisInterface, parent: QWidget = None) -> None:
+    def __init__(self, parent: QWidget = None) -> None:
         QDialog.__init__(self, parent)
         self.setupUi(self)
-        self.iface = iface
 
         self.btn_select_wms.clicked.connect(self.__wms_layer_selected)
         self.btn_add_wms.clicked.connect(self.__add_wms_to_map)
@@ -200,6 +195,6 @@ class WMSDialog(QDialog, FORM_CLASS):  # type: ignore
     def __show_temporal_controller(self) -> None:
         """Sets Temporal Controller dock widget visible if it exists"""
         dock_widget: QDockWidget
-        for dock_widget in self.iface.mainWindow().findChildren(QDockWidget):
+        for dock_widget in iface.mainWindow().findChildren(QDockWidget):
             if dock_widget.objectName() == TEMPORAL_CONTROLLER:
                 dock_widget.setVisible(True)

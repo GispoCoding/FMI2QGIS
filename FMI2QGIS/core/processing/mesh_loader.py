@@ -22,8 +22,7 @@ from pathlib import Path
 from typing import Dict, Optional, Set
 
 from osgeo import gdal
-from qgis._core import QgsMeshLayer
-from qgis.core import QgsProject
+from qgis.core import QgsMeshLayer, QgsProject
 
 from ...definitions.configurable_settings import Settings
 from ...qgis_plugin_tools.tools.resources import plugin_name

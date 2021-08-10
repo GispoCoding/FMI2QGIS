@@ -22,8 +22,24 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 
-from PyQt5.QtCore import QVariant, pyqtSignal
-from PyQt5.QtWidgets import (
+from qgis.core import (
+    QgsApplication,
+    QgsCoordinateReferenceSystem,
+    QgsProcessingContext,
+    QgsProcessingFeedback,
+    QgsProject,
+    QgsRectangle,
+)
+from qgis.gui import (
+    QgsDateTimeEdit,
+    QgsDoubleSpinBox,
+    QgsExtentGroupBox,
+    QgsFileWidget,
+    QgsFilterLineEdit,
+    QgsMessageBar,
+)
+from qgis.PyQt.QtCore import QVariant, pyqtSignal
+from qgis.PyQt.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDialog,
@@ -37,23 +53,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from qgis.core import (
-    QgsApplication,
-    QgsCoordinateReferenceSystem,
-    QgsProcessingContext,
-    QgsProcessingFeedback,
-    QgsProject,
-    QgsRectangle,
-)
-from qgis.gui import (
-    QgisInterface,
-    QgsDateTimeEdit,
-    QgsDoubleSpinBox,
-    QgsExtentGroupBox,
-    QgsFileWidget,
-    QgsFilterLineEdit,
-    QgsMessageBar,
-)
+from qgis.utils import iface
 
 from ..core.processing.base_loader import BaseLoader
 from ..core.processing.mesh_loader import MeshLoader
@@ -74,10 +74,9 @@ LOGGER = logging.getLogger(plugin_name())
 class MainDialog(QDialog, FORM_CLASS):  # type: ignore
     temporal_layers_added = pyqtSignal(set)
 
-    def __init__(self, iface: QgisInterface, parent: QWidget = None) -> None:
+    def __init__(self, parent: QWidget = None) -> None:
         QDialog.__init__(self, parent)
         self.setupUi(self)
-        self.iface = iface
 
         self.message_bar: QgsMessageBar
 
@@ -92,22 +91,22 @@ class MainDialog(QDialog, FORM_CLASS):  # type: ignore
         self.search_ln_ed.valueChanged.connect(self.__search_stored_wfs_layers)
 
         self.extent_group_box_bbox.setOriginalExtent(
-            self.iface.mapCanvas().extent(),
-            self.iface.mapCanvas().mapSettings().destinationCrs(),
+            iface.mapCanvas().extent(),
+            iface.mapCanvas().mapSettings().destinationCrs(),
         )
         self.extent_group_box_bbox.setCurrentExtent(
-            self.iface.mapCanvas().extent(),
-            self.iface.mapCanvas().mapSettings().destinationCrs(),
+            iface.mapCanvas().extent(),
+            iface.mapCanvas().mapSettings().destinationCrs(),
         )
         self.extent_group_box_bbox.setOutputCrs(
             QgsCoordinateReferenceSystem("EPSG:4326")
         )
         try:
             self.extent_group_box_bbox.setMapCanvas(
-                self.iface.mapCanvas(), drawOnCanvasOption=False
+                iface.mapCanvas(), drawOnCanvasOption=False
             )
         except TypeError:
-            self.extent_group_box_bbox.setMapCanvas(self.iface.mapCanvas())
+            self.extent_group_box_bbox.setMapCanvas(iface.mapCanvas())
         self.extent_group_box_bbox.setOutputExtentFromCurrent()
         self.chk_box_add_to_map: QCheckBox
         self.btn_output_dir_select: QgsFileWidget
